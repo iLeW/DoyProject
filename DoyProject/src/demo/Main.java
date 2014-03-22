@@ -12,7 +12,7 @@ public class Main {
 		System.out.println("Hello World!");
 		System.out.println("Prova di stampa.");
 		
-		
+		System.out.println("Test1");
 	}
 
 }
