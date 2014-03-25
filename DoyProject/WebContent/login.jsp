@@ -1,21 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<!-- META -->
-	<title>DoyProject</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<meta name="description" content="" />
-	
-	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="css/kickstart.css" media="all" />
-	<link rel="stylesheet" type="text/css" href="css/style.css" media="all" /> 
-	
-	<!-- Javascript -->
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<script type="text/javascript" src="js/kickstart.js"></script>
-</head>
+<%@ include file="header.jsp" %>
+
 <body>
+<form name="loginform"  method="get" action="ControllerServlet" autocomplete="on">
 <div class="grid">
 	<div class="col_12" style="margin-top:100px;">
 		<h1 class="center">
@@ -24,7 +10,7 @@
 		<h4 style="color:#999;margin-bottom:40px;" class="center">
 		
 		<!-- Uso della form per delimitare un area i cui submit funzionino con metodo POST e chiamino il ControllerServlet -->
-		<form name="loginform"  method="get" action="ControllerServlet" autocomplete="on">
+		
 			<!-- Campo input per l'username -->
 			<label for="Username">Username</label>
 			<input id="Username" type="text" placeholder="Username" />
@@ -44,12 +30,13 @@
 			<!-- In questo caso quello che succede è che quando viene premuto un bottone vado a ControllerServlet con .../ControllerServlet?val=signin oppure ?val=signup.
 			Nell'url vedo però solo ControllerServlet perché, tramite form, ho detto che il metodo deve essere post. Se fosse stato get avrei visto quanto detto qui sopra.
 			Tenendo ogni submit con il nome di "val" nella ControllerServlet mi basterà fare degli if o switch case per differenziare le varie azioni  -->
-		</form>
+		
 		
 		
 		</h4>
 	</div>
 </div> <!-- End Grid -->
+</form>
 
 <!-- Prova aggiunta xxxxxxxxx-->
 </body>
