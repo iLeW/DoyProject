@@ -7,7 +7,7 @@
 		<h1 class="center">
 		<p><i class="icon-user-md"></i></p>
 		LOGIN</h1>
-		<h4 style="color:#999;margin-bottom:40px;" class="center">
+		<h4 style="color:#999; margin-bottom:40px;" class="center">
 		
 		<!-- Uso della form per delimitare un area i cui submit funzionino con metodo POST e chiamino il ControllerServlet -->
 		
