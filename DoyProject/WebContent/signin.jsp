@@ -1,7 +1,7 @@
-<%@ include file="header.jsp" %>
+<%@ include file="/WEB-INF/header.jsp" %>
 
 <body>
-<form name="loginform"  method="get" action="ControllerServlet" autocomplete="on">
+<form name="loginform"  method="post" action="ControllerServlet" autocomplete="on">
 <div class="grid">
 	<div class="col_12" style="margin-top:100px;">
 		<h1 class="center">
@@ -11,16 +11,16 @@
 		
 		<!-- Uso della form per delimitare un area i cui submit funzionino con metodo POST e chiamino il ControllerServlet -->
 		
-			<!-- Campo input per l'username -->
+			<!-- Campo input per l'username, ricorda che il "name" è il campo per uso per riferirmi a questo campo -->
 			<label for="Username">Username</label>
-			<input id="Username" type="text" placeholder="Username" />
+			<input id="Username" type="text" name="username" placeholder="Username" />
 		
 			<br>
 			<br>
 		
 			<!-- Campo input per la password -->
 			<label for="Password">Password</label>
-			<input id="Password" type="password" placeholder="Password" />
+			<input id="Password" type="password" name ="password" placeholder="Password" />
 		
 			<br>
 			<br>
