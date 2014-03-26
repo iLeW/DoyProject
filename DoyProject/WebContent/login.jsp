@@ -5,7 +5,7 @@
 <div class="grid">
 	<div class="col_12" style="margin-top:100px;">
 		<h1 class="center">
-		<p><i class="icon-user-md"></i></p>
+		<i class="icon-user-md"></i>
 		LOGIN</h1>
 		<h4 style="color:#999; margin-bottom:40px;" class="center">
 		
@@ -38,6 +38,5 @@
 </div> <!-- End Grid -->
 </form>
 
-<!-- Prova aggiunta xxxxxxxxx-->
 </body>
 </html>
