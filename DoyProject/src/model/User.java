@@ -88,9 +88,11 @@ public boolean signinU(String password){
 	//sse entrambi i campi sono veri allora procedo
 	if(!username.isEmpty() && !password.isEmpty()){
 		System.out.println("QUI1");
+		//la try è la classica connessione al DB
 		try{
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			//il punto di domanda richiama il ps.setString da cui poi vai a prendere i dati
 			String query = "SELECT * FROM users WHERE username=? and password=?";
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, getUsername());

@@ -2,7 +2,7 @@
 
 <body>
 <form name="loginform"  method="post" action="ControllerServlet" autocomplete="on">
-<div class="grid">
+<div class="grid flex">
 	<div class="col_12" style="margin-top:100px;">
 		<h1 class="center">
 		<i class="icon-user-md"></i>
@@ -26,12 +26,12 @@
 			<br>
 		
 			<!-- Due bottoni che fanno entrambi un submit -->
-			<button type="submit" name="val" value="signin">Sign In</button> or <button type="submit" name="val" value="signup">Sign Up</button>
+			<button class ="pink" type="submit" name="val" value="signin">Sign In</button> or <button type="submit" name="val" value="signup">Sign Up</button>
 			<!-- In questo caso quello che succede è che quando viene premuto un bottone vado a ControllerServlet con .../ControllerServlet?val=signin oppure ?val=signup.
 			Nell'url vedo però solo ControllerServlet perché, tramite form, ho detto che il metodo deve essere post. Se fosse stato get avrei visto quanto detto qui sopra.
 			Tenendo ogni submit con il nome di "val" nella ControllerServlet mi basterà fare degli if o switch case per differenziare le varie azioni  -->
-		
-		
+			
+				
 		
 		</h4>
 	</div>

@@ -61,6 +61,11 @@ public class ControllerServlet extends HttpServlet {
 			
 		}
 		
+		if("signup".equals(val)){
+			path="/WEB-INF/signup";
+			
+		}
+		
 		//Prima di uscire dal post, raccolgo quello che ho seminato, e vado dove devo andare.
 		String url = path + ".jsp";
 		try{
