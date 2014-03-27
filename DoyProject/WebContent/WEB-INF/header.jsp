@@ -1,4 +1,4 @@
-<!-- questo è l'header per includere il jsp, da includere in ogni pagina jsp-->
+<!-- Questo è l'header da includere nelle pagine di login jsp della Web Application-->
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
