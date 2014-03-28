@@ -1,20 +1,13 @@
-<!-- Adesso ho incluso questo JSP ma in realtà qua ce ne vuole un altro con il menù principale -->
+<!-- Inclusione del JSP con il menù principale -->
 <%@ include file="/WEB-INF/headerMenu.jsp"%>
 <div class="grid flex">
 	<div class="col_12" style="margin-top: 100px;">
 		<h1 class="center">
 			<!-- la <i> serve per le icone -->
-			<i class="icon-eye-open"></i> Benvenuto nella HomePage
+			<i class="icon-eye-open"></i> Benvenuto Dott. ${user.username}	<!-- Questo è un utilizzio delle JSP 2.x, tale metodo è possibile perché il JavaBean User.java ha i metodi getter e setter -->
 		</h1>
 		<h4 style="color: #999; margin-bottom: 40px;" class="center">
-			titolo piccolo</h4>
-		<!-- 
-			<div class="grid">
-			<p>
-				<img class="caption center" title="Foto" src="immagini/fox.jpg" width="600" height="783" />
-			</p>
-			</div>
-		-->
+			I messaggi sono:</h4>
 	</div>
 </div>
 <!-- End Grid -->

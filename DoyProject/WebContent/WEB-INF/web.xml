@@ -19,11 +19,18 @@
 		<welcome-file>login.htm</welcome-file>
 		<welcome-file>login.jsp</welcome-file>
 	</welcome-file-list>
-	
+
 	<error-page>
-    	<error-code>404</error-code>
-    	<location>/WEB-INF/Err404.jsp</location>
-	</error-page> 
+		<error-code>404</error-code>
+		<location>/WEB-INF/Err404.jsp</location>
+	</error-page>
+
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>*.jsp</url-pattern>
+			<el-ignored>false</el-ignored>
+		</jsp-property-group>
+	</jsp-config>
 </web-app>
 <!-- Servlets 3.0 and JSP 2.1 (Tomcat 7, and so on) -->
 <!-- <web-app xmlns="http://java.sun.com/xml/ns/javaee" -->

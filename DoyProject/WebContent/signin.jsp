@@ -26,10 +26,9 @@
 						In</button>
 					or
 					<button type="submit" name="val" value="signup">Sign Up</button>
-					<!-- In questo caso quello che succede Ã¨ che quando viene premuto un bottone vado a ControllerServlet con .../ControllerServlet?val=signin oppure ?val=signup.
-			Nell'url vedo perÃ² solo ControllerServlet perchÃ©, tramite form, ho detto che il metodo deve essere post. Se fosse stato get avrei visto quanto detto qui sopra.
+					<!-- In questo caso quello che succede è che quando viene premuto un bottone vado a ControllerServlet con .../ControllerServlet?val=signin oppure ?val=signup.
+			Nell'url vedo però solo ControllerServlet perchè, tramite form, ho detto che il metodo deve essere post. Se fosse stato get avrei visto quanto detto qui sopra.
 			Tenendo ogni submit con il nome di "val" nella ControllerServlet mi basterÃ  fare degli if o switch case per differenziare le varie azioni  -->
-
 
 
 				</h4>

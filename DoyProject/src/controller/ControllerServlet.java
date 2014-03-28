@@ -30,17 +30,58 @@ public class ControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		//response.setContentType("text/html");			//Setto il tipo di risposta da mandare al client
+	    String val = request.getParameter("val");		//intercetto il parametro val
+	    HttpSession session = request.getSession(true);	//Con il true, se non esiste già una sessione ne creo una nuova!
+		User u = (User) session.getAttribute("user");	//Mi prendo l'utente se esiste già
+		String path=""; 								//path che indica la JSP dove voglio andare a seconda delle azioni	
+		
+		/****Intercetto le richieste dal menù orizzontale delle pagine jsp principali (homepage, messaggi, profilo, pazientiLista, pazientiCategoria)*****/
+		
+		//Caso che venga scelta l'homepage
+		if("homepage".equals(val)){
+			path = "/WEB-INF/homepage";
+		}
+		
+		//Caso che venga cliccata la voce messaggi
+		if("messaggi".equals(val)){
+			path = "/WEB-INF/messaggi";
+		}
+		
+		//Caso che venga scelta la pagina del profilo del dottore
+		if("profiloDoc".equals(val)){
+			path = "/WEB-INF/profiloDoc";
+		}
+		
+		//Caso che venga scelta la voce dei pazienti listati
+		if("pazientiLista".equals(val)){
+			path = "/WEB-INF/pazientiLista";
+		}
+		
+		//Caso che venga scelta la voce dei pazienti in categorie
+		if("pazientiCategoria".equals(val)){
+			path = "/WEB-INF/pazientiCategoria";
+		}
+		
+		
+		//Metodo finale che mi rimanda alla pagina giusta.
+		String url = path + ".jsp";
+		try{
+			request.getRequestDispatcher(url).forward(request, response);
+			
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		String val = request.getParameter("val");		//Intercetto il parametro val
 		HttpSession session = request.getSession(true);	//Lavoro a livello di sessione
-		User u = (User) session.getAttribute("user");	//Se già un utente lo prendo
+		User u = (User) session.getAttribute("user");	//Se c'è già un utente lo prendo
 		String path = "";								//path che indica la JSP dove voglio andare a seconda delle azioni
 		
 		
