@@ -102,8 +102,15 @@ public class ControllerServlet extends HttpServlet {
 			
 		}
 		
+		//per andare alla pagina signup
 		if("signup".equals(val)){
 			path="/WEB-INF/signup";
+			
+		}
+		
+		//bottone per l'aggiunta di un paziente
+		if("aggPaziente".equals(val)){
+			path="/WEB-INF/pazienteMod";
 			
 		}
 		
