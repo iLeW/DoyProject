@@ -9,6 +9,10 @@
 -----------------------------------*/
 @import url(http://fonts.googleapis.com/css?family=Arimo:400,700);
 
+/*AGGIUNTO IO */
+@import url(http://fonts.googleapis.com/css?family=Source Sans Pro:400,700);
+@import url(http://fonts.googleapis.com/css?family=Helvetica Neue:300,400,700);
+
 /*---------------------------------
 	OVERRIDES
 -----------------------------------*/
@@ -43,7 +47,7 @@ body {
 	color: #000;
 	background: #efefef url(img/gray_jean.png);
 	/* ******** Tolto il css-> css/img/gray_jean.png ******* */
-	font: normal 0.9em/150% 'Arimo', arial, verdana, sans-serif;
+	font: normal 0.9em/150% 'Helvetiva Neue','Arimo', arial, verdana, sans-serif;
 	text-shadow: 0 0 1px transparent; /* google font pixelation fix */
 }
 

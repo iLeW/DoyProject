@@ -30,6 +30,7 @@ public class ControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("Servlet doGet");
 		//response.setContentType("text/html");			//Setto il tipo di risposta da mandare al client
 	    String val = request.getParameter("val");		//intercetto il parametro val
 	    HttpSession session = request.getSession(true);	//Con il true, se non esiste già una sessione ne creo una nuova!
@@ -63,6 +64,7 @@ public class ControllerServlet extends HttpServlet {
 			path = "/WEB-INF/pazientiCategoria";
 		}
 		
+	
 		
 		//Metodo finale che mi rimanda alla pagina giusta.
 		String url = path + ".jsp";
@@ -79,6 +81,7 @@ public class ControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("Servlet doPost");
 		String val = request.getParameter("val");		//Intercetto il parametro val
 		HttpSession session = request.getSession(true);	//Lavoro a livello di sessione
 		User u = (User) session.getAttribute("user");	//Se c'è già un utente lo prendo
@@ -102,13 +105,22 @@ public class ControllerServlet extends HttpServlet {
 			
 		}
 		
-		//per andare alla pagina signup
+		//Subito si pensava di farlo con il metodo get, poi però essendo che c'è la possibilità che un utente, nel momento in cui clicca su signup, 
+		//abbia già inserito username e password, questi sarebbero passati dall'URL con GET e quindi non sarebbe stato troppo sicuro.
 		if("signup".equals(val)){
 			path="/WEB-INF/signup";
 			
 		}
 		
-		//bottone per l'aggiunta di un paziente
+		//Se arrivo dal bottone "Annulla" dalla pagina di signup. Come prima, mi tocca farlo in post perché altrimenti i dati viaggiano in GET.
+		if("annullaSignup".equals(val)){
+			path = "signin";
+		}
+				
+		
+	
+		
+		//Si arriva qui quando voglio aggiungere un paziente
 		if("aggPaziente".equals(val)){
 			path="/WEB-INF/pazienteMod";
 			

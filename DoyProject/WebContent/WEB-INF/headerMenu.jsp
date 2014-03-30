@@ -21,6 +21,7 @@ Tale header è infatti quello che permette di avere nella pagina la barra in alto
 			mi indica quale elemento della tabella evidenziare. Prendo la pagina corrente con il codice Java nel blocco sopra -->
 				<%
 					if ("homepage.jsp".equals(pageName)) {
+						out.println("<li style=\"float:right;\" class=\"icon_signout\"><a href=\"ControllerServlet?val=signout\"> <i class=\"icon-off\"></i> SigOut</a></li>");
 						out.println("<li class=\"current\"><a href=\"ControllerServlet?val=homepage\"><i class =\"icon-home\"></i>Homepage</a></li>");
 						out.println("<li class=\"\"><a href=\"ControllerServlet?val=profiloDoc\"><i class =\"icon-user-md\"></i>Profilo</a></li>");
 						out.println("<li><a href=\"ControllerServlet?val=messaggi\"><i class=\"icon-envelope\"></i>Messaggi</a></li>");
@@ -29,6 +30,7 @@ Tale header è infatti quello che permette di avere nella pagina la barra in alto
 					}
 
 					else if ("profiloDoc.jsp".equals(pageName)) {
+						out.println("<li style=\"float:right;\" class=\"icon_signout\"><a href=\"ControllerServlet?val=signout\"> <i class=\"icon-off\"></i> SigOut</a></li>");
 						out.println("<li class=\"\"><a href=\"ControllerServlet?val=homepage\"><i class =\"icon-home\"></i>Homepage</a></li>");
 						out.println("<li class=\"current\"><a href=\"ControllerServlet?val=profiloDoc\"><i class =\"icon-user-md\"></i>Profilo</a></li>");
 						out.println("<li><a href=\"ControllerServlet?val=messaggi\"><i class=\"icon-envelope\"></i>Messaggi</a></li>");
@@ -37,6 +39,7 @@ Tale header è infatti quello che permette di avere nella pagina la barra in alto
 					}
 
 					else if ("messaggi.jsp".equals(pageName)) {
+						out.println("<li style=\"float:right;\" class=\"icon_signout\"><a href=\"ControllerServlet?val=signout\"> <i class=\"icon-off\"></i> SigOut</a></li>");
 						out.println("<li><a href=\"ControllerServlet?val=homepage\"><i class =\"icon-home\"></i>Homepage</a></li>");
 						out.println("<li class=\"\"><a href=\"ControllerServlet?val=profiloDoc\"><i class =\"icon-user-md\"></i>Profilo</a></li>");
 						out.println("<li class=\"current\"><a href=\"ControllerServlet?val=messaggi\"><i class=\"icon-envelope\"></i>Messaggi</a></li>");
@@ -45,6 +48,7 @@ Tale header è infatti quello che permette di avere nella pagina la barra in alto
 					}
 
 					else if ("pazientiLista.jsp".equals(pageName) || "pazientiCategoria.jsp".equals(pageName) ) {
+						out.println("<li style=\"float:right;\" class=\"icon_signout\"><a href=\"ControllerServlet?val=signout\"> <i class=\"icon-off\"></i> SigOut</a></li>");
 						out.println("<li><a href=\"ControllerServlet?val=homepage\"><i class =\"icon-home\"></i>Homepage</a></li>");
 						out.println("<li class=\"\"><a href=\"ControllerServlet?val=profiloDoc\"><i class =\"icon-user-md\"></i>Profilo</a></li>");
 						out.println("<li><a href=\"ControllerServlet?val=messaggi\"><i class=\"icon-envelope\"></i>Messaggi</a></li>");
