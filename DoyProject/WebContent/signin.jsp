@@ -42,6 +42,3 @@
 </html>
 
 
-<!-- commento pacco -->
-
-

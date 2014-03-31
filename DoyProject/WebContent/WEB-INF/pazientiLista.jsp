@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/headerMenu.jsp"%>
 
 
-<form method="post" action="ControllerServlet">
+<form method="get" action="ControllerServlet">
 	<div class="grid flex">
 		<h1 class="center">
 			<i class="icon-hospital"></i> Elenco pazienti

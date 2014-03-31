@@ -123,4 +123,4 @@ public boolean signinU(String password){
 	return signin;	//torno il valore booleano (vero o falso)
 }
 	
-}
+} //fine classe User

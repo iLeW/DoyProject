@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.Paziente;
 import model.User;
 
 /**
@@ -64,8 +65,11 @@ public class ControllerServlet extends HttpServlet {
 			path = "/WEB-INF/pazientiCategoria";
 		}
 		
-	
-		
+		//Si arriva qui quando voglio aggiungere un paziente
+		if("aggPaziente".equals(val)){
+			path = "/WEB-INF/pazienteMod";
+		}
+			
 		//Metodo finale che mi rimanda alla pagina giusta.
 		String url = path + ".jsp";
 		try{
@@ -85,6 +89,7 @@ public class ControllerServlet extends HttpServlet {
 		String val = request.getParameter("val");		//Intercetto il parametro val
 		HttpSession session = request.getSession(true);	//Lavoro a livello di sessione
 		User u = (User) session.getAttribute("user");	//Se c'è già un utente lo prendo
+		//Paziente p = (Paziente) session.getAttribute("paziente");	//Se c'è già un paziente lo prendo
 		String path = "";								//path che indica la JSP dove voglio andare a seconda delle azioni
 		
 		
@@ -116,16 +121,13 @@ public class ControllerServlet extends HttpServlet {
 		if("annullaSignup".equals(val)){
 			path = "signin";
 		}
-				
 		
-	
-		
-		//Si arriva qui quando voglio aggiungere un paziente
-		if("aggPaziente".equals(val)){
-			path="/WEB-INF/pazienteMod";
-			
+		if("insPaziente".equals(val)){
+			Paziente p = new Paziente(request.getParameter("IDPaziente"));
+			p.insPaziente(request.getParameter("IDPaziente"), request.getParameter("nome"), request.getParameter("cognome"), request.getParameter("dataNascita").toString(), request.getParameter("codFisc"), request.getParameter("dataIn").toString());
 		}
 		
+	
 		//Prima di uscire dal post, raccolgo quello che ho seminato, e vado dove devo andare.
 		String url = path + ".jsp";
 		try{
