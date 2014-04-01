@@ -52,7 +52,18 @@ public class ControllerServlet extends HttpServlet {
 		
 		//Caso che venga scelta la pagina del profilo del dottore
 		if("profiloDoc".equals(val)){
-			path = "/WEB-INF/profiloDoc";
+			
+			//Devo mostrare il profilo del dottore
+			//Non devo creare un nuovo utente perché c'è già per forza
+			
+			if(!u.getProfileU() || u==null){
+				path = "/WEB-INF/Err";
+				System.out.println("Err");	//Fare questa pagina di errore!!!!!! ****************************************************
+			}
+			else{
+				path = "/WEB-INF/profiloDoc";
+				System.out.println("profiloDoc");
+			}
 		}
 		
 		//Caso che venga scelta la voce dei pazienti listati
