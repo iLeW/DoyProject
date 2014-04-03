@@ -43,9 +43,57 @@ public class Paziente {
 		return this.IDPaziente;
 	}
 	
+	private void setNome(String nome) {
+		this.nome = nome;
+	}
+	
+	public String getNome(){
+		return this.nome;
+	}
+	
+	private void setCognome(String cognome) {
+		this.cognome = cognome;
+	}
+	
+	public String getCognome(){
+		return this.cognome;
+	}
+	
+	private void setCodFisc(String codFisc) {
+		this.codFisc = codFisc;
+	}
+	
+	public String getCodFisc(){
+		return this.codFisc;
+	}
+	
+	private void setDataNascita(Date dataNascita) {
+		this.dataNascita = dataNascita;
+	}
+	
+	public Date getDataNascita(){
+		return this.dataNascita;
+	}
+	
+	private void setDataIn(Date dataIn) {
+		this.dataIn = dataIn;
+	}
+	
+	public Date getDataIn(){
+		return this.dataIn;
+	}
+	
+	private void setDataOut(Date dataOut) {
+		this.dataOut= dataOut;
+	}
+	
+	public Date getDataOut(){
+		return this.dataOut;
+	}
+	
 	/*
 	 * cose da fare:
-	 * 1) fare tutti i metodi get e set
+	 * 1) fare tutti i metodi get e set					[fatto]
 	 * 2) se possibile trasformare IDPAziente in int
 	 * 3) aggiungere la pagina di inserimento effettuato
 	 * 4) nella pagina pazientiLista mettere la tabella

@@ -136,6 +136,11 @@ public class ControllerServlet extends HttpServlet {
 		if("insPaziente".equals(val)){
 			Paziente p = new Paziente(request.getParameter("IDPaziente"));
 			p.insPaziente(request.getParameter("IDPaziente"), request.getParameter("nome"), request.getParameter("cognome"), request.getParameter("dataNascita").toString(), request.getParameter("codFisc"), request.getParameter("dataIn").toString());
+			path = "/WEB-INF/pazientiLista";
+		}
+		
+		if("annPaziente".equals(val)){
+			path = "/WEB-INF/pazientiLista";
 		}
 		
 	
