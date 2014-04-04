@@ -21,7 +21,7 @@
 					<br>
 
 					<!-- Due bottoni che fanno entrambi un submit -->
-					<button type="submit" name="val" value="signin">Sign In</button>
+					<button class="pink" type="submit" name="val" value="signin">Sign In</button>
 					or
 					<button type="submit" name="val" value="signup">Sign Up</button>
 					<!-- In questo caso quello che succede è che quando viene premuto un bottone vado a ControllerServlet con .../ControllerServlet?val=signin oppure ?val=signup.

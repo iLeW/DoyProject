@@ -36,6 +36,8 @@ public class ControllerServlet extends HttpServlet {
 	    String val = request.getParameter("val");		//intercetto il parametro val
 	    HttpSession session = request.getSession(true);	//Con il true, se non esiste già una sessione ne creo una nuova!
 		User u = (User) session.getAttribute("user");	//Mi prendo l'utente se esiste già
+		// 4)creare il nuovo paziente all'inizio sia del doGet che del doPost
+		Paziente p = new Paziente();
 		String path=""; 								//path che indica la JSP dove voglio andare a seconda delle azioni	
 		
 		/****Intercetto le richieste dal menù orizzontale delle pagine jsp principali (homepage, messaggi, profilo, pazientiLista, pazientiCategoria)*****/
@@ -68,6 +70,10 @@ public class ControllerServlet extends HttpServlet {
 		
 		//Caso che venga scelta la voce dei pazienti listati
 		if("pazientiLista".equals(val)){
+			// 5)prima di fare il setAttribute chiamare il metodo per visualizzare così setta il valore giusto
+			// andare nella pagina dove si vuole costruire la tabella
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiLista";
 		}
 		
@@ -101,6 +107,7 @@ public class ControllerServlet extends HttpServlet {
 		HttpSession session = request.getSession(true);	//Lavoro a livello di sessione
 		User u = (User) session.getAttribute("user");	//Se c'è già un utente lo prendo
 		//Paziente p = (Paziente) session.getAttribute("paziente");	//Se c'è già un paziente lo prendo
+		Paziente p = new Paziente();
 		String path = "";								//path che indica la JSP dove voglio andare a seconda delle azioni
 		
 		
@@ -133,13 +140,18 @@ public class ControllerServlet extends HttpServlet {
 			path = "signin";
 		}
 		
+		//bottoni aggiungi paziente e annulla. Dalla pagina pazienteMod riportano a pazientiLista
 		if("insPaziente".equals(val)){
-			Paziente p = new Paziente(request.getParameter("IDPaziente"));
+			//Paziente p = new Paziente(request.getParameter("IDPaziente"));
 			p.insPaziente(request.getParameter("IDPaziente"), request.getParameter("nome"), request.getParameter("cognome"), request.getParameter("dataNascita").toString(), request.getParameter("codFisc"), request.getParameter("dataIn").toString());
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiLista";
 		}
 		
 		if("annPaziente".equals(val)){
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiLista";
 		}
 		
