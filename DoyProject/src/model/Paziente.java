@@ -25,6 +25,7 @@ public class Paziente {
 	private String dataDefault = "1900-01-01";
 	// 1) cambiare le variabili da String a Vector<String>
 	private Vector<String> IDPaziente = new Vector<String>();
+	//private Vector<Integer> IDPaziente = new Vector<Integer>();
 	private Vector<String> nome = new Vector<String>();
 	private Vector<String> cognome = new Vector<String>();
 	private Vector<String> codFisc = new Vector<String>();
@@ -52,7 +53,6 @@ public class Paziente {
 	private void setNome(String nome) {
 		this.nome = nome;
 	}
-	
 	public String getNome(){
 		return this.nome;
 	}
@@ -99,6 +99,12 @@ public class Paziente {
 	public String getIDPaziente(int i) {
 		return IDPaziente.get(i);
 	}
+	/*public void setIDPaziente(int IDPaziente) {
+		this.IDPaziente.add(IDPaziente);
+	}
+	public int getIDPaziente(int i) {
+		return IDPaziente.get(i);
+	}*/
 	public void setNome(String nome) {
 		this.nome.add(nome);
 	}
@@ -140,11 +146,36 @@ public class Paziente {
 		return IDPaziente.size();
 	}
 	
-	public void setInserito(int ins) {
+	public void setInserito(int ins){
 		this.inserito = ins;
 	}
 	public int getInserito() {
 		return this.inserito;
+	}
+	//metodo che ritorna il primo ID disponibile
+	public String getIDDisp(){
+		
+		String disponibile = "";
+		Vector<Integer> vec = new Vector<Integer>();
+		for(int i=0; i<IDPaziente.size(); i++)
+		{
+			int id = Integer.parseInt(IDPaziente.get(i));
+			vec.add(id);
+		}
+		
+		int tmp=1;
+		for(int i=0; i<vec.size(); i++)
+		{
+			if(vec.get(i) == tmp)
+				tmp++;
+			
+			else
+				break;
+		}
+		
+		disponibile = Integer.toString(tmp);
+		//System.out.println("primo disponibile: " + disponibile);
+		return disponibile;
 	}
 	/*
 	 * cose da fare:
@@ -165,10 +196,11 @@ public class Paziente {
 			//inserisco i dati
 			String query ="insert into pazienti (IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, dataOut) values (?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, IDPaziente);
+			//int id = Integer.parseInt(IDPaziente); 
+			ps.setString(1, IDPaziente);
             ps.setString(2, nome);
             ps.setString(3, cognome);
-            //conversto la data da stringa a Date
+            //converto la data da stringa a Date
             Date dataN = Date.valueOf(dataNascita);
             //System.out.println("dataNascita: " + dataNascita);
             //System.out.println("dataN: " + dataN);
@@ -205,6 +237,7 @@ public class Paziente {
         	// salvo i campi dei prodotti dell'utente nei vettori stringa della classe prodotto
 			while(rs.next()){
 				String IDPaziente = rs.getString("IDPaziente");
+				//int IDPaziente = rs.getInt("IDPaziente");
 				setIDPaziente(IDPaziente);
 				String nome = rs.getString("nome");
 				setNome(nome);
@@ -231,8 +264,6 @@ public class Paziente {
 		e.printStackTrace();
 		}
 	}
-	
-	
 	
 	
 } //fine classe Paziente

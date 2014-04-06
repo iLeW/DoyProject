@@ -84,8 +84,11 @@ public class ControllerServlet extends HttpServlet {
 		
 		//Si arriva qui quando voglio aggiungere un paziente
 		if("aggPaziente".equals(val)){
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazienteMod";
 		}
+		
 			
 		//Metodo finale che mi rimanda alla pagina giusta.
 		String url = path + ".jsp";

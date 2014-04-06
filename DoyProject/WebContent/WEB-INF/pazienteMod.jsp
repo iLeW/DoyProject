@@ -1,5 +1,12 @@
 <!-- Inclusione del JSP con il menù principale -->
 <%@ include file="/WEB-INF/header.jsp"%>
+<%@ page import="model.Paziente" %>
+
+<%
+// 6)creare un nuovo oggetto, il metodo conta serve per il for sotto
+Paziente p = (Paziente) session.getAttribute("paziente");
+String disponibile = p.getIDDisp();
+%>
 
 <form method="post" action="ControllerServlet">
 	<div class="grid flex">
@@ -16,7 +23,8 @@
 		<div class="col_2">
 			<label for="IDPaziente">IDPaziente</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
-			<input id="IDPaziente" name="IDPaziente" type="text" placeholder="IDPaziente" required /></div>
+			<input id="IDPaziente" name="IDPaziente" type="text" placeholder="IDPaziente" required />
+			<label for="IDPaziente" style="color: green; margin-left: 20px;">Primo ID disponibile: <%= disponibile%></label></div>
 				
 		<div class="col_2">
 			<label for="nome">Nome</label></div>
@@ -64,7 +72,7 @@
 			
 		<div class="center" style="margin-bottom: 80px">
 			<button class="green" type="submit" name="val" value="insPaziente">Conferma</button>
-			<button class="red" type="submit" name="val" value="annPaziente" formnovalidate>Annulla</button>
+			<button class="red" style="margin-left: 20px" type="submit" name="val" value="annPaziente" formnovalidate>Annulla</button>
 		</div>
 		
 	

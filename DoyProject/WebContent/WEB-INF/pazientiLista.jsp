@@ -30,7 +30,8 @@ int conta = p.contaPazienti();
 			<th>Codice fiscale</th>
 			<th>Data ingresso</th>
 			<th>Data uscita</th>
-			<th>Azioni</th>
+			<th>Azioni 1</th>
+			<th>Azioni 2</th>
 		</tr></thead>
 		<tbody><tr> <!-- Dove vanno inseriti i dati -->
 		<% // 7)fare il for per la visualizzazione nella tabella
@@ -53,6 +54,10 @@ int conta = p.contaPazienti();
 			%> </td>
 			<!-- da vedere bene come fare per modificare i dati -->
 			<td value=""> <a href> <i class="icon-pencil"> </i></a>
+			</td>
+			<td>
+			<button class="blue small" type="submit" name="val" value="modPaz">Modifica</button>
+			<button class="red small" type="submit" name="val" value="cancPaz">Elimina</button>			
 			</td>
 		</tr>
 		<% }%>
