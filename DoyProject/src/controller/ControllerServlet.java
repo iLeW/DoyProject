@@ -89,6 +89,25 @@ public class ControllerServlet extends HttpServlet {
 			path = "/WEB-INF/pazienteMod";
 		}
 		
+		//quì ci arriva quando si schiaccia l'icona con la penna nella tabella dei pazienti
+		if("modPaziente".equals(val)){
+			System.out.println("cosa ho selezionato: " + session.getAttribute("paziente"));
+			//p.viewPaziente();
+			//session.setAttribute("paziente", p);
+			//int ID = Integer.parseInt(request.getParameter("IDpaz"));
+			//System.out.println("prova: " + p.getNome(ID));
+			System.out.println("prova: " + request.getParameter("IDpaz"));
+			path = "/WEB-INF/pazienteMod";
+		}
+		/*if("IDpaziente=?".equals(val)){
+			System.out.println("cosa ho selezionato: " + session.getAttribute("paziente"));
+			//p.viewPaziente();
+			//session.setAttribute("paziente", p);
+			//int ID = Integer.parseInt(request.getParameter("IDpaz"));
+			//System.out.println("prova: " + p.getNome(ID));
+			System.out.println("prova: " + request.getParameter("IDpaz"));
+			path = "/WEB-INF/pazienteMod";
+		}*/
 			
 		//Metodo finale che mi rimanda alla pagina giusta.
 		String url = path + ".jsp";
@@ -158,7 +177,11 @@ public class ControllerServlet extends HttpServlet {
 			path = "/WEB-INF/pazientiLista";
 		}
 		
-	
+		//quì ci arriva quando si schiaccia l'icona con la penna nella tabella dei pazienti
+		if("modPaziente".equals(val)){
+			path = "/WEB-INF/pazienteMod";
+		}
+			
 		//Prima di uscire dal post, raccolgo quello che ho seminato, e vado dove devo andare.
 		String url = path + ".jsp";
 		try{

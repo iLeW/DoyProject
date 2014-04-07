@@ -1,5 +1,6 @@
 <%@ include file="/WEB-INF/headerMenu.jsp"%>
 <%@ page import="model.Paziente" %>
+<%@ page import="controller.ControllerServlet" %>
 
 <%
 // 6)creare un nuovo oggetto, il metodo conta serve per il for sotto
@@ -21,7 +22,7 @@ int conta = p.contaPazienti();
 		</div>
 		
 		<div class="center">
-		<table class="sortable striped">
+		<table class="sortable">
 		<thead><tr> <!-- Intestazione -->
 			<th>ID Paziente</th>
 			<th>Nome</th>
@@ -30,14 +31,13 @@ int conta = p.contaPazienti();
 			<th>Codice fiscale</th>
 			<th>Data ingresso</th>
 			<th>Data uscita</th>
-			<th>Azioni 1</th>
-			<th>Azioni 2</th>
+			<th>Azioni</th>
 		</tr></thead>
 		<tbody><tr> <!-- Dove vanno inseriti i dati -->
 		<% // 7)fare il for per la visualizzazione nella tabella
 		for(int i=0; i<conta; i++)
 		{%>
-		<tr>
+		<tr bgcolor="#FFFFFF"> <!-- si può cambiare coloreeeeeeeee -->
 			<td> <%= p.getIDPaziente(i)
 			%> </td>
 			<td> <%= p.getNome(i)
@@ -53,11 +53,9 @@ int conta = p.contaPazienti();
 			<td> <%= p.getDataOut(i)
 			%> </td>
 			<!-- da vedere bene come fare per modificare i dati -->
-			<td value=""> <a href> <i class="icon-pencil"> </i></a>
-			</td>
-			<td>
-			<button class="blue small" type="submit" name="val" value="modPaz">Modifica</button>
-			<button class="red small" type="submit" name="val" value="cancPaz">Elimina</button>			
+			<td value=""> <a href="ControllerServlet?val=modPaziente"> <i class="icon-pencil"> </i></a>
+			<!--  href="ControllerServlet?IDpaziente= //p.getIDPaziente(i) "-->
+			<a href> <i class="icon-remove"> </i></a>
 			</td>
 		</tr>
 		<% }%>
