@@ -53,8 +53,7 @@ int conta = p.contaPazienti();
 			<td> <%= p.getDataOut(i)
 			%> </td>
 			<!-- da vedere bene come fare per modificare i dati -->
-			<td value=""> <a href="ControllerServlet?val=modPaziente"> <i class="icon-pencil"> </i></a>
-			<!--  href="ControllerServlet?IDpaziente= //p.getIDPaziente(i) "-->
+			<td value=""> <a href="ControllerServlet?val=modPaziente&ID=<%=p.getIDPaziente(i)%>"> <i class="icon-pencil"> </i></a>
 			<a href> <i class="icon-remove"> </i></a>
 			</td>
 		</tr>

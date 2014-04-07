@@ -92,22 +92,17 @@ public class ControllerServlet extends HttpServlet {
 		//quì ci arriva quando si schiaccia l'icona con la penna nella tabella dei pazienti
 		if("modPaziente".equals(val)){
 			System.out.println("cosa ho selezionato: " + session.getAttribute("paziente"));
-			//p.viewPaziente();
-			//session.setAttribute("paziente", p);
-			//int ID = Integer.parseInt(request.getParameter("IDpaz"));
-			//System.out.println("prova: " + p.getNome(ID));
-			System.out.println("prova: " + request.getParameter("IDpaz"));
+			//con queste due righe ricreo l'arrey di tutti i pazienti
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
+			//salvo l'ID del paziente da modificare
+			int ID = Integer.parseInt(request.getParameter("ID"));
+			ID--;
+			System.out.println("nome: " + p.getNome(ID));
+			System.out.println("ID: " + request.getParameter("ID"));
+			//adesso devo passare l'ID del paziente da modificare alla pagina pazienteMod
 			path = "/WEB-INF/pazienteMod";
 		}
-		/*if("IDpaziente=?".equals(val)){
-			System.out.println("cosa ho selezionato: " + session.getAttribute("paziente"));
-			//p.viewPaziente();
-			//session.setAttribute("paziente", p);
-			//int ID = Integer.parseInt(request.getParameter("IDpaz"));
-			//System.out.println("prova: " + p.getNome(ID));
-			System.out.println("prova: " + request.getParameter("IDpaz"));
-			path = "/WEB-INF/pazienteMod";
-		}*/
 			
 		//Metodo finale che mi rimanda alla pagina giusta.
 		String url = path + ".jsp";
