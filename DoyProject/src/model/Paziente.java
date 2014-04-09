@@ -152,6 +152,19 @@ public class Paziente {
 	public int getInserito() {
 		return this.inserito;
 	}
+	//metodo che ritorna l'indice dato l'ID
+	public int getIndice(int ID)
+	{
+		int i;
+		for(i=0; i<IDPaziente.size(); i++)
+		{
+			if(Integer.parseInt(IDPaziente.get(i)) == ID)
+				break;
+		}
+		
+		return i;
+	}
+	
 	//metodo che ritorna il primo ID disponibile
 	public String getIDDisp(){
 		
@@ -181,11 +194,10 @@ public class Paziente {
 	 * cose da fare:
 	 * 1) fare tutti i metodi get e set					[fatto]
 	 * 2) se possibile trasformare IDPAziente in int,
-	 * 2.1) mettere un tasto che dia il primo id disponibile
 	 * 3) aggiungere la pagina di inserimento effettuato	[fatto, aggiunto il messaggio]
 	 * 4) nella pagina pazientiLista mettere la tabella		[fatto, guardare bene la questione della data d'uscita]
 	 * 5) dalla tabella si può selezionare un paziente e premere un tasto per modificarlo ->
-	 * 6) mettere gli if in pazienteMod per precompilare i campi
+	 * 6) mettere gli if in pazienteMod per precompilare i campi	[fatto]
 	 */
 	
 	
@@ -217,6 +229,44 @@ public class Paziente {
         	
         	System.out.println("paziente aggiunto!! :)");
         	inserito = 1;
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void modificaPaziente(String IDPaziente, String nome, String cognome, String dataNascita, String codFisc, String dataIn, String dataOut){
+		try {
+			//int IDp = Integer.parseInt("ID");
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			//inserisco i dati
+			//String query ="insert into pazienti (IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, dataOut) values (?, ?, ?, ?, ?, ?, ?)";
+			String query ="update pazienti set IDPaziente=?, nome=?, cognome=?, dataNascita=?, codFisc=?, dataIn=?, dataOut=? where IDPaziente=?;";
+			PreparedStatement ps = con.prepareStatement(query);
+			//int id = Integer.parseInt(IDPaziente); 
+			ps.setString(1, IDPaziente);
+            ps.setString(2, nome);
+            ps.setString(3, cognome);
+            //converto la data da stringa a Date
+            Date dataN = Date.valueOf(dataNascita);
+            //System.out.println("dataNascita: " + dataNascita);
+            //System.out.println("dataN: " + dataN);
+            ps.setDate(4, dataN);
+            ps.setString(5, codFisc);
+            Date dataI = Date.valueOf(dataIn);
+            ps.setDate(6, dataI);
+            //devo settare un valore di default altrimenti è un pacco la visualizzazione nella tabella dopo
+            Date dataO = Date.valueOf(dataOut);
+            ps.setDate(7, dataO);
+            ps.setString(8, IDPaziente);
+        	ps.executeUpdate();
+        	ps.close();
+        	con.close();
+        	
+        	System.out.println("paziente modificato!! :)");
+        	inserito = 2;
 		}
 		
 		catch (Exception e) {

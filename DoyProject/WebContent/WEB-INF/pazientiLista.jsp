@@ -64,10 +64,16 @@ int conta = p.contaPazienti();
 
 	</div>
 	
-	<!-- per mostrare o no il messaggio di Paziente inserito, fare il resize -->
+	<!-- per mostrare o no il messaggio di Paziente inserito, FARE IL RESIZE -->
 	<% if(p.getInserito() == 1)
 	{ %>
-	<div class="notice success"><i class="icon-ok icon-large"></i> Paziente inserito con successo 
+	<div class="notice success center"><i class="icon-ok icon-large"></i> Paziente inserito con successo 
+	<a href="#close" class="icon-remove"></a></div>
+	<% p.setInserito(0);
+	} %>
+	<% if(p.getInserito() == 2)
+	{ %>
+	<div class="notice success center"><i class="icon-ok icon-large"></i> Paziente modificato con successo 
 	<a href="#close" class="icon-remove"></a></div>
 	<% p.setInserito(0);
 	} %>

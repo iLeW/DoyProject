@@ -96,11 +96,11 @@ public class ControllerServlet extends HttpServlet {
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			//salvo l'ID del paziente da modificare
-			int ID = Integer.parseInt(request.getParameter("ID"));
-			ID--;
-			System.out.println("nome: " + p.getNome(ID));
-			System.out.println("ID: " + request.getParameter("ID"));
+			//int ID = Integer.parseInt(request.getParameter("ID"));
+			//System.out.println("nome: " + p.getNome(ID));
+			//System.out.println("ID: " + request.getParameter("ID"));
 			//adesso devo passare l'ID del paziente da modificare alla pagina pazienteMod
+			p.setInserito(2);
 			path = "/WEB-INF/pazienteMod";
 		}
 			
@@ -173,9 +173,26 @@ public class ControllerServlet extends HttpServlet {
 		}
 		
 		//quì ci arriva quando si schiaccia l'icona con la penna nella tabella dei pazienti
+		//in teoria non serve nel doPost ma solo nel doGet
 		if("modPaziente".equals(val)){
 			path = "/WEB-INF/pazienteMod";
 		}
+		
+		//due funzioni per modificare il paziente
+		if("insModPaziente".equals(val)){
+			//Paziente p = new Paziente(request.getParameter("IDPaziente"));
+			p.modificaPaziente(request.getParameter("IDPaziente"), request.getParameter("nome"), request.getParameter("cognome"), request.getParameter("dataNascita").toString(), request.getParameter("codFisc"), request.getParameter("dataIn").toString(), request.getParameter("dataOut").toString());
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
+			path = "/WEB-INF/pazientiLista";
+		}
+		
+		if("annModPaziente".equals(val)){
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
+			path = "/WEB-INF/pazientiLista";
+		}
+		
 			
 		//Prima di uscire dal post, raccolgo quello che ho seminato, e vado dove devo andare.
 		String url = path + ".jsp";
