@@ -11,8 +11,9 @@ String disponibile = p.getIDDisp();
 if(p.getInserito() == 2)
 {
 	int ID = Integer.parseInt(request.getParameter("ID"));
+	p.setIDold(request.getParameter("ID"));
 	int indice = p.getIndice(ID);
-	System.out.println("pazienteMod, ID: " + request.getParameter("ID") + " indice: " + indice); 
+	System.out.println("pazienteMod, ID: " + request.getParameter("ID") + " indice: " + indice + " IDold: " + p.getIDold()); 
 	%>
 	
 	<form method="post" action="ControllerServlet">
@@ -32,6 +33,9 @@ if(p.getInserito() == 2)
 		<div class="col_10" style="margin-bottom: 10px">
 			<!-- non si riesce a settare disabled nell'input altrimenti non funziona -->
 			<input id="IDPaziente" name="IDPaziente" type="text" value="<%= p.getIDPaziente(indice)%>" placeholder="IDPaziente" required />
+			<span class="tooltip-top"
+						title="Primo ID disponibile: <%= disponibile%>"><i
+						class="icon-info-sign"></i></span>
 		</div>
 				
 		<div class="col_2">
@@ -63,6 +67,11 @@ if(p.getInserito() == 2)
 			<label for="dataOut">Data di uscita</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
 			<input id="dataOut" name="dataOut" type="date" value="<%= p.getDataOut(indice)%>" /></div>
+			
+		<div class="col_2">
+			<label for="dataOut">Reparto</label></div>
+		<div class="col_10" style="margin-bottom: 10px">
+			<input id="reparto" name="reparto" type="text" value="<%= p.getReparto(indice)%>" /></div>
 		
 		<!-- Prova del menu a tendina
 		sarà poi da mettere nella pagina per monitorare i pazienti (paziente.jsp?), qui non ha senso -->
@@ -88,7 +97,7 @@ if(p.getInserito() == 2)
 <% p.setInserito(0); 
  }//fine if
 
-// sin inserito è diverso da due sono nel caso di inserimento normale
+// se inserito è diverso da due sono nel caso di inserimento normale
 else
 { %>
 
@@ -145,6 +154,11 @@ else
 			<label for="dataOut">Data di uscita</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
 			<input id="dataOut" name="dataOut" type="date" /></div>
+		
+		<div class="col_2">
+			<label for="dataOut">Reparto</label></div>
+		<div class="col_10" style="margin-bottom: 10px">
+			<input id="reparto" name="reparto" type="text" placeholder="Reparto" required /></div>
 		
 		<!-- Prova del menu a tendina
 		sarà poi da mettere nella pagina per monitorare i pazienti (paziente.jsp?), qui non ha senso -->

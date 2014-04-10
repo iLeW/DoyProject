@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.JOptionPane;
 
 import model.Paziente;
 import model.User;
@@ -92,9 +93,10 @@ public class ControllerServlet extends HttpServlet {
 		//quì ci arriva quando si schiaccia l'icona con la penna nella tabella dei pazienti
 		if("modPaziente".equals(val)){
 			System.out.println("cosa ho selezionato: " + session.getAttribute("paziente"));
-			//con queste due righe ricreo l'arrey di tutti i pazienti
+			//con queste due righe ricreo l'array di tutti i pazienti
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
+			session.setAttribute("IDpaz", request.getParameter("ID"));
 			//salvo l'ID del paziente da modificare
 			//int ID = Integer.parseInt(request.getParameter("ID"));
 			//System.out.println("nome: " + p.getNome(ID));
@@ -102,6 +104,16 @@ public class ControllerServlet extends HttpServlet {
 			//adesso devo passare l'ID del paziente da modificare alla pagina pazienteMod
 			p.setInserito(2);
 			path = "/WEB-INF/pazienteMod";
+		}
+		//se dalla pagina pazientiLista schiacchio il tasto per cancellare il paziente
+		if("delPaziente".equals(val)){
+			System.out.println("cancellare il paziente " + request.getParameter("ID") + "?");
+			//JOptionPane.showMessageDialog(null, "cancellare il paziente " + request.getParameter("ID") + "?");
+			//JOptionPane.showMessageDialog(this, "cacca");
+			p.removePaziente(request.getParameter("ID"));
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
+			path = "/WEB-INF/pazientiLista";
 		}
 			
 		//Metodo finale che mi rimanda alla pagina giusta.
@@ -160,7 +172,7 @@ public class ControllerServlet extends HttpServlet {
 		//bottoni aggiungi paziente e annulla. Dalla pagina pazienteMod riportano a pazientiLista
 		if("insPaziente".equals(val)){
 			//Paziente p = new Paziente(request.getParameter("IDPaziente"));
-			p.insPaziente(request.getParameter("IDPaziente"), request.getParameter("nome"), request.getParameter("cognome"), request.getParameter("dataNascita").toString(), request.getParameter("codFisc"), request.getParameter("dataIn").toString());
+			p.insPaziente(request.getParameter("IDPaziente"), request.getParameter("nome"), request.getParameter("cognome"), request.getParameter("dataNascita").toString(), request.getParameter("codFisc"), request.getParameter("dataIn").toString(), request.getParameter("reparto"));
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiLista";
@@ -181,7 +193,7 @@ public class ControllerServlet extends HttpServlet {
 		//due funzioni per modificare il paziente
 		if("insModPaziente".equals(val)){
 			//Paziente p = new Paziente(request.getParameter("IDPaziente"));
-			p.modificaPaziente(request.getParameter("IDPaziente"), request.getParameter("nome"), request.getParameter("cognome"), request.getParameter("dataNascita").toString(), request.getParameter("codFisc"), request.getParameter("dataIn").toString(), request.getParameter("dataOut").toString());
+			p.modificaPaziente(request.getParameter("IDPaziente"), request.getParameter("nome"), request.getParameter("cognome"), request.getParameter("dataNascita").toString(), request.getParameter("codFisc"), request.getParameter("dataIn").toString(), request.getParameter("dataOut").toString(), request.getParameter("reparto"), session.getAttribute("IDpaz").toString());
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiLista";

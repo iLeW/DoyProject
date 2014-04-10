@@ -25,6 +25,7 @@ public class Paziente {
 	private String dataDefault = "1900-01-01";
 	// 1) cambiare le variabili da String a Vector<String>
 	private Vector<String> IDPaziente = new Vector<String>();
+	private String IDold;
 	//private Vector<Integer> IDPaziente = new Vector<Integer>();
 	private Vector<String> nome = new Vector<String>();
 	private Vector<String> cognome = new Vector<String>();
@@ -32,6 +33,7 @@ public class Paziente {
 	private Vector<Date> dataNascita = new Vector<Date>();
 	private Vector<Date> dataIn = new Vector<Date>();
 	private Vector<Date> dataOut = new Vector<Date>();
+	private Vector<String> Reparto = new Vector<String>();
 	int contaPazienti;
 	int inserito = 0; //0=vecchio, 1=nuovo inserito, 2=modificato
 	
@@ -99,12 +101,12 @@ public class Paziente {
 	public String getIDPaziente(int i) {
 		return IDPaziente.get(i);
 	}
-	/*public void setIDPaziente(int IDPaziente) {
-		this.IDPaziente.add(IDPaziente);
+	public void setIDold(String IDold) {
+		this.IDold = IDold;
 	}
-	public int getIDPaziente(int i) {
-		return IDPaziente.get(i);
-	}*/
+	public String getIDold() {
+		return this.IDold;
+	}
 	public void setNome(String nome) {
 		this.nome.add(nome);
 	}
@@ -140,6 +142,12 @@ public class Paziente {
 	}
 	public Date getDataOut(int i) {
 		return dataOut.get(i);
+	}
+	public void setReparto(String Reparto) {
+		this.Reparto.add(Reparto);
+	}
+	public String getReparto(int i) {
+		return Reparto.get(i);
 	}
 	//aggiungere anche questo per avere il conteggio dei pazienti
 	public int contaPazienti(){
@@ -201,12 +209,12 @@ public class Paziente {
 	 */
 	
 	
-	public void insPaziente(String IDPaziente, String nome, String cognome, String dataNascita, String codFisc, String dataIn){
+	public void insPaziente(String IDPaziente, String nome, String cognome, String dataNascita, String codFisc, String dataIn, String reparto){
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
 			//inserisco i dati
-			String query ="insert into pazienti (IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, dataOut) values (?, ?, ?, ?, ?, ?, ?)";
+			String query ="insert into pazienti (IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, dataOut, reparto) values (?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(query);
 			//int id = Integer.parseInt(IDPaziente); 
 			ps.setString(1, IDPaziente);
@@ -223,6 +231,7 @@ public class Paziente {
             //devo settare un valore di default altrimenti è un pacco la visualizzazione nella tabella dopo
             Date dataO = Date.valueOf(dataDefault);
             ps.setDate(7, dataO);
+            ps.setString(8, reparto);
         	ps.executeUpdate();
         	ps.close();
         	con.close();
@@ -236,14 +245,12 @@ public class Paziente {
 		}
 	}
 	
-	public void modificaPaziente(String IDPaziente, String nome, String cognome, String dataNascita, String codFisc, String dataIn, String dataOut){
+	public void modificaPaziente(String IDPaziente, String nome, String cognome, String dataNascita, String codFisc, String dataIn, String dataOut, String reparto, String IDold){
 		try {
-			//int IDp = Integer.parseInt("ID");
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
 			//inserisco i dati
-			//String query ="insert into pazienti (IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, dataOut) values (?, ?, ?, ?, ?, ?, ?)";
-			String query ="update pazienti set IDPaziente=?, nome=?, cognome=?, dataNascita=?, codFisc=?, dataIn=?, dataOut=? where IDPaziente=?;";
+			String query ="update pazienti set IDPaziente=?, nome=?, cognome=?, dataNascita=?, codFisc=?, dataIn=?, dataOut=?, reparto=? where IDPaziente=?;";
 			PreparedStatement ps = con.prepareStatement(query);
 			//int id = Integer.parseInt(IDPaziente); 
 			ps.setString(1, IDPaziente);
@@ -260,15 +267,38 @@ public class Paziente {
             //devo settare un valore di default altrimenti è un pacco la visualizzazione nella tabella dopo
             Date dataO = Date.valueOf(dataOut);
             ps.setDate(7, dataO);
-            ps.setString(8, IDPaziente);
+            ps.setString(8, reparto);
+            ps.setString(9, IDold);
         	ps.executeUpdate();
         	ps.close();
         	con.close();
         	
+        	//System.out.println("IDold: " + IDold + " IDnew: " + IDPaziente);
         	System.out.println("paziente modificato!! :)");
+        	IDold = "";
         	inserito = 2;
 		}
 		
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void removePaziente (String ID)
+	{
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			String strQuery="DELETE FROM pazienti WHERE IDPaziente=?";
+            PreparedStatement ps = con.prepareStatement(strQuery);
+            ps.setString(1, ID);
+            
+            ps.executeUpdate();
+        	ps.close();
+        	con.close();
+        	
+        	System.out.println("paziente eliminato!! :)");
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -281,9 +311,9 @@ public class Paziente {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
 			String strQuery="select * from pazienti";
-            PreparedStatement pst = con.prepareStatement(strQuery);
+            PreparedStatement ps = con.prepareStatement(strQuery);
                
-        	ResultSet rs = pst.executeQuery();
+        	ResultSet rs = ps.executeQuery();
         	// salvo i campi dei prodotti dell'utente nei vettori stringa della classe prodotto
 			while(rs.next()){
 				String IDPaziente = rs.getString("IDPaziente");
@@ -304,8 +334,10 @@ public class Paziente {
 				String dataO = rs.getString("dataOut");
 				Date dataOut = Date.valueOf(dataO);
 				setDataOut(dataOut);
+				String Reparto = rs.getString("reparto");
+				setReparto(Reparto);
 			}
-			pst.close();
+			ps.close();
 			
 			con.close();
 		}
@@ -313,6 +345,27 @@ public class Paziente {
 		catch (Exception e) {
 		e.printStackTrace();
 		}
+	}
+	
+	//i colori sono da #000000 a #FFFFFF dove ogni due cifre è un canale RGB
+	public String getColore(int i)
+	{
+		String colore;
+		
+		switch (getReparto(i)) {
+        case "cardiologia":  colore = "#FF7D7D";
+                 break;
+        case "chirurgia":  colore = "#97FF99";
+                 break;
+        case "radiologia":  colore = "#9DFFF5";
+                 break;
+        case "nefrologia":  colore = "#FFFD9D";
+                 break;
+        default: colore = "#FFFFFF";
+                 break;
+		}//fine switch
+		
+		return colore;
 	}
 	
 	
