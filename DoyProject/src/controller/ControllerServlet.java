@@ -80,6 +80,10 @@ public class ControllerServlet extends HttpServlet {
 		
 		//Caso che venga scelta la voce dei pazienti in categorie
 		if("pazientiCategoria".equals(val)){
+			//come faccio ad avere i vari reparti?
+			System.out.println("reparti: " + session.getAttribute("Dep1"));
+			p.viewReparto();
+			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiCategoria";
 		}
 		
@@ -172,7 +176,7 @@ public class ControllerServlet extends HttpServlet {
 		//bottoni aggiungi paziente e annulla. Dalla pagina pazienteMod riportano a pazientiLista
 		if("insPaziente".equals(val)){
 			//Paziente p = new Paziente(request.getParameter("IDPaziente"));
-			p.insPaziente(request.getParameter("IDPaziente"), request.getParameter("nome"), request.getParameter("cognome"), request.getParameter("dataNascita").toString(), request.getParameter("codFisc"), request.getParameter("dataIn").toString(), request.getParameter("reparto"));
+			p.insPaziente(p.getIDDisp(), request.getParameter("nome"), request.getParameter("cognome"), request.getParameter("dataNascita").toString(), request.getParameter("codFisc"), request.getParameter("dataIn").toString(), request.getParameter("reparto"));
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiLista";

@@ -28,15 +28,15 @@ if(p.getInserito() == 2)
 			<hr class="alt1" />
 		</div>
 	
+		<!-- 	
 		<div class="col_2">
 			<label for="IDPaziente">IDPaziente</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
-			<!-- non si riesce a settare disabled nell'input altrimenti non funziona -->
-			<input id="IDPaziente" name="IDPaziente" type="text" value="<%= p.getIDPaziente(indice)%>" placeholder="IDPaziente"/>
+			<input id="IDPaziente" name="IDPaziente" type="text" value="" placeholder="IDPaziente"/>
 			<span class="tooltip-top"
-						title="Primo ID disponibile: <%= disponibile%>"><i
+						title="Primo ID disponibile:"><i
 						class="icon-info-sign"></i></span>
-		</div>
+		</div> -->
 				
 		<div class="col_2">
 			<label for="nome">Nome</label></div>
@@ -113,18 +113,19 @@ else
 			<hr class="alt1" />
 		</div>
 	
+		<!-- 
 		<div class="col_2">
 			<label for="IDPaziente">IDPaziente</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
-		<!-- 3 tooltip diversi, scegliere il più carino -->
 			<input id="IDPaziente" name="IDPaziente" type="text" placeholder="IDPaziente" 
-			class="tooltip-top" title="Primo ID disponibile: <%= disponibile%>"/>
-			<label for="IDPaziente" style="color: green; margin-left: 20px;">Primo ID disponibile: <%= disponibile%></label>
+			class="tooltip-top" title="Primo ID disponibile: "/>
+			<label for="IDPaziente" style="color: green; margin-left: 20px;">Primo ID disponibile: </label>
 			<span class="tooltip-top"
-						title="Primo ID disponibile: <%= disponibile%>"><i
+						title="Primo ID disponibile: "><i
 						class="icon-info-sign"></i></span>
 		</div>
-				
+		 -->
+		 	
 		<div class="col_2">
 			<label for="nome">Nome</label></div>
 		<div class="col_10" style="margin-bottom: 10px">

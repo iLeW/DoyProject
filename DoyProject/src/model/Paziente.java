@@ -174,22 +174,36 @@ public class Paziente {
 	}
 	
 	//metodo che ritorna il primo ID disponibile
-	public String getIDDisp(){
-		
+	public String getIDDisp()
+	{
+		Vector<Integer> vecID = new Vector<Integer>();
 		String disponibile = "";
-		Vector<Integer> vec = new Vector<Integer>();
-		for(int i=0; i<IDPaziente.size(); i++)
-		{
-			int id = Integer.parseInt(IDPaziente.get(i));
-			vec.add(id);
+		
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			String strQuery="select * from pazienti";
+            PreparedStatement ps = con.prepareStatement(strQuery);
+               
+        	ResultSet rs = ps.executeQuery();
+        	// salvo i campi dei prodotti dell'utente nei vettori stringa della classe prodotto
+			while(rs.next()){
+				//String IDPaziente = rs.getString("IDPaziente");
+				//vecID.add(IDPaziente);
+				vecID.add(Integer.parseInt(rs.getString("IDPaziente")));
+			}
+			ps.close();
+			con.close();
+		}
+		catch (Exception e) {
+		e.printStackTrace();
 		}
 		
 		int tmp=1;
-		for(int i=0; i<vec.size(); i++)
+		for(int i=0; i<vecID.size(); i++)
 		{
-			if(vec.get(i) == tmp)
+			if(vecID.get(i) == tmp)
 				tmp++;
-			
 			else
 				break;
 		}
@@ -198,6 +212,7 @@ public class Paziente {
 		//System.out.println("primo disponibile: " + disponibile);
 		return disponibile;
 	}
+	
 	/*
 	 * cose da fare:
 	 * 1) fare tutti i metodi get e set					[fatto]
@@ -215,30 +230,28 @@ public class Paziente {
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
 			//inserisco i dati
 			//String query ="insert into pazienti (IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, dataOut, reparto) values (?, ?, ?, ?, ?, ?, ?, ?)";
-			String query ="insert into pazienti (nome, cognome, dataNascita, codFisc, dataIn, dataOut, reparto) values (?, ?, ?, ?, ?, ?, ?)";
+			String query ="insert into pazienti (IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, dataOut, reparto) values (?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(query);
-			
-			//ps.setString(1, IDPaziente);
-            
-			ps.setString(1, nome);
-            ps.setString(2, cognome);
+			ps.setString(1, IDPaziente);
+            ps.setString(2, nome);
+            ps.setString(3, cognome);
             //converto la data da stringa a Date
             Date dataN = Date.valueOf(dataNascita);
             //System.out.println("dataNascita: " + dataNascita);
             //System.out.println("dataN: " + dataN);
-            ps.setDate(3, dataN);
-            ps.setString(4, codFisc);
+            ps.setDate(4, dataN);
+            ps.setString(5, codFisc);
             Date dataI = Date.valueOf(dataIn);
-            ps.setDate(5, dataI);
+            ps.setDate(6, dataI);
             //devo settare un valore di default altrimenti è un pacco la visualizzazione nella tabella dopo
             Date dataO = Date.valueOf(dataDefault);
-            ps.setDate(6, dataO);
-            ps.setString(7, reparto);
+            ps.setDate(7, dataO);
+            ps.setString(8, reparto);
         	ps.executeUpdate();
         	ps.close();
         	con.close();
         	
-        	System.out.println("paziente aggiunto!! :)");
+        	System.out.println("paziente aggiunto!! :) id del paziente aggiunto: " + IDPaziente);
         	inserito = 1;
 		}
 		
@@ -313,6 +326,47 @@ public class Paziente {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
 			String strQuery="select * from pazienti";
+            PreparedStatement ps = con.prepareStatement(strQuery);
+               
+        	ResultSet rs = ps.executeQuery();
+        	// salvo i campi dei prodotti dell'utente nei vettori stringa della classe prodotto
+			while(rs.next()){
+				String IDPaziente = rs.getString("IDPaziente");
+				//int IDPaziente = rs.getInt("IDPaziente");
+				setIDPaziente(IDPaziente);
+				String nome = rs.getString("nome");
+				setNome(nome);
+				String cognome = rs.getString("cognome");
+				setCognome(cognome);
+				String dataN = rs.getString("dataNascita");
+				Date dataNascita = Date.valueOf(dataN);
+				setDataNascita(dataNascita);
+				String codFisc = rs.getString("codFisc");
+				setCodFisc(codFisc);
+				String dataI = rs.getString("dataIn");
+				Date dataIn = Date.valueOf(dataI);
+				setDataIn(dataIn);
+				String dataO = rs.getString("dataOut");
+				Date dataOut = Date.valueOf(dataO);
+				setDataOut(dataOut);
+				String Reparto = rs.getString("reparto");
+				setReparto(Reparto);
+			}
+			ps.close();
+			
+			con.close();
+		}
+		
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+	}
+	
+	public void viewReparto(){
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			String strQuery="select * from pazienti join users where pazienti.reparto = users.dep1";
             PreparedStatement ps = con.prepareStatement(strQuery);
                
         	ResultSet rs = ps.executeQuery();
