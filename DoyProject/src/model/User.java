@@ -30,9 +30,11 @@ public class User {
 	private String name;
 	private String surname;
 	private Date birthdate;
-	private String dep1;
-	private String dep2;
-	private String dep3;
+	private String dep1 = null;
+	private String dep2 = null;
+	private String dep3 = null;
+	private ArrayList<String> depArray;
+	private int numDep = 0;
 	private Hashtable <String, String> errors;	//Per definire la lista degli errori
 	private ArrayList<String> messages;			//Lista dei messaggi di altri dottori
 
@@ -93,11 +95,28 @@ public Date getBirthdate(){
 }
 
 /**
- * Metodo che setta il primo reparto
+ * Setto il numero dei reparti
+ * @param n numero dei reparti
+ */
+public void setNumDep(int n){
+	this.numDep = n;
+}
+
+/**
+ * Ricavo il numero dei reparti
+ * @return il numero dei reparti
+ */
+public int getNumDep(){
+	return this.numDep;
+}
+
+/**
+ * Metodo che setta il primo reparto, e setta anche il numero dei reparti.
  * @param dep1 reparto
  */
 public void setDep1(String dep1){
 	this.dep1 = dep1;
+	this.setNumDep(1);
 }
 
 /**
@@ -106,14 +125,16 @@ public void setDep1(String dep1){
  */
 public String getDep1(){
 	return this.dep1;
+	
 }
 
 /**
- * Metodo che setta il secondo reparto
+ * Metodo che setta il secondo reparto, e setta anche il numero dei reparti.
  * @param dep2 reparto
  */
 public void setDep2(String dep2){
 	this.dep2 = dep2;
+	this.setNumDep(2);	//Esempio in questo caso: se arrivo a settare il secondo reparto allora vuol dire che ne ho due di reparti.
 }
 
 /**
@@ -125,11 +146,12 @@ public String getDep2(){
 }
 
 /**
- * Metodo che setta il terzo reparto
+ * Metodo che setta il terzo reparto, e setta anche il numero dei reparti.
  * @param dep3 reparto
  */
 public void setDep3(String dep3){
-	this.dep3 = dep3;
+	this.numDep = 3;
+	this.setNumDep(3);
 }
 
 

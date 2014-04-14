@@ -53,7 +53,7 @@ public class ControllerServlet extends HttpServlet {
 			path = "/WEB-INF/messaggi";
 		}
 		
-		//Caso che venga scelta la pagina del profilo del dottore
+		//Caso che venga scelta la pagina del profilo del dottore (dal menù in alto)
 		if("profiloDoc".equals(val)){
 			
 			//Devo mostrare il profilo del dottore
