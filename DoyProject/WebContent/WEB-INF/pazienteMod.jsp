@@ -32,7 +32,7 @@ if(p.getInserito() == 2)
 			<label for="IDPaziente">IDPaziente</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
 			<!-- non si riesce a settare disabled nell'input altrimenti non funziona -->
-			<input id="IDPaziente" name="IDPaziente" type="text" value="<%= p.getIDPaziente(indice)%>" placeholder="IDPaziente" required />
+			<input id="IDPaziente" name="IDPaziente" type="text" value="<%= p.getIDPaziente(indice)%>" placeholder="IDPaziente"/>
 			<span class="tooltip-top"
 						title="Primo ID disponibile: <%= disponibile%>"><i
 						class="icon-info-sign"></i></span>
@@ -117,7 +117,7 @@ else
 			<label for="IDPaziente">IDPaziente</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
 		<!-- 3 tooltip diversi, scegliere il più carino -->
-			<input id="IDPaziente" name="IDPaziente" type="text" placeholder="IDPaziente" required
+			<input id="IDPaziente" name="IDPaziente" type="text" placeholder="IDPaziente" 
 			class="tooltip-top" title="Primo ID disponibile: <%= disponibile%>"/>
 			<label for="IDPaziente" style="color: green; margin-left: 20px;">Primo ID disponibile: <%= disponibile%></label>
 			<span class="tooltip-top"

@@ -214,24 +214,26 @@ public class Paziente {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
 			//inserisco i dati
-			String query ="insert into pazienti (IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, dataOut, reparto) values (?, ?, ?, ?, ?, ?, ?, ?)";
+			//String query ="insert into pazienti (IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, dataOut, reparto) values (?, ?, ?, ?, ?, ?, ?, ?)";
+			String query ="insert into pazienti (nome, cognome, dataNascita, codFisc, dataIn, dataOut, reparto) values (?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(query);
-			//int id = Integer.parseInt(IDPaziente); 
-			ps.setString(1, IDPaziente);
-            ps.setString(2, nome);
-            ps.setString(3, cognome);
+			
+			//ps.setString(1, IDPaziente);
+            
+			ps.setString(1, nome);
+            ps.setString(2, cognome);
             //converto la data da stringa a Date
             Date dataN = Date.valueOf(dataNascita);
             //System.out.println("dataNascita: " + dataNascita);
             //System.out.println("dataN: " + dataN);
-            ps.setDate(4, dataN);
-            ps.setString(5, codFisc);
+            ps.setDate(3, dataN);
+            ps.setString(4, codFisc);
             Date dataI = Date.valueOf(dataIn);
-            ps.setDate(6, dataI);
+            ps.setDate(5, dataI);
             //devo settare un valore di default altrimenti è un pacco la visualizzazione nella tabella dopo
             Date dataO = Date.valueOf(dataDefault);
-            ps.setDate(7, dataO);
-            ps.setString(8, reparto);
+            ps.setDate(6, dataO);
+            ps.setString(7, reparto);
         	ps.executeUpdate();
         	ps.close();
         	con.close();
