@@ -84,7 +84,7 @@
 				<div class="col_9">
 					<input id="cPassword" type="password" name="cpassword"
 						placeholder="Ridigita la Password"
-						style="background-color: rgba(249, 144, 0, 0.2)" required />
+						style="background-color: #f2dede" required />
 				</div>
 
 

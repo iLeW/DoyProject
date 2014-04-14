@@ -718,3 +718,32 @@ div.caption span {
 	text-decoration: none;
 	font-size: 0.8em;
 }
+
+/*---------------------------------
+	LABEL AGGIUNTO IO
+-----------------------------------*/
+
+label.l1{
+	font-size: 3.5em;
+	margin: 2px 0 2px 0;
+}
+label.l2{
+	font-size: 3em;
+	margin: 2px 0 2px 0;
+}
+label.l3{
+	font-size: 2.5em;
+	margin: 2px 0 2px 0;
+}
+label.l4{
+	font-size: 2em;
+	margin: 2px 0 2px 0;
+}
+label.l5{
+	font-size: 1.5em;
+	margin: 2px 0 2px 0;
+}
+label.l6{
+	font-size: 1.2em;
+	margin: 2px 0 2px 0;
+}

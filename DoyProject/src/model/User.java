@@ -261,11 +261,11 @@ public boolean getProfileU(){
 		}
 		
 		if(rs.getString("dep2") != null){
-			this.setDep2("dep2");
+			this.setDep2(rs.getString("dep2"));
 		}
 		
 		if(rs.getString("dep3") != null){
-			this.setDep2("dep3");
+			this.setDep3(rs.getString("dep3"));
 		}
 		
 		//Rilascio le risorse invece di aspettare che siano rilasciate automaticamente
