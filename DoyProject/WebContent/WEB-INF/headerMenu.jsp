@@ -25,7 +25,10 @@ Tale header è infatti quello che permette di avere nella pagina la barra in alto
 						out.println("<li class=\"current\"><a href=\"ControllerServlet?val=homepage\"><i class =\"icon-home\"></i>Homepage</a></li>");
 						out.println("<li class=\"\"><a href=\"ControllerServlet?val=profiloDoc\"><i class =\"icon-user-md\"></i>Profilo</a></li>");
 						out.println("<li><a href=\"ControllerServlet?val=messaggi\"><i class=\"icon-envelope\"></i>Messaggi</a></li>");
-						out.println("<li><a href=\"\"><i class=\"icon-plus-sign-alt\"></i> Pazienti</a>");
+						out.println("<li><a href=\"ControllerServlet?val=homepage\"><i class=\"icon-plus-sign-alt\"></i> Pazienti</a>");	//Ho dovuto mettere solo in questo caso su pazienti il link alla homepage altrimenti dava 404 per
+																																			//perché non aveva ancora niente nel URL (se arrivavo dal login) e quindi non trovava niente. L'indirizzo
+																																			//della URL dal login era http://localhost:8080/DoyProject/ControllerServlet e quindi se cliccavo su Pazienti
+																																			//dava 404 perché cercava di "rimanere/andare" su quella pagina che però non esiste.
 						out.println("<ul>");
 					}
 

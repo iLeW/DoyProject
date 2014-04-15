@@ -32,9 +32,9 @@ public class User {
 	private String name;
 	private String surname;
 	private Date birthdate;
-	private String dep1 = null;
-	private String dep2 = null;
-	private String dep3 = null;
+	private String dep1 = "";
+	private String dep2 = "";
+	private String dep3 = "";
 	private ArrayList<String> depArray;
 	private int numDep = 0;
 	private Hashtable <String, String> errors;	//Per definire la lista degli errori
@@ -229,6 +229,45 @@ public boolean signinU(String password){
 	return signin;	//torno il valore booleano (vero o falso)
 }
 
+/*MF*/
+public boolean signupU(String username, String password, String nome, String cognome, Date birthdate, String dep1, String dep2, String dep3){
+	boolean signup = false;
+	
+	//la try è la classica connessione al DB
+			try{
+				Class.forName(DRIVER).newInstance();
+				Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+				//il punto di domanda richiama il ps.setString da cui poi vai a prendere i dati
+				String query = "INSERT INTO users (username, password, nome, cognome, birthdate, dep1, dep2, dep3) VALUES (?,?,?,?,?)";
+				PreparedStatement ps = con.prepareStatement(query);
+				ps.setString(1, getUsername());
+				ps.setString(2, password);
+				ps.setString(3, nome);
+				ps.setString(4, cognome);
+				ps.setString(5, birthdate.toString());
+				ps.setString(6, dep1);
+				if(dep2.isEmpty())
+					ps.setString(7, dep2);
+				else
+					ps.setString(7, "NULL");
+				
+				if(!dep3.isEmpty())
+					ps.setString(8, dep3);
+				else
+					ps.setString(8, "NULL");
+				
+				ps.executeUpdate();
+				ps.close();
+				con.close();
+				
+			} catch (Exception e){
+				signup = false;
+				e.printStackTrace();
+				
+			}
+	
+	return signup;
+}
 
 /**
  * Metodo che serve per andare a prendere i dati personali del dottore dal database e mostrarli all'utente
