@@ -119,6 +119,7 @@ public int getNumDep(){
 public void setDep1(String dep1){
 	this.dep1 = dep1;
 	this.setNumDep(1);
+	System.out.println("dipartimento 1: " + this.dep1);
 }
 
 /**

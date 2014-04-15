@@ -95,7 +95,8 @@ public class ControllerServlet extends HttpServlet {
 		// Caso che venga scelta la voce dei pazienti in categorie
 		if ("pazientiCategoria".equals(val)) {
 			// come faccio ad avere i vari reparti?
-			System.out.println("reparti: " + session.getAttribute("Dep1"));
+			System.out.println("reparti: " + u.getDep1());
+			
 			p.viewReparto();
 			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiCategoria";
@@ -111,16 +112,11 @@ public class ControllerServlet extends HttpServlet {
 		// quì ci arriva quando si schiaccia l'icona con la penna nella tabella
 		// dei pazienti
 		if ("modPaziente".equals(val)) {
-			System.out.println("cosa ho selezionato: "
-					+ session.getAttribute("paziente"));
+			System.out.println("cosa ho selezionato: " + session.getAttribute("paziente"));
 			// con queste due righe ricreo l'array di tutti i pazienti
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			session.setAttribute("IDpaz", request.getParameter("ID"));
-			// salvo l'ID del paziente da modificare
-			// int ID = Integer.parseInt(request.getParameter("ID"));
-			// System.out.println("nome: " + p.getNome(ID));
-			// System.out.println("ID: " + request.getParameter("ID"));
 			// adesso devo passare l'ID del paziente da modificare alla pagina
 			// pazienteMod
 			p.setInserito(2);
@@ -221,12 +217,9 @@ public class ControllerServlet extends HttpServlet {
 		// riportano a pazientiLista
 		if ("insPaziente".equals(val)) {
 			// Paziente p = new Paziente(request.getParameter("IDPaziente"));
-			p.insPaziente(p.getIDDisp(), request.getParameter("nome"),
-					request.getParameter("cognome"),
-					request.getParameter("dataNascita").toString(),
-					request.getParameter("codFisc"),
-					request.getParameter("dataIn").toString(),
-					request.getParameter("reparto"));
+			p.insPaziente(p.getIDDisp(), request.getParameter("nome"), request.getParameter("cognome"),
+					request.getParameter("dataNascita").toString(), request.getParameter("codFisc"),
+					request.getParameter("dataIn").toString(), request.getParameter("reparto"));
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiLista";
@@ -238,24 +231,20 @@ public class ControllerServlet extends HttpServlet {
 			path = "/WEB-INF/pazientiLista";
 		}
 
-		// quì ci arriva quando si schiaccia l'icona con la penna nella tabella
-		// dei pazienti
+		// quì ci arriva quando si schiaccia l'icona con la penna nella tabella dei pazienti
 		// in teoria non serve nel doPost ma solo nel doGet
-		if ("modPaziente".equals(val)) {
+		/*if ("modPaziente".equals(val)) {
 			path = "/WEB-INF/pazienteMod";
-		}
+		}*/
 
 		// due funzioni per modificare il paziente
 		if ("insModPaziente".equals(val)) {
 			// Paziente p = new Paziente(request.getParameter("IDPaziente"));
-			p.modificaPaziente(request.getParameter("IDPaziente"), request
-					.getParameter("nome"), request.getParameter("cognome"),
-					request.getParameter("dataNascita").toString(), request
-							.getParameter("codFisc"),
-					request.getParameter("dataIn").toString(), request
-							.getParameter("dataOut").toString(), request
-							.getParameter("reparto"),
-					session.getAttribute("IDpaz").toString());
+			//System.out.println("IDPaziente: " + session.getAttribute("IDpaz").toString());
+			p.modificaPaziente(session.getAttribute("IDpaz").toString(), request.getParameter("nome"), request.getParameter("cognome"),
+					request.getParameter("dataNascita").toString(), request.getParameter("codFisc"),
+					request.getParameter("dataIn").toString(), request.getParameter("dataOut").toString(),
+					request.getParameter("reparto"));
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiLista";

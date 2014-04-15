@@ -75,7 +75,7 @@ int conta = p.contaPazienti();
 	{ %>
 	<div class="notice success center"><i class="icon-ok icon-large"></i> Paziente inserito con successo 
 	<a href="#close" class="icon-remove"></a></div>
-	<% p.setInserito(0);
+	<% p.setInserito(0); //cercare di togliere questo!!
 	} %>
 	<% if(p.getInserito() == 2)
 	{ %>

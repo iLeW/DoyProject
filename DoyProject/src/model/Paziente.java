@@ -42,55 +42,6 @@ public class Paziente {
 		
 	}
 	
-	/* metodi vecchi
-	public Paziente(String IDPaziente){
-		setIDPaziente(IDPaziente);
-	}
-	private void setIDPaziente(String IDPaziente) {
-		this.IDPaziente = IDPaziente;
-	}
-	public String getIDPaziente(){
-		return this.IDPaziente;
-	}
-	private void setNome(String nome) {
-		this.nome = nome;
-	}
-	public String getNome(){
-		return this.nome;
-	}
-	private void setCognome(String cognome) {
-		this.cognome = cognome;
-	}
-	public String getCognome(){
-		return this.cognome;
-	}
-	private void setCodFisc(String codFisc) {
-		this.codFisc = codFisc;
-	}
-	public String getCodFisc(){
-		return this.codFisc;
-	}
-	private void setDataNascita(Date dataNascita) {
-		this.dataNascita = dataNascita;
-	}
-	
-	public Date getDataNascita(){
-		return this.dataNascita;
-	}
-	private void setDataIn(Date dataIn) {
-		this.dataIn = dataIn;
-	}
-	public Date getDataIn(){
-		return this.dataIn;
-	}
-	private void setDataOut(Date dataOut) {
-		this.dataOut= dataOut;
-	}
-	public Date getDataOut(){
-		return this.dataOut;
-	}*/
-	
-	//metodi nuovi
 	// 2)cambiare i metodi per far ritornare il valore desiderato
 	public Paziente(String IDPaziente){
 		setIDPaziente(IDPaziente);
@@ -260,36 +211,35 @@ public class Paziente {
 		}
 	}
 	
-	public void modificaPaziente(String IDPaziente, String nome, String cognome, String dataNascita, String codFisc, String dataIn, String dataOut, String reparto, String IDold){
+	public void modificaPaziente(String IDPaziente, String nome, String cognome, String dataNascita, String codFisc, String dataIn, String dataOut, String reparto){
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
 			//inserisco i dati
-			String query ="update pazienti set IDPaziente=?, nome=?, cognome=?, dataNascita=?, codFisc=?, dataIn=?, dataOut=?, reparto=? where IDPaziente=?;";
+			String query ="update pazienti set nome=?, cognome=?, dataNascita=?, codFisc=?, dataIn=?, dataOut=?, reparto=? where IDPaziente=?;";
 			PreparedStatement ps = con.prepareStatement(query);
 			//int id = Integer.parseInt(IDPaziente); 
-			ps.setString(1, IDPaziente);
-            ps.setString(2, nome);
-            ps.setString(3, cognome);
+			ps.setString(1, nome);
+            ps.setString(2, cognome);
             //converto la data da stringa a Date
             Date dataN = Date.valueOf(dataNascita);
             //System.out.println("dataNascita: " + dataNascita);
             //System.out.println("dataN: " + dataN);
-            ps.setDate(4, dataN);
-            ps.setString(5, codFisc);
+            ps.setDate(3, dataN);
+            ps.setString(4, codFisc);
             Date dataI = Date.valueOf(dataIn);
-            ps.setDate(6, dataI);
+            ps.setDate(5, dataI);
             //devo settare un valore di default altrimenti è un pacco la visualizzazione nella tabella dopo
             Date dataO = Date.valueOf(dataOut);
-            ps.setDate(7, dataO);
-            ps.setString(8, reparto);
-            ps.setString(9, IDold);
+            ps.setDate(6, dataO);
+            ps.setString(7, reparto);
+            ps.setString(8, IDPaziente);
         	ps.executeUpdate();
         	ps.close();
         	con.close();
         	
         	//System.out.println("IDold: " + IDold + " IDnew: " + IDPaziente);
-        	System.out.println("paziente modificato!! :)");
+        	System.out.println("paziente modificato!! :)" + IDPaziente);
         	IDold = "";
         	inserito = 2;
 		}

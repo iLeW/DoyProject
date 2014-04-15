@@ -5,15 +5,15 @@
 <%
 // 6)creare un nuovo oggetto, il metodo conta serve per il for sotto
 Paziente p = (Paziente) session.getAttribute("paziente");
-String disponibile = p.getIDDisp();
+//String disponibile = p.getIDDisp();
 
 //inserito è a 2 quando sto modificando un paziente
 if(p.getInserito() == 2)
 {
 	int ID = Integer.parseInt(request.getParameter("ID"));
-	p.setIDold(request.getParameter("ID"));
+	//p.setIDold(request.getParameter("ID"));
 	int indice = p.getIndice(ID);
-	System.out.println("pazienteMod, ID: " + request.getParameter("ID") + " indice: " + indice + " IDold: " + p.getIDold()); 
+	//System.out.println("pazienteMod, ID: " + request.getParameter("ID") + " indice: " + indice + " IDold: " + p.getIDold()); 
 	%>
 	
 	<form method="post" action="ControllerServlet">
@@ -94,7 +94,7 @@ if(p.getInserito() == 2)
 	</div>
 <!-- End Grid -->
 </form>
-<% p.setInserito(0); 
+<% //p.setInserito(0); 
  }//fine if
 
 // se inserito è diverso da due sono nel caso di inserimento normale
@@ -154,7 +154,7 @@ else
 		<div class="col_2">
 			<label for="dataOut">Data di uscita</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
-			<input id="dataOut" name="dataOut" type="date" /></div>
+			<input id="dataOut" name="dataOut" type="date" disabled /></div>
 		
 		<div class="col_2">
 			<label for="dataOut">Reparto</label></div>
