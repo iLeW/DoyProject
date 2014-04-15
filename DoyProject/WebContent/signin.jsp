@@ -1,4 +1,4 @@
-<!-- CIAO -->
+<!-- Pagina di login principale: signin.jsp -->
 <%@ include file="/WEB-INF/header.jsp"%>
 
 <body>

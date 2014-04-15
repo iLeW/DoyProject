@@ -6,8 +6,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.Calendar;
 
 /**
  * 
@@ -279,6 +281,95 @@ public boolean getProfileU(){
 	
 	
 	return profile_ok;
+}
+
+/**
+ * Classe per verificare se ci sono degli errori nei dati inseriti della registrazione
+ * @param username
+ * @param password
+ * @param cpassword
+ * @param nome
+ * @param cognome
+ * @param birthdate
+ * @return true=se ci sono dei problemi
+ */
+public boolean checkSignup(String username, String password, String cpassword, String nome, String cognome, Date birthdate){
+	boolean bad_signup = false;
+	
+	this.errors = new Hashtable<String, String>();
+	
+	//Controllo dei campi di inserimento
+	if(username.length() <=4 || this.checkBasic(username) || this.checkXSS(username)){
+		errors.put("username", "Inserire un username valido");
+		bad_signup = true;
+	}
+	
+	
+	if(!password.equals(cpassword) || password.length()<=4){	//nota: basta solo la lenght su una perché altrimenti basta il caso che sono diverse
+		errors.put("password", "Inserire una password valida");
+		bad_signup=true;
+	}
+	
+	
+	if(this.checkBasic(nome) || this.checkXSS(nome)){
+		errors.put("nome", "Inserire un nome valido");
+		bad_signup = true;
+	}
+	
+	if(this.checkBasic(cognome) || this.checkXSS(cognome)){
+		errors.put("cognome", "Inserire un cognome valido");
+		bad_signup = true;
+	}
+	
+	
+	//Se la data inserita è successiva alla data corrente non va bene
+	if( birthdate.compareTo(Calendar.getInstance().getTime()) > 0 ){
+		errors.put("birthdate", "Inserire una data valida");
+		bad_signup = true;
+	}
+		
+	
+	return bad_signup;
+}
+
+
+/**
+ * Funzione che utilizzo per recuperare il messaggio di errore
+ * @param s la chiave da cercare nella mappa
+ * @return il messaggio di errore. Nel caso non lo trovi perché la chiave non esiste allora torno una stringa vuota.
+ */
+public String getError(String s) {
+    String error = errors.get(s);
+    return (error == null) ? "":error;	//torno una stringa vuota se non c'è la chiave corrispondente
+  }
+
+
+/**
+ * Funzione per fare il check dei campi inseriti sensibili all'XSS
+ * @param s stringa da controllare
+ * @return vero=ha trovato dei problemi
+ */
+private boolean checkXSS(String s){
+	boolean result = false;
+	
+	if(s.contains(">") || s.contains("<") || s.contains("'") || s.startsWith(" ") || s.endsWith(" "))
+		result = true;
+	
+	return result;
+}
+
+/**
+ * Funzione che fa il check dei campi vuoti o con solo uno spazio all'interno
+ * @param s
+ * @return
+ */
+private boolean checkBasic(String s){
+	boolean result = false;
+	
+	if(s.equals("") || s.equals(" ") || s.trim().isEmpty())
+		result = true;
+	
+	return result;
 }
 	
 } //fine classe User

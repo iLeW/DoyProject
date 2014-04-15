@@ -11,6 +11,15 @@
 			+ password);
 %>
 
+<!-- I campi in questa pagina per adesso sono:
+username
+password
+cpassword
+nome
+cognome
+birthdate 
+-->
+
 <body>
 	<form name="signupform" method="post" action="ControllerServlet"
 		autocomplete="off">

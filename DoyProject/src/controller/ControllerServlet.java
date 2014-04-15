@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.JOptionPane;
 
 import model.Paziente;
 import model.User;
@@ -265,6 +265,35 @@ public class ControllerServlet extends HttpServlet {
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiLista";
+		}
+		
+		/*MF*/
+		if("confermaSignup".equals(val)){
+			System.out.println("confermaSignup");
+			u = new User(request.getParameter("username"));
+			String username = request.getParameter("username");
+			String password = request.getParameter("password");
+			String cpassword = request.getParameter("cpassword");
+			String name = request.getParameter("nome");
+			String surname = request.getParameter("surname");
+			Date birthdate = Date.valueOf(request.getParameter("birthdate"));
+			
+			//Controllo dei campi inseriti correttamente (non l'obbligatorietà perché quella è fatta tramite HTML5 però comunque ricontrollata)
+			
+			//se c'è qualche errore allora torno alla pagina di signup ma quella di errore. Prima recupero i messaggi di errore e li setto nella sessione.
+			if(u.checkSignup(username, password, cpassword, name, surname, birthdate)){
+				session.setAttribute("err_username",u.getError("username"));
+				session.setAttribute("err_password", u.getError("password"));
+				session.setAttribute("err_name", u.getError("nome"));
+				session.setAttribute("err_cognome", u.getError("cognome"));
+				session.setAttribute("err_birthdate", u.getError("birthdate"));
+				path = "/WEB-INF/signupErr";
+			}
+			
+			else{
+				//*********+++DA FARE L'ELSE CON IL PASSAGGIO DALLA FUNZIONE DI REGISTRAZIONE SUL DATABASE(da fare direi) e il passaggio alla pagina di login eliminando però prima i dati di sessione
+			}
+			
 		}
 
 		// Prima di uscire dal post, raccolgo quello che ho seminato, e vado
