@@ -1,9 +1,11 @@
 <%@ include file="/WEB-INF/headerMenu.jsp"%>
 <%@ page import="model.Paziente" %>
+<%@ page import="model.User" %>
 <%@ page import="controller.ControllerServlet" %>
 
 <% Paziente p = (Paziente) session.getAttribute("paziente");
 int conta = p.contaPazienti();
+User u = (User) session.getAttribute("user");
 %>
 
 <form method="get" action="ControllerServlet">
@@ -14,6 +16,17 @@ int conta = p.contaPazienti();
 	
 		<br>
 	
+		<!-- intestazione TABS -->
+		<ul class="tabs left">
+		<li><a href="#tabr1"><%= u.getDep1() %></a></li>
+		<% if(u.getDep2() != null)
+		{%> <li><a href="#tabr2"><%= u.getDep2() %></a></li><%}%> 
+		<% if(u.getDep3() != null)
+		{%> <li><a href="#tabr3"><%= u.getDep3() %></a></li><%}%>
+		</ul>
+
+		<!-- TABS1 -->
+		<div id="tabr1" class="tab-content">
 		<div class="center">
 		<table class="sortable">
 		<thead><tr> <!-- Intestazione -->
@@ -28,9 +41,11 @@ int conta = p.contaPazienti();
 			<th>Azioni</th>
 		</tr></thead>
 		<tbody><tr> <!-- Dove vanno inseriti i dati -->
-		<% // 7)fare il for per la visualizzazione nella tabella
-		for(int i=0; i<conta; i++)
-		{%>
+		<% for(int i=0; i<conta; i++)
+		{
+		if((p.getReparto(i)).equals(u.getDep1()))
+		{
+		%>
 		<tr bgcolor="<%=p.getColore(i) %>"> <!-- si può cambiare coloreeeeeeeee -->
 			<td> <%= p.getIDPaziente(i)
 			%> </td>
@@ -49,19 +64,143 @@ int conta = p.contaPazienti();
 			<td> <%= p.getReparto(i)
 			%> </td>
 			<!-- non riesco a modificare il colore delle icone -->
-			<td> <a href="ControllerServlet?val=modPaziente&ID=<%=p.getIDPaziente(i)%>">
-			<i class="icon-pencil tooltip-top" title="modifica"> </i></a>
+			<td> <a href="ControllerServlet?val=modPazienteCat&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-pencil tooltip-top" title="Modifica"> </i></a>
 			
-			<a href="ControllerServlet?val=delPaziente&ID=<%=p.getIDPaziente(i)%>">
-			<i class="icon-trash tooltip-top" title="elimina"> </i></a>
+			<a href="ControllerServlet?val=delPazienteCat&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-trash tooltip-top" title="Elimina"> </i></a>
+			
+			<a href="ControllerServlet?val=profiloPaziente&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-medkit tooltip-top" title="Profilo"> </i></a>
 			</td>
 		</tr>
-		<% }%>
+		<%
+		}//fine if
+		}//fine for %>
 		</tbody>
 		</table>
 		</div>
-
-	</div>
+		</div> <!-- fine Tabs1 -->
+			
+		<% if(u.getDep2() != null){%>
+		<!-- TABS2 -->	
+		<div id="tabr2" class="tab-content">
+		<div class="center">
+		<table class="sortable">
+		<thead><tr> <!-- Intestazione -->
+			<th>ID Paziente</th>
+			<th>Nome</th>
+			<th>Cognome</th>
+			<th>Data di nascita</th>
+			<th>Codice fiscale</th>
+			<th>Data ingresso</th>
+			<th>Data uscita</th>
+			<th>Reparto</th>
+			<th>Azioni</th>
+		</tr></thead>
+		<tbody><tr> <!-- Dove vanno inseriti i dati -->
+		<% for(int i=0; i<conta; i++)
+		{
+		if((p.getReparto(i)).equals(u.getDep2()))
+		{
+		%>
+		<tr bgcolor="<%=p.getColore(i) %>"> <!-- si può cambiare coloreeeeeeeee -->
+			<td> <%= p.getIDPaziente(i)
+			%> </td>
+			<td> <%= p.getNome(i)
+			%> </td>
+			<td> <%= p.getCognome(i)
+			%> </td>
+			<td> <%= p.getDataNascita(i)
+			%> </td>
+			<td> <%= p.getCodFisc(i)
+			%> </td>
+			<td> <%= p.getDataIn(i)
+			%> </td>
+			<td> <%= p.getDataOut(i)
+			%> </td>
+			<td> <%= p.getReparto(i)
+			%> </td>
+			<!-- non riesco a modificare il colore delle icone -->
+			<td> <a href="ControllerServlet?val=modPazienteCat&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-pencil tooltip-top" title="Modifica"> </i></a>
+			
+			<a href="ControllerServlet?val=delPazienteCat&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-trash tooltip-top" title="Elimina"> </i></a>
+			
+			<a href="ControllerServlet?val=profiloPaziente&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-medkit tooltip-top" title="Profilo"> </i></a>
+			</td>
+		</tr>
+		<%
+		}//fine if
+		}//fine for %>
+		</tbody>
+		</table>
+		</div>
+		</div> <!-- fine Tabs2 -->
+		<%} %>
+		
+		<% if(u.getDep3() != null){%>
+		<!-- TABS3 -->
+		<div id="tabr3" class="tab-content">
+		<div class="center">
+		<table class="sortable">
+		<thead><tr> <!-- Intestazione -->
+			<th>ID Paziente</th>
+			<th>Nome</th>
+			<th>Cognome</th>
+			<th>Data di nascita</th>
+			<th>Codice fiscale</th>
+			<th>Data ingresso</th>
+			<th>Data uscita</th>
+			<th>Reparto</th>
+			<th>Azioni</th>
+		</tr></thead>
+		<tbody><tr> <!-- Dove vanno inseriti i dati -->
+		<% for(int i=0; i<conta; i++)
+		{
+		if((p.getReparto(i)).equals(u.getDep3()))
+		{
+		%>
+		<tr bgcolor="<%=p.getColore(i) %>"> <!-- si può cambiare coloreeeeeeeee -->
+			<td> <%= p.getIDPaziente(i)
+			%> </td>
+			<td> <%= p.getNome(i)
+			%> </td>
+			<td> <%= p.getCognome(i)
+			%> </td>
+			<td> <%= p.getDataNascita(i)
+			%> </td>
+			<td> <%= p.getCodFisc(i)
+			%> </td>
+			<td> <%= p.getDataIn(i)
+			%> </td>
+			<td> <%= p.getDataOut(i)
+			%> </td>
+			<td> <%= p.getReparto(i)
+			%> </td>
+			<!-- non riesco a modificare il colore delle icone -->
+			<td> <a href="ControllerServlet?val=modPazienteCat&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-pencil tooltip-top" title="Modifica"> </i></a>
+			
+			<a href="ControllerServlet?val=delPazienteCat&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-trash tooltip-top" title="Elimina"> </i></a>
+			
+			<a href="ControllerServlet?val=profiloPaziente&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-medkit tooltip-top" title="Profilo"> </i></a>
+			</td>
+		</tr>
+		<%
+		}//fine if
+		}//fine for %>
+		</tbody>
+		</table>
+		</div>
+		</div> <!-- fine Tabs3 -->
+		<%} %>
+	
+	</div> <!--  fine div class grid flex -->
 	
 	<!-- per mostrare o no il messaggio di Paziente inserito, FARE IL RESIZE -->
 	<% if(p.getInserito() == 1)

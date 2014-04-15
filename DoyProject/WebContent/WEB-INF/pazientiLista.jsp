@@ -57,10 +57,13 @@ int conta = p.contaPazienti();
 			%> </td>
 			<!-- non riesco a modificare il colore delle icone -->
 			<td> <a href="ControllerServlet?val=modPaziente&ID=<%=p.getIDPaziente(i)%>">
-			<i class="icon-pencil tooltip-top" title="modifica"> </i></a>
+			<i class="icon-pencil tooltip-top" title="Modifica"> </i></a>
 			
 			<a href="ControllerServlet?val=delPaziente&ID=<%=p.getIDPaziente(i)%>">
-			<i class="icon-trash tooltip-top" title="elimina"> </i></a>
+			<i class="icon-trash tooltip-top" title="Elimina"> </i></a>
+			
+			<a href="ControllerServlet?val=profiloPaziente&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-medkit tooltip-top" title="Profilo"> </i></a>
 			</td>
 		</tr>
 		<% }%>
@@ -75,14 +78,12 @@ int conta = p.contaPazienti();
 	{ %>
 	<div class="notice success center"><i class="icon-ok icon-large"></i> Paziente inserito con successo 
 	<a href="#close" class="icon-remove"></a></div>
-	<% p.setInserito(0); //cercare di togliere questo!!
-	} %>
+	<% } %>
 	<% if(p.getInserito() == 2)
 	{ %>
 	<div class="notice success center"><i class="icon-ok icon-large"></i> Paziente modificato con successo 
 	<a href="#close" class="icon-remove"></a></div>
-	<% p.setInserito(0);
-	} %>
+	<% } %>
 	
 </form>
 </body>

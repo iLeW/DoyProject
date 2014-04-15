@@ -95,9 +95,7 @@ public class ControllerServlet extends HttpServlet {
 		// Caso che venga scelta la voce dei pazienti in categorie
 		if ("pazientiCategoria".equals(val)) {
 			// come faccio ad avere i vari reparti?
-			System.out.println("reparti: " + u.getDep1());
-			
-			p.viewReparto();
+			p.viewReparto(u.getDep1(), u.getDep2(), u.getDep3());
 			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiCategoria";
 		}
@@ -112,16 +110,28 @@ public class ControllerServlet extends HttpServlet {
 		// quì ci arriva quando si schiaccia l'icona con la penna nella tabella
 		// dei pazienti
 		if ("modPaziente".equals(val)) {
-			System.out.println("cosa ho selezionato: " + session.getAttribute("paziente"));
+			//System.out.println("cosa ho selezionato: " + session.getAttribute("paziente"));
 			// con queste due righe ricreo l'array di tutti i pazienti
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			session.setAttribute("IDpaz", request.getParameter("ID"));
-			// adesso devo passare l'ID del paziente da modificare alla pagina
-			// pazienteMod
+			// adesso devo passare l'ID del paziente da modificare alla pagina pazienteMod
 			p.setInserito(2);
 			path = "/WEB-INF/pazienteMod";
 		}
+		
+		if ("modPazienteCat".equals(val)) {
+			//System.out.println("cosa ho selezionato: " + session.getAttribute("paziente"));
+			// con queste due righe ricreo l'array di tutti i pazienti
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
+			session.setAttribute("IDpaz", request.getParameter("ID"));
+			// adesso devo passare l'ID del paziente da modificare alla pagina pazienteMod
+			p.setInserito(2);
+			session.setAttribute("categoria", 1);
+			path = "/WEB-INF/pazienteMod";
+		}
+		
 		// se dalla pagina pazientiLista schiacchio il tasto per cancellare il
 		// paziente
 		if ("delPaziente".equals(val)) {
@@ -134,6 +144,25 @@ public class ControllerServlet extends HttpServlet {
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiLista";
+		}
+		if ("delPazienteCat".equals(val)) {
+			System.out.println("cancellare il paziente "
+					+ request.getParameter("ID") + "?");
+			// JOptionPane.showMessageDialog(null, "cancellare il paziente " +
+			// request.getParameter("ID") + "?");
+			// JOptionPane.showMessageDialog(this, "cacca");
+			p.removePaziente(request.getParameter("ID"));
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
+			session.setAttribute("categoria", 1);
+			path = "/WEB-INF/pazientiLista";
+		}
+		
+		if ("profiloPaziente".equals(val)) {
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
+			session.setAttribute("IDpaz", request.getParameter("ID"));
+			path = "/WEB-INF/paziente";
 		}
 
 		// Questo chiude la sessione e quindi invalida tutti i dati della
@@ -165,25 +194,18 @@ public class ControllerServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Servlet doPost");
 		String val = request.getParameter("val"); // Intercetto il parametro val
-		HttpSession session = request.getSession(true); // Lavoro a livello di
-														// sessione
-		User u = (User) session.getAttribute("user"); // Se c'è già un utente lo
-														// prendo
-		// Paziente p = (Paziente) session.getAttribute("paziente"); //Se c'è
-		// già un paziente lo prendo
+		HttpSession session = request.getSession(true); // Lavoro a livello di sessione
+		User u = (User) session.getAttribute("user"); // Se c'è già un utente lo prendo
+		// Paziente p = (Paziente) session.getAttribute("paziente"); //Se c'è già un paziente lo prendo
 		Paziente p = new Paziente();
-		String path = ""; // path che indica la JSP dove voglio andare a seconda
-							// delle azioni
+		String path = ""; // path che indica la JSP dove voglio andare a seconda delle azioni
 
 		// caso del signin
 		if ("signin".equals(val)) {
 			System.out.println("username che setto: "
 					+ request.getParameter("username"));
 
-			u = new User(request.getParameter("username")); // creo un oggetto
-															// utente con
-															// l'username
-															// passato
+			u = new User(request.getParameter("username")); // creo un oggetto utente con l'username passato
 
 			// Se non si trova corrispondenza nel database (e lo fa la Servlet)
 			// oppure l'utente è nullo allora sto nel login
@@ -240,20 +262,35 @@ public class ControllerServlet extends HttpServlet {
 		// due funzioni per modificare il paziente
 		if ("insModPaziente".equals(val)) {
 			// Paziente p = new Paziente(request.getParameter("IDPaziente"));
-			//System.out.println("IDPaziente: " + session.getAttribute("IDpaz").toString());
 			p.modificaPaziente(session.getAttribute("IDpaz").toString(), request.getParameter("nome"), request.getParameter("cognome"),
 					request.getParameter("dataNascita").toString(), request.getParameter("codFisc"),
 					request.getParameter("dataIn").toString(), request.getParameter("dataOut").toString(),
 					request.getParameter("reparto"));
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
-			path = "/WEB-INF/pazientiLista";
+			if(session.getAttribute("categoria") != null)
+			{
+				session.removeAttribute("categoria");
+				path = "/WEB-INF/pazientiCategoria";
+			}
+			else
+			{
+				path = "/WEB-INF/pazientiLista";
+			}
 		}
 
 		if ("annModPaziente".equals(val)) {
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
-			path = "/WEB-INF/pazientiLista";
+			if(session.getAttribute("categoria") != null)
+			{
+				session.removeAttribute("categoria");
+				path = "/WEB-INF/pazientiCategoria";
+			}
+			else
+			{
+				path = "/WEB-INF/pazientiLista";
+			}
 		}
 		
 		/*MF*/

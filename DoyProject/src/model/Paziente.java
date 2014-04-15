@@ -9,7 +9,21 @@ import java.sql.ResultSet;
 import java.util.Hashtable;
 import java.util.Vector;
 
-
+/*
+ * cose da fare:
+ * 1) fare tutti i metodi get e set					[fatto]
+ * 2) se possibile trasformare IDPAziente in int,
+ * 3) aggiungere la pagina di inserimento effettuato	[fatto, aggiunto il messaggio]
+ * 4) nella pagina pazientiLista mettere la tabella		[fatto, guardare bene la questione della data d'uscita]
+ * 5) dalla tabella si può selezionare un paziente e premere un tasto per modificarlo ->
+ * 6) mettere gli if in pazienteMod per precompilare i campi	[fatto]
+ * 7) pazientiCategoria											[fatto]
+ * 8) controllo per il codice fiscale da gestire le eccezioni
+ * 9) controllare che le date in e out vadano bene
+ * 10) fare i grafici
+ * 11) fare la pagina del progilo del paziente, che è paziente.jsp
+ * 12) popup per l'eliminazione del paziente
+ */
 
 public class Paziente {
 
@@ -25,7 +39,6 @@ public class Paziente {
 	private String dataDefault = "1900-01-01";
 	// 1) cambiare le variabili da String a Vector<String>
 	private Vector<String> IDPaziente = new Vector<String>();
-	private String IDold;
 	//private Vector<Integer> IDPaziente = new Vector<Integer>();
 	private Vector<String> nome = new Vector<String>();
 	private Vector<String> cognome = new Vector<String>();
@@ -52,12 +65,12 @@ public class Paziente {
 	public String getIDPaziente(int i) {
 		return IDPaziente.get(i);
 	}
-	public void setIDold(String IDold) {
+	/*public void setIDold(String IDold) {
 		this.IDold = IDold;
 	}
 	public String getIDold() {
 		return this.IDold;
-	}
+	}*/
 	public void setNome(String nome) {
 		this.nome.add(nome);
 	}
@@ -164,17 +177,6 @@ public class Paziente {
 		return disponibile;
 	}
 	
-	/*
-	 * cose da fare:
-	 * 1) fare tutti i metodi get e set					[fatto]
-	 * 2) se possibile trasformare IDPAziente in int,
-	 * 3) aggiungere la pagina di inserimento effettuato	[fatto, aggiunto il messaggio]
-	 * 4) nella pagina pazientiLista mettere la tabella		[fatto, guardare bene la questione della data d'uscita]
-	 * 5) dalla tabella si può selezionare un paziente e premere un tasto per modificarlo ->
-	 * 6) mettere gli if in pazienteMod per precompilare i campi	[fatto]
-	 */
-	
-	
 	public void insPaziente(String IDPaziente, String nome, String cognome, String dataNascita, String codFisc, String dataIn, String reparto){
 		try {
 			Class.forName(DRIVER).newInstance();
@@ -240,7 +242,6 @@ public class Paziente {
         	
         	//System.out.println("IDold: " + IDold + " IDnew: " + IDPaziente);
         	System.out.println("paziente modificato!! :)" + IDPaziente);
-        	IDold = "";
         	inserito = 2;
 		}
 		
@@ -312,45 +313,56 @@ public class Paziente {
 		}
 	}
 	
-	public void viewReparto(){
-		try {
-			Class.forName(DRIVER).newInstance();
-			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
-			String strQuery="select * from pazienti join users where pazienti.reparto = users.dep1";
-            PreparedStatement ps = con.prepareStatement(strQuery);
-               
-        	ResultSet rs = ps.executeQuery();
-        	// salvo i campi dei prodotti dell'utente nei vettori stringa della classe prodotto
-			while(rs.next()){
-				String IDPaziente = rs.getString("IDPaziente");
-				//int IDPaziente = rs.getInt("IDPaziente");
-				setIDPaziente(IDPaziente);
-				String nome = rs.getString("nome");
-				setNome(nome);
-				String cognome = rs.getString("cognome");
-				setCognome(cognome);
-				String dataN = rs.getString("dataNascita");
-				Date dataNascita = Date.valueOf(dataN);
-				setDataNascita(dataNascita);
-				String codFisc = rs.getString("codFisc");
-				setCodFisc(codFisc);
-				String dataI = rs.getString("dataIn");
-				Date dataIn = Date.valueOf(dataI);
-				setDataIn(dataIn);
-				String dataO = rs.getString("dataOut");
-				Date dataOut = Date.valueOf(dataO);
-				setDataOut(dataOut);
-				String Reparto = rs.getString("reparto");
-				setReparto(Reparto);
-			}
-			ps.close();
-			
-			con.close();
-		}
+	public void viewReparto(String rep1, String rep2, String rep3){
 		
-		catch (Exception e) {
-		e.printStackTrace();
-		}
+		Vector<String> rep = new Vector<String>();
+		rep.add(rep1);
+		if(rep2 != null)
+			rep.add(rep2);
+		if(rep3 != null)
+			rep.add(rep3);
+		
+		for(int i=1; i<=rep.size(); i++)
+		{
+			try {
+				Class.forName(DRIVER).newInstance();
+				Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+				String strQuery="select * from pazienti where pazienti.reparto = ?";
+			
+				PreparedStatement ps = con.prepareStatement(strQuery);
+				ps.setString(1, rep.get(i-1));
+				
+				ResultSet rs = ps.executeQuery();
+				//salvo i campi dei prodotti dell'utente nei vettori stringa della classe prodotto
+				while(rs.next()){
+					String IDPaziente = rs.getString("IDPaziente");
+					//int IDPaziente = rs.getInt("IDPaziente");
+					setIDPaziente(IDPaziente);
+					String nome = rs.getString("nome");
+					setNome(nome);
+					String cognome = rs.getString("cognome");
+					setCognome(cognome);
+					String dataN = rs.getString("dataNascita");
+					Date dataNascita = Date.valueOf(dataN);
+					setDataNascita(dataNascita);
+					String codFisc = rs.getString("codFisc");
+					setCodFisc(codFisc);
+					String dataI = rs.getString("dataIn");
+					Date dataIn = Date.valueOf(dataI);
+					setDataIn(dataIn);
+					String dataO = rs.getString("dataOut");
+					Date dataOut = Date.valueOf(dataO);
+					setDataOut(dataOut);
+					String Reparto = rs.getString("reparto");
+					setReparto(Reparto);
+				}
+				ps.close();
+				con.close();
+			}//fine try
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}//fine for che esplora il vector rep
 	}
 	
 	//i colori sono da #000000 a #FFFFFF dove ogni due cifre è un canale RGB
