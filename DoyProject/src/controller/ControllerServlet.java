@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.Paziente;
+import model.Reparto;
 import model.User;
 
 /**
@@ -199,6 +201,9 @@ public class ControllerServlet extends HttpServlet {
 		// Paziente p = (Paziente) session.getAttribute("paziente"); //Se c'è già un paziente lo prendo
 		Paziente p = new Paziente();
 		String path = ""; // path che indica la JSP dove voglio andare a seconda delle azioni
+		Reparto r = (Reparto) session.getAttribute("Reparto");
+		if(r == null)
+			r = new Reparto();
 
 		// caso del signin
 		if ("signin".equals(val)) {
@@ -301,23 +306,60 @@ public class ControllerServlet extends HttpServlet {
 			String password = request.getParameter("password");
 			String cpassword = request.getParameter("cpassword");
 			String name = request.getParameter("nome");
-			String surname = request.getParameter("surname");
+			String surname = request.getParameter("cognome");
 			Date birthdate = Date.valueOf(request.getParameter("birthdate"));
+			ArrayList<String> deps = new ArrayList<String>();
 			
-			//Controllo dei campi inseriti correttamente (non l'obbligatorietà perché quella è fatta tramite HTML5 però comunque ricontrollata)
+			//****DEVO PRENDERE I DIPARTIMENTI
+			int numRep = r.getNumRep();
+			//byte count = 0;	//Per il massimo numero di reparti possibili
+			for(byte i = 0; i < numRep; ++i ){
+				String par = "check" + i;
+				String dep = request.getParameter(par);
+				System.out.println("Reparto preso:" + dep);
+				if(dep != null){
+					if(!dep.equals("null")){
+					System.out.println("Aggiungo il reparto:" + dep);
+					deps.add(dep);
+					//count++;	//Per renderlo più efficiente, si blocca se il numero di reparti aggiunti è 3
+					}
+				}
+			}	//notare che il numero di reparti selezionato potrebe essere maggiore di 3 e quindi non andrebbe bene, lo controllo dopo, in checkSignup.
+			
+			//Controllo dei campi inseriti correttamente (una prima obbligatorietà è controllata tramite HTML5)
 			
 			//se c'è qualche errore allora torno alla pagina di signup ma quella di errore. Prima recupero i messaggi di errore e li setto nella sessione.
-			if(u.checkSignup(username, password, cpassword, name, surname, birthdate)){
+			if(u.checkSignup(username, password, cpassword, name, surname, birthdate, deps)){
 				session.setAttribute("err_username",u.getError("username"));
 				session.setAttribute("err_password", u.getError("password"));
 				session.setAttribute("err_name", u.getError("nome"));
-				session.setAttribute("err_cognome", u.getError("cognome"));
+				session.setAttribute("err_surname", u.getError("cognome"));
 				session.setAttribute("err_birthdate", u.getError("birthdate"));
+				session.setAttribute("err_deps0", u.getError("deps0"));
+				session.setAttribute("err_deps", u.getError("deps"));
 				path = "/WEB-INF/signupErr";
 			}
 			
+			//se non ci sono errori posso inserire i dati nel database
 			else{
-				//*********+++DA FARE L'ELSE CON IL PASSAGGIO DALLA FUNZIONE DI REGISTRAZIONE SUL DATABASE(da fare direi) e il passaggio alla pagina di login eliminando però prima i dati di sessione
+				System.out.println("ELSE");
+				
+				//Se ho solo un reparto allora ne metto altri due vuoi
+				if(deps.size()==1){
+					deps.add("");
+					deps.add("");
+				}
+				
+				//Se è grande due ne aggiungo solo una vuota
+				if(deps.size()==2){
+					deps.add("");
+				}
+				
+				//faccio il signup e ritorno al login
+				u.signupU(username, cpassword, name, surname, birthdate, deps.get(0), deps.get(1), deps.get(2));
+				session.invalidate();
+				response.sendRedirect("signin.jsp");
+				return;
 			}
 			
 		}

@@ -1,5 +1,6 @@
 <!-- NOTA: TALE PAGINA è DA METTERE A POSTO CON UNA GRAFICA MIGLIORE. -->
 
+<%@ page import="model.Reparto"%>
 <%@ include file="/WEB-INF/header.jsp"%>
 <!-- Inclusione dell'header per la formattazione della pagina -->
 
@@ -139,17 +140,28 @@ birthdate
 				</div>
 				<br> <br>
 
-				<!-- Checkbox -->
+				<!-- Checkbox che creo dinamicamente-->
 				<div class="col_3">
+					<%
+						Reparto r = new Reparto();
+					%>
 					<fieldset>
 						<legend>Reparti</legend>
-						<input type="checkbox" id="check1" class="checkbox" /> <label
-							for="check1" class="inline">Chirurgia</label> <br> <input
-							type="checkbox" id="check2" class="checkbox" /> <label
-							for="check2" class="inline">Pediatria</label> <br> <input
-							type="checkbox" id="check3" class="checkbox" /> <label
-							for="check3" class="inline">Geriatria</label> <br>
+						<%
+							byte i = 0;
+							String rep = "1";
+							while (!rep.equals("")) {
+								rep = r.getReparti1by1();
+								if (!rep.equals("")) {
+									out.println("<input type=\"checkbox\" id=\"check" + i
+											+ "\" class=\"checkbox\" name=\"check" + i
+											+ "\" value=\"" + rep + "\"/> <label for=\"check" + i
+											+ "\" class=\"inline\">" + rep + "</label> <br>");
+									i++;
+								}
+							}
 
+							session.setAttribute("reparto", r);		//****NON SO SE E' CORRETTO SETTARE QUA NEL MVC. A parte che non so nemmeno se serve settare il reparto.						%>
 					</fieldset>
 				</div>
 				<div class="col_12">
