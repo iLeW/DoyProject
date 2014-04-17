@@ -33,6 +33,15 @@ public class Reparto {
 	}
 	
 	/**
+	 * Secondo costruttore per costruire la lista dei reparti
+	 * @param bool
+	 */
+	public Reparto(boolean bool){
+		if(bool)
+			this.repartiR();
+	}
+	
+	/**
 	 * Funzione che ritorna il numero di reparti
 	 * @return torna il numero di reparti
 	 */
@@ -91,6 +100,14 @@ public class Reparto {
 			return nth;
 		}
 	}
+	
+	/**
+	 * Funzione per tornare i reparti
+	 * @return
+	 */
+	public ArrayList<String> getAllReparti(){
+		return this.reparti;
+	}
 
 	/**
 	 * Metodo privato che setta i reparti
@@ -121,13 +138,13 @@ public class Reparto {
 												// nel PreparedStatement
 			if (rs.next()) {
 				result = true;
-				this.setReparti(rs.getString("reparto")); // prendo il risultato
+				this.setReparti(rs.getString("reparto")); // prendo il primo risultato
 															// dall'unica
 															// colonna che ho
 															// adesso
 
 				while (rs.next()) {
-					this.setReparti(rs.getString("reparto"));
+					this.setReparti(rs.getString("reparto"));	//continuo con gli altri risultati
 				}
 
 			}

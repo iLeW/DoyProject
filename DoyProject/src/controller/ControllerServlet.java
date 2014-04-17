@@ -237,7 +237,8 @@ public class ControllerServlet extends HttpServlet {
 		// Se arrivo dal bottone "Annulla" dalla pagina di signup. Come prima,
 		// mi tocca farlo in post perché altrimenti i dati viaggiano in GET.
 		if ("annullaSignup".equals(val)) {
-			path = "signin";
+			session.invalidate();
+			response.sendRedirect("signin.jsp");
 		}
 
 		// bottoni aggiungi paziente e annulla. Dalla pagina pazienteMod
@@ -310,7 +311,7 @@ public class ControllerServlet extends HttpServlet {
 			Date birthdate = Date.valueOf(request.getParameter("birthdate"));
 			ArrayList<String> deps = new ArrayList<String>();
 			
-			//****DEVO PRENDERE I DIPARTIMENTI
+			//Prendo i reparti che sono stati scelti nelle checkboxes
 			int numRep = r.getNumRep();
 			//byte count = 0;	//Per il massimo numero di reparti possibili
 			for(byte i = 0; i < numRep; ++i ){
@@ -318,7 +319,7 @@ public class ControllerServlet extends HttpServlet {
 				String dep = request.getParameter(par);
 				System.out.println("Reparto preso:" + dep);
 				if(dep != null){
-					if(!dep.equals("null")){
+					if(!dep.equals("null")){	//se una checkbox non è segnata, mi torna null, allora devo stare attento a non prenderla
 					System.out.println("Aggiungo il reparto:" + dep);
 					deps.add(dep);
 					//count++;	//Per renderlo più efficiente, si blocca se il numero di reparti aggiunti è 3
@@ -326,10 +327,13 @@ public class ControllerServlet extends HttpServlet {
 				}
 			}	//notare che il numero di reparti selezionato potrebe essere maggiore di 3 e quindi non andrebbe bene, lo controllo dopo, in checkSignup.
 			
+			
 			//Controllo dei campi inseriti correttamente (una prima obbligatorietà è controllata tramite HTML5)
 			
 			//se c'è qualche errore allora torno alla pagina di signup ma quella di errore. Prima recupero i messaggi di errore e li setto nella sessione.
 			if(u.checkSignup(username, password, cpassword, name, surname, birthdate, deps)){
+				
+				//Setto gli errori da riprendere nella signupErr.jsp
 				session.setAttribute("err_username",u.getError("username"));
 				session.setAttribute("err_password", u.getError("password"));
 				session.setAttribute("err_name", u.getError("nome"));
@@ -337,6 +341,16 @@ public class ControllerServlet extends HttpServlet {
 				session.setAttribute("err_birthdate", u.getError("birthdate"));
 				session.setAttribute("err_deps0", u.getError("deps0"));
 				session.setAttribute("err_deps", u.getError("deps"));
+				
+				//Setto gli attributi che sono già stati inseriti in modo da poterli riprendere
+				session.setAttribute("username", username);
+				session.setAttribute("password", password);
+				session.setAttribute("name", name);
+				session.setAttribute("surname", surname);
+				session.setAttribute("birthdate", birthdate);
+				session.setAttribute("deps", deps);
+				
+				
 				path = "/WEB-INF/signupErr";
 			}
 			

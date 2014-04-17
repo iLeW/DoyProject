@@ -31,7 +31,7 @@ birthdate
 
 				<!-- Prima parte con dei dati di registrazione come Username e Password -->
 				<div class="div_head">
-					<h4>Registration</h4>
+					<h4>Registrazione</h4>
 				</div>
 
 				<!-- HR -->

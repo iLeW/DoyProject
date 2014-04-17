@@ -19,6 +19,14 @@ fieldset {
 	left: 0;
 }
 
+/* ***** AGGIUNTO IO ****** */
+fieldset.error{
+	
+	border: 1px solid red;
+	background: pink;
+	
+}
+
 legend {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -31,6 +39,12 @@ legend {
 	position: relative;
 	top: 0;
 	left: 0;
+}
+
+/* ***** AGGIUNTO IO ****** */
+legend.error {
+	border: 1px solid red;
+	
 }
 
 /*IE ONLY - I know, this is a stop gap*/
