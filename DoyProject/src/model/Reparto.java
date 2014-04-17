@@ -1,10 +1,12 @@
 package model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * Classe per gestire le chiamate alla tabella dei reparti nel database
@@ -24,7 +26,9 @@ public class Reparto {
 	private ArrayList<String> reparti = new ArrayList<String>();
 	private boolean notagain = false;
 	private byte i = 0;
-
+	
+	private Vector<String> rep = new Vector<String>();
+	
 	/**
 	 * Metodo costruttore vuoto che rispecchia la caratteristica dei Bean
 	 */
@@ -161,5 +165,39 @@ public class Reparto {
 
 		return result;
 	}
+	
+	//funzione fatta da borto
+	public void viewAllReparti(){
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			String strQuery="select * from reparti";
+            PreparedStatement ps = con.prepareStatement(strQuery);
+               
+        	ResultSet rs = ps.executeQuery();
+        	// salvo i campi dei prodotti dell'utente nei vettori stringa della classe prodotto
+			while(rs.next()){
+				String reparto = rs.getString("reparto");
+				rep.add(reparto);
+			}
+			ps.close();
+			
+			con.close();
+		}
+		
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+	}
+	
+	public int getDim(){
+		int dim=rep.size();
+		return dim;
+	}
+	
+	public String getRep(int i){
+		return rep.get(i);
+	}
+	
 
 }// fine Reparto

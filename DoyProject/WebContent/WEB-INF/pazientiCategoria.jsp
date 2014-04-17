@@ -64,14 +64,15 @@ User u = (User) session.getAttribute("user");
 			<td> <%= p.getReparto(i)
 			%> </td>
 			<!-- non riesco a modificare il colore delle icone -->
-			<td> <a href="ControllerServlet?val=modPazienteCat&ID=<%=p.getIDPaziente(i)%>">
+			<td><a href="ControllerServlet?val=profiloPazienteCat&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-medkit tooltip-top" title="Profilo"> </i></a> 
+			
+			<a href="ControllerServlet?val=modPazienteCat&ID=<%=p.getIDPaziente(i)%>">
 			<i class="icon-pencil tooltip-top" title="Modifica"> </i></a>
 			
 			<a href="ControllerServlet?val=delPazienteCat&ID=<%=p.getIDPaziente(i)%>">
 			<i class="icon-trash tooltip-top" title="Elimina"> </i></a>
-			
-			<a href="ControllerServlet?val=profiloPaziente&ID=<%=p.getIDPaziente(i)%>">
-			<i class="icon-medkit tooltip-top" title="Profilo"> </i></a>
+						
 			</td>
 		</tr>
 		<%
@@ -122,14 +123,16 @@ User u = (User) session.getAttribute("user");
 			<td> <%= p.getReparto(i)
 			%> </td>
 			<!-- non riesco a modificare il colore delle icone -->
-			<td> <a href="ControllerServlet?val=modPazienteCat&ID=<%=p.getIDPaziente(i)%>">
+			<td><a href="ControllerServlet?val=profiloPazienteCat&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-medkit tooltip-top" title="Profilo"> </i></a>
+			
+			<a href="ControllerServlet?val=modPazienteCat&ID=<%=p.getIDPaziente(i)%>">
 			<i class="icon-pencil tooltip-top" title="Modifica"> </i></a>
 			
 			<a href="ControllerServlet?val=delPazienteCat&ID=<%=p.getIDPaziente(i)%>">
 			<i class="icon-trash tooltip-top" title="Elimina"> </i></a>
 			
-			<a href="ControllerServlet?val=profiloPaziente&ID=<%=p.getIDPaziente(i)%>">
-			<i class="icon-medkit tooltip-top" title="Profilo"> </i></a>
+			
 			</td>
 		</tr>
 		<%
@@ -181,14 +184,15 @@ User u = (User) session.getAttribute("user");
 			<td> <%= p.getReparto(i)
 			%> </td>
 			<!-- non riesco a modificare il colore delle icone -->
-			<td> <a href="ControllerServlet?val=modPazienteCat&ID=<%=p.getIDPaziente(i)%>">
+			<td><a href="ControllerServlet?val=profiloPazienteCat&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-medkit tooltip-top" title="Profilo"> </i></a>
+			
+			<a href="ControllerServlet?val=modPazienteCat&ID=<%=p.getIDPaziente(i)%>">
 			<i class="icon-pencil tooltip-top" title="Modifica"> </i></a>
 			
 			<a href="ControllerServlet?val=delPazienteCat&ID=<%=p.getIDPaziente(i)%>">
 			<i class="icon-trash tooltip-top" title="Elimina"> </i></a>
 			
-			<a href="ControllerServlet?val=profiloPaziente&ID=<%=p.getIDPaziente(i)%>">
-			<i class="icon-medkit tooltip-top" title="Profilo"> </i></a>
 			</td>
 		</tr>
 		<%

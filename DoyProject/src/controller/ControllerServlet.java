@@ -14,6 +14,8 @@ import javax.servlet.http.HttpSession;
 import model.Paziente;
 import model.Reparto;
 import model.User;
+import model.Monitoraggio;
+
 
 /**
  * Servlet implementation class ControllerServlet
@@ -48,6 +50,7 @@ public class ControllerServlet extends HttpServlet {
 														// esiste già
 		// 4)creare il nuovo paziente all'inizio sia del doGet che del doPost
 		Paziente p = new Paziente();
+		Monitoraggio m = new Monitoraggio();
 		String path = ""; // path che indica la JSP dove voglio andare a seconda
 							// delle azioni
 
@@ -160,12 +163,37 @@ public class ControllerServlet extends HttpServlet {
 			path = "/WEB-INF/pazientiLista";
 		}
 		
+		//quando si chiaccia l'icona per il profilo utente
 		if ("profiloPaziente".equals(val)) {
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			session.setAttribute("IDpaz", request.getParameter("ID"));
+			m.viewAllMonitoraggi();
+			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/paziente";
 		}
+		if ("profiloPazienteCat".equals(val)) {
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
+			session.setAttribute("IDpaz", request.getParameter("ID"));
+			session.setAttribute("categoria", 1);
+			m.viewAllMonitoraggi();
+			session.setAttribute("monitoraggio", m);
+			path = "/WEB-INF/paziente";
+		}
+		//per eliminare un valore seguito
+		if ("delMonitor".equals(val)) {
+			System.out.println("cancellare il valore monitorato "
+					+ request.getParameter("ID") + ", " + request.getParameter("VAL") + "?");
+			// JOptionPane.showMessageDialog(null, "cancellare il paziente " +
+			// request.getParameter("ID") + "?");
+			// JOptionPane.showMessageDialog(this, "cacca");
+			m.removeValore(request.getParameter("ID"), request.getParameter("VAL"));
+			m.viewAllMonitoraggi();
+			session.setAttribute("monitoraggio", m);
+			path = "/WEB-INF/paziente";
+		}
+		
 
 		// Questo chiude la sessione e quindi invalida tutti i dati della
 		// sessione, forzando subito la schermata di login
@@ -200,6 +228,7 @@ public class ControllerServlet extends HttpServlet {
 		User u = (User) session.getAttribute("user"); // Se c'è già un utente lo prendo
 		// Paziente p = (Paziente) session.getAttribute("paziente"); //Se c'è già un paziente lo prendo
 		Paziente p = new Paziente();
+		Monitoraggio m = new Monitoraggio();
 		String path = ""; // path che indica la JSP dove voglio andare a seconda delle azioni
 		Reparto r = (Reparto) session.getAttribute("Reparto");
 		if(r == null)
@@ -259,12 +288,6 @@ public class ControllerServlet extends HttpServlet {
 			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiLista";
 		}
-
-		// quì ci arriva quando si schiaccia l'icona con la penna nella tabella dei pazienti
-		// in teoria non serve nel doPost ma solo nel doGet
-		/*if ("modPaziente".equals(val)) {
-			path = "/WEB-INF/pazienteMod";
-		}*/
 
 		// due funzioni per modificare il paziente
 		if ("insModPaziente".equals(val)) {
@@ -378,7 +401,32 @@ public class ControllerServlet extends HttpServlet {
 			}
 			
 		}
-
+		
+		
+		//quì ci arriva quando si schiaccia il bottone per aggiungere un valore da monitorare
+		if ("addValore".equals(val)) {
+			m.insMonitoraggio(session.getAttribute("IDpaz").toString(), request.getParameter("nomeValore"), request.getParameter("valMin").toString(), request.getParameter("valMax").toString());
+			//System.out.println("prova IDPAZ: "+session.getAttribute("IDpaz"));
+			m.viewAllMonitoraggi();
+			session.setAttribute("monitoraggio", m);
+			path = "/WEB-INF/paziente";
+		}
+		
+		//quando si chiude il profilo del paziente
+		if ("closeProfiloPaziente".equals(val)) {
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
+			if(session.getAttribute("categoria") != null)
+			{
+				session.removeAttribute("categoria");
+				path = "/WEB-INF/pazientiCategoria";
+			}
+			else
+			{
+				path = "/WEB-INF/pazientiLista";
+			}
+		}
+		
 		// Prima di uscire dal post, raccolgo quello che ho seminato, e vado
 		// dove devo andare.
 		String url = path + ".jsp";

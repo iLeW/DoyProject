@@ -1,10 +1,14 @@
 <!-- Inclusione del JSP con il menù principale -->
 <%@ include file="/WEB-INF/header.jsp"%>
 <%@ page import="model.Paziente" %>
+<%@ page import="model.Reparto" %>
 
 <%
 // 6)creare un nuovo oggetto, il metodo conta serve per il for sotto
 Paziente p = (Paziente) session.getAttribute("paziente");
+Reparto r = new Reparto();
+r.viewAllReparti();
+int dim = r.getDim();
 //String disponibile = p.getIDDisp();
 
 //inserito è a 2 quando sto modificando un paziente
@@ -37,6 +41,7 @@ if(p.getInserito() == 2)
 						title="Primo ID disponibile:"><i
 						class="icon-info-sign"></i></span>
 		</div> -->
+		
 				
 		<div class="col_2">
 			<label for="nome">Nome</label></div>
@@ -156,24 +161,24 @@ else
 		<div class="col_10" style="margin-bottom: 10px">
 			<input id="dataOut" name="dataOut" type="date" disabled /></div>
 		
+		
+		<!--  
 		<div class="col_2">
 			<label for="dataOut">Reparto</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
-			<input id="reparto" name="reparto" type="text" placeholder="Reparto" required /></div>
+			<input id="reparto" name="reparto" type="text" placeholder="Reparto" required /></div>-->
 		
-		<!-- Prova del menu a tendina
-		sarà poi da mettere nella pagina per monitorare i pazienti (paziente.jsp?), qui non ha senso -->
 		<div class="col_2">
-			<label for="select1">Scegli cosa monitorare</label></div>
+			<label for="select1">Reparto</label></div>
 		<div class="col_10" style="margin-bottom: 30px">
-			<select id="ValoreMon">
-			<option value="0">-- Valore --</option>
-			<option value="1">Pressione sanguigna</option>
-			<option value="2">Battito cardiaco</option>
-			<option value="3">Globuli bianchi</option>
+			<select id="ValoreMon" name="reparto" required>
+			<%for(int i=0; i<dim; i++)
+			{%>
+			<option value="<%=r.getRep(i)%>"><%=r.getRep(i)%></option>
+			<%} %>
 			</select>
-			<button type="submit" name="val" value="addValore">Aggiungi valore</button>
 		</div>
+		
 			
 		<div class="center" style="margin-bottom: 80px">
 			<button class="green" type="submit" name="val" value="insPaziente">Conferma</button>

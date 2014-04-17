@@ -56,14 +56,15 @@ int conta = p.contaPazienti();
 			<td> <%= p.getReparto(i)
 			%> </td>
 			<!-- non riesco a modificare il colore delle icone -->
-			<td> <a href="ControllerServlet?val=modPaziente&ID=<%=p.getIDPaziente(i)%>">
+			<td><a href="ControllerServlet?val=profiloPaziente&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-medkit tooltip-top" title="Profilo"> </i></a>
+			
+			<a href="ControllerServlet?val=modPaziente&ID=<%=p.getIDPaziente(i)%>">
 			<i class="icon-pencil tooltip-top" title="Modifica"> </i></a>
 			
 			<a href="ControllerServlet?val=delPaziente&ID=<%=p.getIDPaziente(i)%>">
 			<i class="icon-trash tooltip-top" title="Elimina"> </i></a>
-			
-			<a href="ControllerServlet?val=profiloPaziente&ID=<%=p.getIDPaziente(i)%>">
-			<i class="icon-medkit tooltip-top" title="Profilo"> </i></a>
+						
 			</td>
 		</tr>
 		<% }%>

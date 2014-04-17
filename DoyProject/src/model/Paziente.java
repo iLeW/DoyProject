@@ -23,6 +23,7 @@ import java.util.Vector;
  * 10) fare i grafici
  * 11) fare la pagina del progilo del paziente, che è paziente.jsp
  * 12) popup per l'eliminazione del paziente
+ * 13) fare la selezione del reparto con il menu a tendina
  */
 
 public class Paziente {
@@ -371,13 +372,13 @@ public class Paziente {
 		String colore;
 		
 		switch (getReparto(i)) {
-        case "cardiologia":  colore = "#FF7D7D";
+        case "Cardiologia":  colore = "#FF7D7D";
                  break;
-        case "chirurgia":  colore = "#97FF99";
+        case "Chirurgia":  colore = "#97FF99";
                  break;
-        case "radiologia":  colore = "#9DFFF5";
+        case "Radiologia":  colore = "#9DFFF5";
                  break;
-        case "nefrologia":  colore = "#FFFD9D";
+        case "Nefrologia":  colore = "#FFFD9D";
                  break;
         default: colore = "#FFFFFF";
                  break;
