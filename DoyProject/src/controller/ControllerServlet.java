@@ -239,6 +239,7 @@ public class ControllerServlet extends HttpServlet {
 		if ("annullaSignup".equals(val)) {
 			session.invalidate();
 			response.sendRedirect("signin.jsp");
+			return;
 		}
 
 		// bottoni aggiungi paziente e annulla. Dalla pagina pazienteMod
