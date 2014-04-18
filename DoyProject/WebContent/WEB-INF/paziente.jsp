@@ -11,7 +11,6 @@ Monitoraggio m = (Monitoraggio) session.getAttribute("monitoraggio");
 int ID = Integer.parseInt(session.getAttribute("IDpaz").toString());
 int indice = p.getIndice(ID);
 int conta = m.contaMonitor();
-m.viewAllMonitor();
 %>
 	
 <form method="post" action="ControllerServlet">
@@ -80,7 +79,7 @@ m.viewAllMonitor();
 			<label for="select1">Scegli cosa monitorare</label></div>
 		<div class="col_10" style="margin-bottom: 30px">
 			<select id="ValoreMon" name="nomeValore" required>
-			<%int dim = m.getDimMon();
+			<%int dim = m.viewAllMonitor();
 			for(int i=0; i<dim; i++)
 			{%>
 			<option value="<%=m.getMon(i)%>"><%=m.getMon(i)%></option>
@@ -93,12 +92,8 @@ m.viewAllMonitor();
 		<button class="blue" type="submit" name="val" style="margin-left: 20px" value="addValore">
 		<i class="icon-tag"></i> Aggiungi</button>
 	</div>
-			
-	<div class="center" style="margin-bottom: 80px">
-		<button class="red" style="margin-left: 20px" type="submit" name="val" value="closeProfiloPaziente" formnovalidate>
-		<i class="icon-ok"></i> Chiudi profilo paziente</button>
-	</div>
 	
+	<!-- vedo se mettere la tabella o no -->
 	<%if(m.controllaPresenza(p.getIDPaziente(indice)))
 	{%>
 	<!-- Tabella con i monitoraggi del paziente -->
@@ -144,6 +139,28 @@ m.viewAllMonitor();
 	</div>
 	<%}//fine if per creare la tabella %>
 
+	<!-- da qui c'è la zona dei grafici -->
+	<h4 style="color: #999; margin-bottom: 10px; margin-top: 80px" class="center">
+			Grafici:
+		</h4>
+	<hr class="alt1" />
+
+	
+
+
+
+
+
+
+
+
+
+	<!-- bottone per chiudere il prfilo del paziente -->
+	<div class="center" style="margin-bottom: 80px; margin-top: 100px">
+		<button class="red" style="margin-left: 20px" type="submit" name="val" value="closeProfiloPaziente" formnovalidate>
+		<i class="icon-ok"></i> Chiudi profilo paziente</button>
+	</div>
+	
 	
 </div><!-- End Grid -->
 
