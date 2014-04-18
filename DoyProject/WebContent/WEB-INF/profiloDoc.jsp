@@ -32,6 +32,7 @@
 
 <%
 	User u = (User) session.getAttribute("user");
+	System.out.println("NOME:" + u.getName());
 %>
 	<!-- Username -->
 	<div class="col_3">

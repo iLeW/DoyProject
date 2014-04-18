@@ -257,7 +257,7 @@ public class ControllerServlet extends HttpServlet {
 			// altrimenti vado alla homepage
 			else {
 				u.getProfileU();								//In questo modo vengono settati i dati nell'oggetto utente.
-				session.setAttribute("user", u);
+				session.setAttribute("user", u);				//SEMBRA CHE QUI NON LA SETTIIIIIIIIIIIIIIIII AAAAAAAAAAAAA
 				path = "/WEB-INF/homepage";
 			}
 
@@ -424,10 +424,10 @@ public class ControllerServlet extends HttpServlet {
 		//Qui ci arrivo da profiloDoc quando clicco su Modifica per confermare le modifiche ai dati personali
 		if("acceptMod".equals(val)){
 			System.out.println("acceptMod");
-			u = new User();
+			
 			//Prendo i valori passati dalla form
 			String username = request.getParameter("username");
-			System.out.println("USERNAME: " + username);		//QUA MI DA NULL!!!!!!
+			System.out.println("USERNAME: " + username);		//Ok risolto il null qua con readonly="readonly" sul campo input
 			String password = request.getParameter("password");
 			System.out.println("PASSWORD: " + password);
 			String cpassword = request.getParameter("cpassword");
