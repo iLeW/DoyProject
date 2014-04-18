@@ -107,9 +107,12 @@ public class Reparto {
 	
 	/**
 	 * Funzione per tornare i reparti
-	 * @return
+	 * @return un ArrayList con tutti i reparti
 	 */
 	public ArrayList<String> getAllReparti(){
+		//if(this.reparti.size()==0)
+			this.repartiR();
+	
 		return this.reparti;
 	}
 

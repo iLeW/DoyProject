@@ -19,9 +19,9 @@ User u = (User) session.getAttribute("user");
 		<!-- intestazione TABS -->
 		<ul class="tabs left">
 		<li><a href="#tabr1"><%= u.getDep1() %></a></li>
-		<% if(u.getDep2() != null)
+		<% if(u.getDep2() != "")
 		{%> <li><a href="#tabr2"><%= u.getDep2() %></a></li><%}%> 
-		<% if(u.getDep3() != null)
+		<% if(u.getDep3() != "")
 		{%> <li><a href="#tabr3"><%= u.getDep3() %></a></li><%}%>
 		</ul>
 
@@ -83,7 +83,7 @@ User u = (User) session.getAttribute("user");
 		</div>
 		</div> <!-- fine Tabs1 -->
 			
-		<% if(u.getDep2() != null){%>
+		<% if(u.getDep2() != ""){%>
 		<!-- TABS2 -->	
 		<div id="tabr2" class="tab-content">
 		<div class="center">
@@ -144,7 +144,7 @@ User u = (User) session.getAttribute("user");
 		</div> <!-- fine Tabs2 -->
 		<%} %>
 		
-		<% if(u.getDep3() != null){%>
+		<% if(u.getDep3() != ""){%>
 		<!-- TABS3 -->
 		<div id="tabr3" class="tab-content">
 		<div class="center">

@@ -143,7 +143,10 @@ birthdate
 				<!-- Checkbox che creo dinamicamente-->
 				<div class="col_3">
 					<%
-						Reparto r = new Reparto();
+						
+						Reparto r = (Reparto) session.getAttribute("reparto");
+							if(r == null)
+								r = new Reparto();
 					%>
 					<fieldset>
 						<legend>Reparti</legend>

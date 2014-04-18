@@ -7,12 +7,15 @@
 
 <!-- Con questa Scriptlet vado a prendere i valori di username e password che l'utente potrebbe aver inserito nel campo nome e password -->
 <%
-	String username = request.getParameter("username").toString();
-	String password = request.getParameter("password").toString();
-	System.out.println("username:" + username + ", password:"
-			+ password);
+	if (request.getParameter("username") != null) {
+		String username = request.getParameter("username").toString();
+		System.out.println("username:" + username);
+	}
 
-	Reparto r = (Reparto) session.getAttribute("reparto");
+	if (request.getParameter("password") != null) {
+		String password = request.getParameter("password").toString();
+		System.out.println("password:" + password);
+	}
 %>
 
 <!-- I campi in questa pagina per adesso sono:
@@ -30,15 +33,45 @@ birthdate
 		<!-- il grid flex serve per adattare la pagina al resize della finestra del browser -->
 		<div class="grid flex">
 			<div class="col_12" style="margin-top: 20px;">
-				<h1 class="center">SIGN UP</h1>
+				<%
+					if (session.getAttribute("err_mod") != null) {
+				%>
+				<h1 class="center">
+					<i class="icon-edit"></i>MODIFICA PROFILO
+				</h1>
+				<%
+					}
+
+					else {
+				%><h1 class="center">SIGN UP</h1>
+				<%
+					}
+				%>
 
 				<!-- Error -->
+				<%
+					if (session.getAttribute("err_mod") != null) {
+				%>
 
-				<!-- Error -->
 				<div class="notice error">
-					<i class="icon-remove-sign icon-large"></i> Errore inserimento dati. Controllare i campi evidenziati in rosso.
+					<i class="icon-remove-sign icon-large"></i>
+					<%=session.getAttribute("err_mod").toString()%>
 					<a href="#close" class="icon-remove"></a>
 				</div>
+				<%
+					}
+
+					else {
+				%>
+				<div class="notice error">
+					<i class="icon-remove-sign icon-large"></i> Errore inserimento
+					dati. Controllare i campi evidenziati in rosso. <a href="#close"
+						class="icon-remove"></a>
+				</div>
+				<%
+					}
+				%>
+
 
 
 				<!-- Prima parte con dei dati di registrazione come Username e Password -->
@@ -66,16 +99,17 @@ birthdate
 				</div>
 				<div class="col_9">
 					<%
-						if (session.getAttribute("err_username").equals("")) {
+						if (session.getAttribute("err_username") == null) {
 					%>
 
 					<input id="Username" type="text" name="username"
-						placeholder="Username" value="" required />
+						placeholder="Username"
+						value="<%=session.getAttribute("username")%>" required />
 					<%
 						} else {
 					%>
 					<input id="Username" class="error" type="text" name="username"
-						value="<%=session.getAttribute("username")%>" required />
+						value="<%=session.getAttribute("username")%>" readonly="readonly" />
 					<%
 						}
 					%>
@@ -92,7 +126,7 @@ birthdate
 				</div>
 				<div class="col_9">
 					<%
-						if (session.getAttribute("err_password").equals("")) {
+						if (session.getAttribute("err_password") == null) {
 					%>
 					<input id="Password" type="password" name="password"
 						placeholder="Password"
@@ -166,7 +200,7 @@ birthdate
 
 				<div class="col_9">
 					<%
-						if (session.getAttribute("err_surname").equals("")) {
+						if (session.getAttribute("err_surname") == null) {
 					%>
 					<input id="Cognome" type="text" name="cognome"
 						placeholder="Cognome" value="<%=session.getAttribute("surname")%>"
@@ -188,7 +222,7 @@ birthdate
 
 				<div class="col_9">
 					<%
-						if (session.getAttribute("err_birthdate").toString().equals("")) {
+						if (session.getAttribute("err_birthdate").toString().equals("null")) {
 					%>
 					<input id="Birthdate" type="date" name="birthdate" placeholder=""
 						value="<%=session.getAttribute("birthdate")%>" />
@@ -206,46 +240,59 @@ birthdate
 				<!-- Checkbox che creo dinamicamente-->
 				<div class="col_3">
 					<%
-						//Reparto r = new Reparto();
+						if (session.getAttribute("err_deps") != null
+								|| session.getAttribute("err_deps0") != null) {
 					%>
 					<fieldset class="error">
 						<legend class="error">Reparti</legend>
 						<%
-							ArrayList<String> deps = new ArrayList<String>(r.getAllReparti());
-							for (byte i = 0; i < deps.size(); i++) {
-								out.println("<input type=\"checkbox\" id=\"check" + i
-										+ "\" class=\"checkbox\" name=\"check" + i
-										+ "\" value=\"" + deps.get(i)
-										+ "\"/> <label for=\"check" + i
-										+ "\" class=\"inline\">" + deps.get(i)
-										+ "</label> <br>");
-							}
-
-							// 							byte i = 0;
-							// 							String rep = "1";
-							// 							while (!rep.equals("")) {
-							// 								rep = r.getReparti1by1();
-							// 								if (!rep.equals("")) {
-							// 									out.println("<input type=\"checkbox\" id=\"check" + i
-							// 											+ "\" class=\"checkbox\" name=\"check" + i
-							// 											+ "\" value=\"" + rep + "\"/> <label for=\"check"
-							// 											+ i + "\" class=\"inline\">" + rep
-							// 											+ "</label> <br>");
-							// 									i++;
-							// 								}
-							// 							}
-
-							session.setAttribute("reparto", r); //****NON SO SE E' CORRETTO SETTARE QUA NEL MVC. A parte che non so nemmeno se serve settare il reparto.
+							} else {
 						%>
-					</fieldset>
+						<fieldset>
+							<legend>Reparti</legend>
+							<%
+								}
+								Reparto r = (Reparto) session.getAttribute("reparto");
+								if (r == null)
+									r = new Reparto();
+								ArrayList<String> deps = new ArrayList<String>(r.getAllReparti());
+								for (byte i = 0; i < deps.size(); i++) {
+									out.println("<input type=\"checkbox\" id=\"check" + i
+											+ "\" class=\"checkbox\" name=\"check" + i
+											+ "\" value=\"" + deps.get(i)
+											+ "\"/> <label for=\"check" + i
+											+ "\" class=\"inline\">" + deps.get(i)
+											+ "</label> <br>");
+								}
+
+								session.setAttribute("reparto", r); //****NON SO SE E' CORRETTO SETTARE QUA NEL MVC. A parte che non so nemmeno se serve settare il reparto.
+							%>
+						</fieldset>
 				</div>
 
 
 				<div class="col_12">
 					<!-- Bottoni conferma e annulla -->
 					<br> <br>
+
+
+					<!-- Se è presente l'attributo errore per la modifica allora mostro il tasto modifica, altrimenti quello normale -->
+					<%
+						if (session.getAttribute("err_mod") != null) {
+					%>
+
+					<button class="green" type="submit" name="val" value="acceptMod">Modifica</button>
+					<%
+						}
+
+						else {
+					%>
 					<button class="green" type="submit" name="val"
 						value="confermaSignup">Conferma</button>
+					<%
+						}
+					%>
+
 					<!-- In questo caso formnovalidate evita di cercare i campi obbligatori anche quando faccio "annulla", non funziona in Safari -->
 					<button class="blue" type="submit" name="val" value="annullaSignup"
 						formnovalidate>Annulla</button>
@@ -259,9 +306,6 @@ birthdate
 		<!-- End Grid -->
 	</form>
 
-
-</body>
-</html>
 
 </body>
 </html>

@@ -173,7 +173,7 @@ public class User {
 	 *            reparto
 	 */
 	public void setDep3(String dep3) {
-		this.numDep = 3;
+		this.dep3 = dep3;
 		this.setNumDep(3);
 	}
 
@@ -298,6 +298,7 @@ public class User {
 			ps.executeUpdate();
 			ps.close();
 			con.close();
+			signup = true;
 
 		} catch (Exception e) {
 			signup = false;
@@ -381,6 +382,69 @@ public class User {
 	}
 
 	/**
+	 * Funzione che viene chiamata quando l'utente (dottore) decide di
+	 * modificare il suo profilo
+	 * 
+	 * @return vero se è stato tutto modificato correttamente, altrimento falso
+	 */
+	public boolean modProfilo(String password, String nome, String cognome,
+			Date birthdate, String dep1, String dep2, String dep3,
+			String username) {
+		boolean result = false;
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME,
+					SQLUSERNAME, SQLPW);
+			String strQuery = "UPDATE users SET password=?, name=?, surname=?, birthdate=?, dep1=?, dep2=?, dep3=? WHERE username=?";
+			PreparedStatement ps = con.prepareStatement(strQuery);
+			ps.setString(1, password);
+			ps.setString(2, nome);
+			ps.setString(3, cognome);
+			ps.setString(4, birthdate.toString());
+			ps.setString(5, dep1);
+			if (!dep2.isEmpty())
+				ps.setString(6, dep2);
+			else
+				ps.setString(6, null);	//ATTENTO QUA CHE HO CAMBIATO
+			if (!dep3.isEmpty())
+				ps.setString(7, dep3);
+			else
+				ps.setString(7, null);
+			ps.setString(8, username);
+
+			ps.executeUpdate();
+			ps.close();
+			con.close();
+			
+			//Setto i nuovi dati nell'oggetto
+			this.setName(name);
+			this.setSurname(surname);
+			this.setBirthdate(birthdate);
+			this.setNumDep(1); //di base 1 solo reparto
+			this.setDep1(dep1);
+			if (!dep2.isEmpty()){
+				this.setDep2(dep2);
+				this.setNumDep(2);
+			}
+			else
+				this.setDep2("");
+			if (!dep3.isEmpty()){
+				this.setDep3(dep3);
+				this.setNumDep(3);
+			}
+			else
+				this.setDep3("");
+			
+			result = true;
+		
+		} catch (Exception e) {
+			result = false;
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	/**
 	 * Classe per verificare se ci sono degli errori nei dati inseriti della
 	 * registrazione
 	 * 
@@ -393,7 +457,8 @@ public class User {
 	 * @return true=se ci sono dei problemi
 	 */
 	public boolean checkSignup(String username, String password,
-			String cpassword, String nome, String cognome, Date birthdate, ArrayList<String> deps) {
+			String cpassword, String nome, String cognome, Date birthdate,
+			ArrayList<String> deps) {
 		boolean bad_signup = false;
 
 		this.errors = new Hashtable<String, String>();
@@ -407,20 +472,20 @@ public class User {
 		}
 
 		if (!password.equals(cpassword) || password.length() < 4) { // nota:
-																		// basta
-																		// solo
-																		// la
-																		// lenght
-																		// su
-																		// una
-																		// perché
-																		// altrimenti
-																		// basta
-																		// il
-																		// caso
-																		// che
-																		// sono
-																		// diverse
+																	// basta
+																	// solo
+																	// la
+																	// lenght
+																	// su
+																	// una
+																	// perché
+																	// altrimenti
+																	// basta
+																	// il
+																	// caso
+																	// che
+																	// sono
+																	// diverse
 			errors.put("password", "Inserire una password valida");
 			System.out.println("err_password");
 			bad_signup = true;
@@ -444,17 +509,18 @@ public class User {
 			System.out.println("err_birthdate");
 			bad_signup = true;
 		}
-		
-		//Se non è stato selezionato nessun reparto
-		if(deps.size()==0){
+
+		// Se non è stato selezionato nessun reparto
+		if (deps.size() == 0) {
 			errors.put("deps0", "Selezionare almeno un reparto");
 			System.out.println("err_deps0");
 			bad_signup = true;
 		}
-		
-		//Se sono stati selezionati più di 3 reparti
-		if(deps.size()>3){
-			errors.put("deps", "Ai dottori non è consentito seguire più di 3 reparti");
+
+		// Se sono stati selezionati più di 3 reparti
+		if (deps.size() > 3) {
+			errors.put("deps",
+					"Ai dottori non è consentito seguire più di 3 reparti");
 			System.out.println("err_deps");
 			bad_signup = true;
 		}
