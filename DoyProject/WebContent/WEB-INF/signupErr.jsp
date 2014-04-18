@@ -34,7 +34,7 @@ birthdate
 		<div class="grid flex">
 			<div class="col_12" style="margin-top: 20px;">
 				<%
-					if (session.getAttribute("err_mod") != null) {
+					if (session.getAttribute("err_mod") != null || !session.getAttribute("err_mod").toString().trim().isEmpty()) {
 				%>
 				<h1 class="center">
 					<i class="icon-edit"></i>MODIFICA PROFILO
@@ -50,7 +50,7 @@ birthdate
 
 				<!-- Error -->
 				<%
-					if (session.getAttribute("err_mod") != null) {
+					if (session.getAttribute("err_mod") != null || !session.getAttribute("err_mod").toString().trim().isEmpty()) {
 				%>
 
 				<div class="notice error">
@@ -126,7 +126,7 @@ birthdate
 				</div>
 				<div class="col_9">
 					<%
-						if (session.getAttribute("err_password") == null) {
+						if (session.getAttribute("err_password").toString().trim().isEmpty() || session.getAttribute("err_password") == null ) {
 					%>
 					<input id="Password" type="password" name="password"
 						placeholder="Password"
@@ -179,7 +179,7 @@ birthdate
 
 				<div class="col_9">
 					<%
-						if (session.getAttribute("err_name").equals("")) {
+						if (session.getAttribute("err_name").toString().trim().isEmpty() || session.getAttribute("err_name") == null) {
 					%>
 					<input id="Nome" type="text" name="nome" placeholder="Nome"
 						value="<%=session.getAttribute("name")%>" required />
@@ -200,13 +200,14 @@ birthdate
 
 				<div class="col_9">
 					<%
-						if (session.getAttribute("err_surname") == null) {
+						if (session.getAttribute("err_surname").toString().trim().isEmpty() || session.getAttribute("err_surname") == null) {
 					%>
 					<input id="Cognome" type="text" name="cognome"
 						placeholder="Cognome" value="<%=session.getAttribute("surname")%>"
 						required />
 					<%
 						} else {
+							System.out.println("Errore nel surname: " + session.getAttribute("err_surname").toString());
 					%>
 					<input id="Cognome" class="error" type="text" name="cognome"
 						value="<%=session.getAttribute("surname")%>" required />
@@ -222,7 +223,7 @@ birthdate
 
 				<div class="col_9">
 					<%
-						if (session.getAttribute("err_birthdate").toString().equals("null")) {
+						if (session.getAttribute("err_birthdate").toString().trim().isEmpty() || session.getAttribute("err_birthdate") == null ) {
 					%>
 					<input id="Birthdate" type="date" name="birthdate" placeholder=""
 						value="<%=session.getAttribute("birthdate")%>" />
@@ -240,8 +241,8 @@ birthdate
 				<!-- Checkbox che creo dinamicamente-->
 				<div class="col_3">
 					<%
-						if (session.getAttribute("err_deps") != null
-								|| session.getAttribute("err_deps0") != null) {
+						if (session.getAttribute("err_deps").toString().trim().isEmpty()
+								|| session.getAttribute("err_deps0").toString().trim().isEmpty() || session.getAttribute("err_deps") == null || session.getAttribute("err_deps0") == null) {
 					%>
 					<fieldset class="error">
 						<legend class="error">Reparti</legend>
@@ -278,7 +279,7 @@ birthdate
 
 					<!-- Se è presente l'attributo errore per la modifica allora mostro il tasto modifica, altrimenti quello normale -->
 					<%
-						if (session.getAttribute("err_mod") != null) {
+						if (session.getAttribute("err_mod") != null || !session.getAttribute("err_mod").toString().trim().isEmpty() ) {
 					%>
 
 					<button class="green" type="submit" name="val" value="acceptMod">Modifica</button>

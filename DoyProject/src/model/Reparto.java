@@ -110,7 +110,7 @@ public class Reparto {
 	 * @return un ArrayList con tutti i reparti
 	 */
 	public ArrayList<String> getAllReparti(){
-		//if(this.reparti.size()==0)
+		if(this.reparti.size()==0)
 			this.repartiR();
 	
 		return this.reparti;
