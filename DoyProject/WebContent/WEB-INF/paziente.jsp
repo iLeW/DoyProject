@@ -2,11 +2,13 @@
 <%@ include file="/WEB-INF/header.jsp"%>
 <%@ page import="model.Paziente" %>
 <%@ page import="model.Monitoraggio" %>
+<%@ page import="model.Storico" %>
 
 
 <%
 Paziente p = (Paziente) session.getAttribute("paziente");
-Monitoraggio m = (Monitoraggio) session.getAttribute("monitoraggio"); 
+Monitoraggio m = (Monitoraggio) session.getAttribute("monitoraggio");
+Storico s = new Storico();
 //int ID = Integer.parseInt(request.getParameter("ID"));
 int ID = Integer.parseInt(session.getAttribute("IDpaz").toString());
 int indice = p.getIndice(ID);
@@ -139,18 +141,55 @@ int conta = m.contaMonitor();
 	</div>
 	<%}//fine if per creare la tabella %>
 
+</div>
+</form>
+
+
+<form method="post" action="ControllerServlet">
+<div class="grid flex">
+
 	<!-- da qui c'è la zona dei grafici -->
 	<h4 style="color: #999; margin-bottom: 10px; margin-top: 80px" class="center">
 			Grafici:
 		</h4>
 	<hr class="alt1" />
 
+	<div class="col_2">
+			<label for="select1">Aggiungi un dato a:</label></div>
+		<div class="col_10" style="margin-bottom: 30px">
+			<select id="ValoreMon" name="valoreStorico" required>
+			<% dim = s.viewMonitorPaziente(ID);
+			for(int i=0; i<dim; i++)
+			{%>
+			<option value="<%=s.getMon(i)%>"><%=s.getMon(i)%></option>
+			<%} %>
+			</select>
+		<input id="dato" name="dato" type="text" placeholder="dato" style="margin-left: 20px" required />
+		<button class="orange" type="submit" name="val" style="margin-left: 20px" value="addDato">
+		<i class="icon-tag"></i> Aggiungi</button>
+	</div>
 	
+</div>
+</form>
 
 
+<form method="post" action="ControllerServlet">
+<div class="grid flex">
 
+	<div class="col_2">
+			<label for="select1">Visualizza il grafico di:</label></div>
+		<div class="col_10" style="margin-bottom: 30px">
+			<select id="ValoreMon" name="valoreStorico" required>
+			<%for(int i=0; i<dim; i++)
+			{%>
+			<option value="<%=s.getMon(i)%>"><%=s.getMon(i)%></option>
+			<%} %>
+			</select>
+		<button class="orange" type="submit" name="val" style="margin-left: 20px" value="aggiornaGrafico">
+		<i class="icon-bolt"></i> Aggiorna</button>
+	</div>
 
-
+	
 
 
 

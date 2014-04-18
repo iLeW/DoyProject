@@ -15,6 +15,8 @@ import model.Paziente;
 import model.Reparto;
 import model.User;
 import model.Monitoraggio;
+import model.Storico;
+
 
 
 /**
@@ -237,6 +239,7 @@ public class ControllerServlet extends HttpServlet {
 		// Paziente p = (Paziente) session.getAttribute("paziente"); //Se c'è già un paziente lo prendo
 		Paziente p = new Paziente();
 		Monitoraggio m = new Monitoraggio();
+		Storico s = new Storico();
 		String path = ""; // path che indica la JSP dove voglio andare a seconda delle azioni
 		Reparto r = (Reparto) session.getAttribute("Reparto");
 		if(r == null)
@@ -509,6 +512,11 @@ public class ControllerServlet extends HttpServlet {
 			//System.out.println("prova IDPAZ: "+session.getAttribute("IDpaz"));
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
+			path = "/WEB-INF/paziente";
+		}
+		
+		if ("addDato".equals(val)) {
+			s.insDato(session.getAttribute("IDpaz").toString(), request.getParameter("valoreStorico"), request.getParameter("dato"));
 			path = "/WEB-INF/paziente";
 		}
 		

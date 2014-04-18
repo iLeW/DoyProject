@@ -156,13 +156,18 @@ public class Monitoraggio {
 		return presente;
 	}
 	
-	//funzioni per gestire la tabella monitor per il menu a tendina
+	//funzioni per gestire il menu a tendina nella pagina paziente.jsp 
+	public String getMon(int i){
+		return monitor.get(i);
+	}
+	//ritorna tutti i valori che si possono monitorare
 	public int viewAllMonitor(){
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
 			String strQuery="select * from monitor";
-            PreparedStatement ps = con.prepareStatement(strQuery);
+            //la tabella monitor è quella con i nomi delle cose che si possono monitorare
+			PreparedStatement ps = con.prepareStatement(strQuery);
                
         	ResultSet rs = ps.executeQuery();
         	// salvo i campi dei prodotti dell'utente nei vettori stringa della classe prodotto
@@ -181,16 +186,6 @@ public class Monitoraggio {
 		int dim=monitor.size();
 		return dim;
 	}
-	
-	public String getMon(int i){
-		return monitor.get(i);
-	}
-	
-	/*public int getDimMon(){
-		int dim=monitor.size();
-		return dim;
-	}*/
-	
 	
 	
 	
