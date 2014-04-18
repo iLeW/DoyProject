@@ -73,23 +73,21 @@ if(p.getInserito() == 2)
 		<div class="col_10" style="margin-bottom: 10px">
 			<input id="dataOut" name="dataOut" type="date" value="<%= p.getDataOut(indice)%>" /></div>
 			
+		<!-- pezzo vecchi con il textfield, da aggiungere p.getReparto(indice) in value
 		<div class="col_2">
 			<label for="dataOut">Reparto</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
-			<input id="reparto" name="reparto" type="text" value="<%= p.getReparto(indice)%>" /></div>
-		
-		<!-- Prova del menu a tendina
-		sarà poi da mettere nella pagina per monitorare i pazienti (paziente.jsp?), qui non ha senso -->
+			<input id="reparto" name="reparto" type="text" value="" /></div>-->
+			
 		<div class="col_2">
-			<label for="select1">Scegli cosa monitorare</label></div>
+			<label for="select1">Reparto</label></div>
 		<div class="col_10" style="margin-bottom: 30px">
-			<select id="ValoreMon">
-			<option value="0">-- Valore --</option>
-			<option value="1">Pressione sanguigna</option>
-			<option value="2">Battito cardiaco</option>
-			<option value="3">Globuli bianchi</option>
+			<select id="ValoreMon" name="reparto" required>
+			<%for(int i=0; i<dim; i++)
+			{%>
+			<option value="<%=r.getRep(i)%>"><%=r.getRep(i)%></option>
+			<%} %>
 			</select>
-			<button type="submit" name="val" value="addValore">Aggiungi valore</button>
 		</div>
 			
 		<div class="center" style="margin-bottom: 80px">
@@ -161,8 +159,7 @@ else
 		<div class="col_10" style="margin-bottom: 10px">
 			<input id="dataOut" name="dataOut" type="date" disabled /></div>
 		
-		
-		<!--  
+		<!-- pezzo vecchi con il textfield  
 		<div class="col_2">
 			<label for="dataOut">Reparto</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
@@ -178,8 +175,7 @@ else
 			<%} %>
 			</select>
 		</div>
-		
-			
+					
 		<div class="center" style="margin-bottom: 80px">
 			<button class="green" type="submit" name="val" value="insPaziente">Conferma</button>
 			<button class="red" style="margin-left: 20px" type="submit" name="val" value="annPaziente" formnovalidate>Annulla</button>

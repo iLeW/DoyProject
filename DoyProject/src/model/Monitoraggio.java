@@ -22,6 +22,7 @@ public class Monitoraggio {
 	private Vector<String> valore = new Vector<String>();
 	private Vector<Integer> minimo = new Vector<Integer>();
 	private Vector<Integer> massimo = new Vector<Integer>();
+	//vector per i valori monitorati da mettere nel menu a tendina
 	private Vector<String> monitor = new Vector<String>();
 	
 	
@@ -156,7 +157,7 @@ public class Monitoraggio {
 	}
 	
 	//funzioni per gestire la tabella monitor per il menu a tendina
-	public void viewAllMonitor(){
+	public int viewAllMonitor(){
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
@@ -176,9 +177,7 @@ public class Monitoraggio {
 		catch (Exception e) {
 		e.printStackTrace();
 		}
-	}
-	
-	public int getDimMon(){
+		
 		int dim=monitor.size();
 		return dim;
 	}
@@ -186,6 +185,13 @@ public class Monitoraggio {
 	public String getMon(int i){
 		return monitor.get(i);
 	}
+	
+	/*public int getDimMon(){
+		int dim=monitor.size();
+		return dim;
+	}*/
+	
+	
 	
 	
 }//fine classi Monitoraggio
