@@ -255,6 +255,7 @@ public class User {
 				con.close();
 
 			} catch (Exception e) {
+				signin = false;	//Se c'è un errore metto falso
 				e.printStackTrace();
 
 			}

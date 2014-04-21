@@ -23,11 +23,11 @@ public class Reparto {
 	private static String SQLUSERNAME = "root";
 	private static String SQLPW = "root";
 
-	private ArrayList<String> reparti = new ArrayList<String>();
+	private ArrayList<String> reparti = new ArrayList<String>();	//Non so se è bene crearli qui, magari dentro a metodi è meglio
 	private boolean notagain = false;
 	private byte i = 0;
 	
-	private Vector<String> rep = new Vector<String>();
+	private Vector<String> rep = new Vector<String>();	//Non so se è bene crearli qui, magari dentro a metodi è meglio
 	
 	/**
 	 * Metodo costruttore vuoto che rispecchia la caratteristica dei Bean
