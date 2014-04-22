@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/headerMenu.jsp"%>
 <%@ page import="model.Messaggio"%>
 <%@ page import="model.User"%>
-
+<% session.setAttribute("fromMessaggi", "1");	//dico che vengo dai messaggi, lo setto subito altrimenti non viene letto %>
 
 
 <form method="get" action="ControllerServlet">
@@ -44,7 +44,9 @@
 						<tr>
 							<!-- Dove vanno inseriti i dati -->
 							<%
+							System.out.println("NUM MESS: " + mx.getNumMexU(u.getUsername()));
 								for (int i = 0; i < mx.getNumMexU(u.getUsername()); ++i) {
+									System.out.println("i :" + i);
 							%>
 						
 						<tr>
@@ -113,7 +115,7 @@
 								href="ControllerServlet?val=delMex&sender=<%=mx.getSenderR(i)%>&date=<%=mx.getDateR(i)%>">
 									<i class="icon-trash tooltip-top" title="Elimina"> </i>
 							</a><a
-								href="ControllerServlet?val=okReadMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>">
+								href="ControllerServlet?val=okReadMex&sender=<%=mx.getSenderR(i)%>&date=<%=mx.getDateR(i)%>">
 									<i class="icon-check tooltip-top" title="Letto"> </i>
 							</a></td>
 						</tr>

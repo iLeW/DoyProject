@@ -2,6 +2,9 @@ package controller;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -67,11 +70,19 @@ public class ControllerServlet extends HttpServlet {
 
 		// Caso che venga scelta l'homepage
 		if ("homepage".equals(val)) {
+			if (session.getAttribute("fromMessaggi") != null)
+				session.removeAttribute("fromMessaggi"); // Rimuovo l'attributo
+															// messaggi se c'è
+															// (Serve per capire
+															// dove sono per la
+															// tabella)
 			path = "/WEB-INF/homepage";
 		}
 
 		// Caso che venga cliccata la voce messaggi
 		if ("messaggi".equals(val)) {
+			if (session.getAttribute("fromHome") != null)
+				session.removeAttribute("fromHome");
 			mx = new Messaggio(); // La assegno se arrivo qua. In ogni caso la
 									// creo sempre nuova,
 									// perché nel frattempo potrebbero essermi
@@ -187,7 +198,7 @@ public class ControllerServlet extends HttpServlet {
 			session.setAttribute("IDpaz", request.getParameter("ID"));
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
-			//session.setAttribute("valStorico", "");
+			// session.setAttribute("valStorico", "");
 			session.setAttribute("storico", s);
 			path = "/WEB-INF/paziente";
 		}
@@ -198,7 +209,7 @@ public class ControllerServlet extends HttpServlet {
 			session.setAttribute("categoria", 1);
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
-			//session.setAttribute("valStorico", "");
+			// session.setAttribute("valStorico", "");
 			session.setAttribute("storico", s);
 			path = "/WEB-INF/paziente";
 		}
@@ -234,59 +245,93 @@ public class ControllerServlet extends HttpServlet {
 					// quindi anche il codice successivo a questo è fatto
 					// girare. E da errore.
 		}
-		
-		/////////////////////////////////
-		//HREF DALLE TABELLE DEI MESSAGGI
-		/////////////////////////////////
-		
+
+		// ///////////////////////////////
+		// HREF DALLE TABELLE DEI MESSAGGI
+		// ///////////////////////////////
+
 		System.out.println("VAL: " + val);
-		
-		//Se premo l'azione di lettura
-		if("readMex".equals(val)){
+
+		// Se premo l'azione di lettura
+		if ("readMex".equals(val)) {
 			mx = (Messaggio) session.getAttribute("messaggio");
 			path = "/WEB-INF/messaggio.jsp";
 		}
-		
-		//Se premo l'azione di risposta
-		if("rispMex".equals(val)){
+
+		// Se premo l'azione di risposta
+		if ("rispMex".equals(val)) {
 			mx = (Messaggio) session.getAttribute("messaggio");
-			session.setAttribute("rispMex", true);	//Perché uso la stessa pagina di lettura e di risposta, mettendo questo attributo 
-													//posso modificarla per la risposta (con tasti appositi)
-			path = "/WEB-INF/messaggio.jsp"; 
+			session.setAttribute("rispMex", true); // Perché uso la stessa
+													// pagina di lettura e di
+													// risposta, mettendo questo
+													// attributo
+													// posso modificarla per la
+													// risposta (con tasti
+													// appositi)
+			path = "/WEB-INF/messaggio.jsp";
 		}
-		
+
 		//Se premo l'azione di delete
-		if("delMex".equals(val)){
-			mx = (Messaggio) session.getAttribute("messaggio");
-			boolean result = mx.deleteMexR(u.getUsername(), request.getParameter("sender"), Date.valueOf(request.getParameter("date")));
-			if (result){
-				if(session.getAttribute("fromHome") != null){
-					path = "/WEB-INF/homepage";
-					session.removeAttribute("fromHome");	//Lo rimuovo altrimenti sarà sempre settato e tutta questa cosa non funzionerebbe più
+				if("delMex".equals(val)){
+					mx = (Messaggio) session.getAttribute("messaggio");
+					
+					////////////////////////////
+			
+//					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//					String formattedDate = formatter.format(request.getParameter("date"));
+//					System.out.println("DATA: " + formattedDate);
+					
+					DateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+					String inputText = request.getParameter("date");
+					System.out.println("InputText: " + inputText);
+					java.util.Date date = null;
+					try {
+						date = inputFormat.parse(inputText);
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					String outputText = outputFormat.format(date);
+					
+					System.out.println("OutputText: " + outputText);
+					//////////////////////////////////// 
+					boolean result = mx.deleteMexR(u.getUsername(), request.getParameter("sender"), outputText);
+					System.out.println("************: RESULT : " + result );
+					if (result){
+						if(session.getAttribute("fromHome") != null){
+							mx.readAndSetMex(u.getUsername());
+							session.setAttribute("messaggio", mx);
+							session.removeAttribute("fromHome");	//Lo rimuovo altrimenti sarà sempre settato e tutta questa cosa non funzionerebbe più
+							path = "/WEB-INF/homepage";
+						}
+						else{
+							mx.readAndSetMex(u.getUsername());
+							session.setAttribute("messaggio", mx);
+							session.removeAttribute("fromMessagi");	//Lo rimuovo altrimenti sarà sempre settato e tutta questa cosa non funzionerebbe più
+							path = "/WEB-INF/messaggi";
+						}
+						
+					}
 				}
-				else
-					path = "/WEB-INF/messaggi";
 				
-			}
-		}
-		
-		//se premo l'azione di segnalazione come letto
-		if("okReadMex".equals(val)){
-			mx = (Messaggio) session.getAttribute("messaggio");
-			boolean result = mx.markAsReadMex(u.getUsername(), request.getParameter("sender"), Date.valueOf(request.getParameter("date")));
-			if (result){
-				if(session.getAttribute("fromHome") != null){
-					System.out.println("OKASASASASA");
-					path = "/WEB-INF/homepage";
-					session.removeAttribute("fromHome");	//Lo rimuovo altrimenti sarà sempre settato e tutta questa cosa non funzionerebbe più
+				//se premo l'azione di segnalazione come letto
+				if("okReadMex".equals(val)){
+					mx = (Messaggio) session.getAttribute("messaggio");
+					boolean result = mx.markAsReadMex(u.getUsername(), request.getParameter("sender"), Date.valueOf(request.getParameter("date")));
+					if (result){
+						if(session.getAttribute("fromHome") != null){
+							System.out.println("OKASASASASA");
+							path = "/WEB-INF/homepage";
+							session.removeAttribute("fromHome");	//Lo rimuovo altrimenti sarà sempre settato e tutta questa cosa non funzionerebbe più
+						}
+						else
+							path = "/WEB-INF/messaggi";
+						
+					}
 				}
-				else
-					path = "/WEB-INF/messaggi";
-				
-			}
-		}
-		
-		
+
 		// Metodo finale che mi rimanda alla pagina giusta.
 		String url = path + ".jsp";
 		try {
@@ -315,7 +360,7 @@ public class ControllerServlet extends HttpServlet {
 		Paziente p = new Paziente();
 		Monitoraggio m = new Monitoraggio();
 		Storico s = new Storico();
-		//Storico s = (Storico) session.getAttribute("storico");
+		// Storico s = (Storico) session.getAttribute("storico");
 		String path = ""; // path che indica la JSP dove voglio andare a seconda
 							// delle azioni
 		Reparto r = (Reparto) session.getAttribute("Reparto");
@@ -660,11 +705,12 @@ public class ControllerServlet extends HttpServlet {
 			} else {
 				path = "/WEB-INF/pazientiLista";
 			}
-			//session.removeAttribute("valStorico");
+			// session.removeAttribute("valStorico");
 		}
-		
+
 		if ("aggiornaGrafico".equals(val)) {
-			//session.setAttribute("valStorico", request.getParameter("visStorico"));
+			// session.setAttribute("valStorico",
+			// request.getParameter("visStorico"));
 			s.setValGrafico(request.getParameter("visStorico").toString());
 			s.setDataInizio(Date.valueOf(request.getParameter("dataInizio")));
 			s.setDataFine(Date.valueOf(request.getParameter("dataFine")));

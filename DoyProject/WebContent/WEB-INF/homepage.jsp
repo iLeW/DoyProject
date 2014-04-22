@@ -2,6 +2,7 @@
 <%@ include file="/WEB-INF/headerMenu.jsp"%>
 <%@ page import="model.Messaggio"%>
 <%@ page import="model.User"%>
+<% session.setAttribute("fromHome", "1");	//dico che vengo dalla homepage, lo setto subito altrimenti non viene letto %>
 <div class="grid flex">
 	<div class="col_12" style="margin-top: 100px;">
 		<h1 class="center">
@@ -12,6 +13,7 @@
 
 		<!-- Se ci sono dei messaggi allora dico che ce ne sono altrimenti no -->
 		<%
+		
 			Messaggio mx = (Messaggio) session.getAttribute("messaggio"); //Di sicuro settato dalla servlet
 			User u = (User) session.getAttribute("user");
 			if (mx.getNumNewMex(u.getUsername()) == 0) {
@@ -79,6 +81,5 @@
 </div>
 <!-- End Grid -->
 
-<% session.setAttribute("fromHome", true);	//dico che vengo dalla homepage %>
 </body>
 </html>

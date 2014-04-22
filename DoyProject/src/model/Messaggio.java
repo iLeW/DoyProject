@@ -30,10 +30,10 @@ public class Messaggio {
 	// Variabili della classe
 	private ArrayList<String> sendersU;
 	private ArrayList<String> messagesU; // I messaggi non letti
-	private ArrayList<Date> datesU;
+	private ArrayList<String> datesU;
 	private ArrayList<String> sendersR;
 	private ArrayList<String> messagesR; // I messaggi letti
-	private ArrayList<Date> datesR;
+	private ArrayList<String> datesR;
 
 	/**
 	 * Metodo costruttore per rispecchiare la costruzione di un Bean
@@ -165,7 +165,7 @@ public class Messaggio {
 	 *            Indice del messaggio di cui voglio ricavare la data
 	 * @return La data del messaggio all'indice idx
 	 */
-	public Date getDateR(int idx) {
+	public String getDateR(int idx) {
 		return this.datesR.get(idx);
 	}
 
@@ -181,7 +181,7 @@ public class Messaggio {
 	 *            La data del messaggio
 	 * @return Vero se è stato correttamente cancellata la riga corrispondente
 	 */
-	public boolean deleteMexR(String receiver, String sender, Date date) {
+	public boolean deleteMexR(String receiver, String sender, String date) {
 		return this.deleteMexDB(receiver, date, sender);
 	}
 
@@ -256,7 +256,7 @@ public class Messaggio {
 	 * @return Il messaggio
 	 */
 	public String getMexU(int idx) {
-		return this.messagesR.get(idx);
+		return this.messagesU.get(idx);
 	}
 
 	/**
@@ -266,8 +266,8 @@ public class Messaggio {
 	 *            Indice del messaggio di cui voglio ricavare la data
 	 * @return La data del messaggio all'indice idx
 	 */
-	public Date getDateU(int idx) {
-		return this.datesR.get(idx);
+	public String getDateU(int idx) {
+		return this.datesU.get(idx);
 	}
 
 	/**
@@ -304,10 +304,10 @@ public class Messaggio {
 		// Creo le variabili solo se arrivo a questo punto
 		this.sendersU = new ArrayList<String>();
 		this.messagesU = new ArrayList<String>();
-		this.datesU = new ArrayList<Date>();
+		this.datesU = new ArrayList<String>();
 		this.sendersR = new ArrayList<String>();
 		this.messagesR = new ArrayList<String>();
-		this.datesR = new ArrayList<Date>();
+		this.datesR = new ArrayList<String>();
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME,
@@ -322,15 +322,17 @@ public class Messaggio {
 			else {
 				result = true;
 
+				//Metto nella lista dei messaggi non letti (U=unread) oppure in quelli letti (R=Read);
 				do {
 					if (!rs.getBoolean("readbool")) {
 						this.sendersU.add(rs.getString("sender"));
 						this.messagesU.add(rs.getString("message"));
-						this.datesU.add(rs.getDate("date"));
+						this.datesU.add(rs.getString("date"));
 					} else {
 						this.sendersR.add(rs.getString("sender"));
 						this.messagesR.add(rs.getString("message"));
-						this.datesR.add(rs.getDate("date"));
+						this.datesR.add(rs.getString("date"));
+						
 					}
 
 				} while (rs.next());
@@ -417,7 +419,7 @@ public class Messaggio {
 	 *            Il mittente del messaggio
 	 * @return Vero se la riga è stata correttamente cancellata
 	 */
-	private boolean deleteMexDB(String receiver, Date date, String sender) {
+	private boolean deleteMexDB(String receiver, String date, String sender) {
 		boolean result = false;
 
 		try {
@@ -428,11 +430,14 @@ public class Messaggio {
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, receiver);
 			ps.setString(2, sender);
-			ps.setDate(3, date);
+			ps.setString(3, date);
+			System.out.println("Receiver: " + receiver + " ,sender: " + sender + ", DATE in Messaggio: " + date);
 			int num = ps.executeUpdate(); // torna o il numero di righe affette
 											// (cancellate nel nostro caso)
 											// oppure 0 se non c'è stato nessun
 											// effetto.
+			ps.executeUpdate();
+			System.out.println("int num: " + num);
 
 			if (num != 0)
 				result = true;
