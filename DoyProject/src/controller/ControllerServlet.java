@@ -16,8 +16,7 @@ import model.Reparto;
 import model.User;
 import model.Monitoraggio;
 import model.Storico;
-
-
+import model.Messaggio;
 
 /**
  * Servlet implementation class ControllerServlet
@@ -53,6 +52,9 @@ public class ControllerServlet extends HttpServlet {
 		// 4)creare il nuovo paziente all'inizio sia del doGet che del doPost
 		Paziente p = new Paziente();
 		Monitoraggio m = new Monitoraggio();
+
+		Messaggio mx; // Variabile messaggio
+
 		String path = ""; // path che indica la JSP dove voglio andare a seconda
 							// delle azioni
 
@@ -69,6 +71,13 @@ public class ControllerServlet extends HttpServlet {
 
 		// Caso che venga cliccata la voce messaggi
 		if ("messaggi".equals(val)) {
+			mx = new Messaggio(); // La assegno se arrivo qua. In ogni caso la
+									// creo sempre nuova,
+									// perché nel frattempo potrebbero essermi
+									// arrivati nuovi messaggi
+			mx.readAndSetMex(u.getUsername()); // Leggo e setto i messaggi
+			session.setAttribute("messaggio", mx); // Setto l'oggetto nella
+													// sessione
 			path = "/WEB-INF/messaggi";
 		}
 
@@ -117,28 +126,32 @@ public class ControllerServlet extends HttpServlet {
 		// quì ci arriva quando si schiaccia l'icona con la penna nella tabella
 		// dei pazienti
 		if ("modPaziente".equals(val)) {
-			//System.out.println("cosa ho selezionato: " + session.getAttribute("paziente"));
+			// System.out.println("cosa ho selezionato: " +
+			// session.getAttribute("paziente"));
 			// con queste due righe ricreo l'array di tutti i pazienti
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			session.setAttribute("IDpaz", request.getParameter("ID"));
-			// adesso devo passare l'ID del paziente da modificare alla pagina pazienteMod
+			// adesso devo passare l'ID del paziente da modificare alla pagina
+			// pazienteMod
 			p.setInserito(2);
 			path = "/WEB-INF/pazienteMod";
 		}
-		
+
 		if ("modPazienteCat".equals(val)) {
-			//System.out.println("cosa ho selezionato: " + session.getAttribute("paziente"));
+			// System.out.println("cosa ho selezionato: " +
+			// session.getAttribute("paziente"));
 			// con queste due righe ricreo l'array di tutti i pazienti
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			session.setAttribute("IDpaz", request.getParameter("ID"));
-			// adesso devo passare l'ID del paziente da modificare alla pagina pazienteMod
+			// adesso devo passare l'ID del paziente da modificare alla pagina
+			// pazienteMod
 			p.setInserito(2);
 			session.setAttribute("categoria", 1);
 			path = "/WEB-INF/pazienteMod";
 		}
-		
+
 		// se dalla pagina pazientiLista schiacchio il tasto per cancellare il
 		// paziente
 		if ("delPaziente".equals(val)) {
@@ -152,7 +165,7 @@ public class ControllerServlet extends HttpServlet {
 			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiLista";
 		}
-		
+
 		if ("delPazienteCat".equals(val)) {
 			System.out.println("cancellare il paziente "
 					+ request.getParameter("ID") + "?");
@@ -165,8 +178,8 @@ public class ControllerServlet extends HttpServlet {
 			session.setAttribute("categoria", 1);
 			path = "/WEB-INF/pazientiLista";
 		}
-		
-		//quando si chiaccia l'icona per il profilo utente
+
+		// quando si chiaccia l'icona per il profilo utente
 		if ("profiloPaziente".equals(val)) {
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
@@ -184,25 +197,26 @@ public class ControllerServlet extends HttpServlet {
 			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/paziente";
 		}
-		//per eliminare un valore seguito
+		// per eliminare un valore seguito
 		if ("delMonitor".equals(val)) {
 			System.out.println("cancellare il valore monitorato "
-					+ request.getParameter("ID") + ", " + request.getParameter("VAL") + "?");
+					+ request.getParameter("ID") + ", "
+					+ request.getParameter("VAL") + "?");
 			// JOptionPane.showMessageDialog(null, "cancellare il paziente " +
 			// request.getParameter("ID") + "?");
 			// JOptionPane.showMessageDialog(this, "cacca");
-			m.removeValore(request.getParameter("ID"), request.getParameter("VAL"));
+			m.removeValore(request.getParameter("ID"),
+					request.getParameter("VAL"));
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/paziente";
 		}
-		
-		if("modProfilo".equals(val)){
+
+		if ("modProfilo".equals(val)) {
 			System.out.println("Modifica del profilo");
-			//Qua l'utente esiste già per forza perché è loggato dentro
+			// Qua l'utente esiste già per forza perché è loggato dentro
 			path = "/WEB-INF/profiloDocMod";
-			}
-		
+		}
 
 		// Questo chiude la sessione e quindi invalida tutti i dati della
 		// sessione, forzando subito la schermata di login
@@ -210,11 +224,64 @@ public class ControllerServlet extends HttpServlet {
 			session.invalidate();
 			System.out.println("signout");
 			response.sendRedirect("signin.jsp");
-			return;		//serve il return perché tutte le varie istruzioni come il redirect non fanno bloccare il codice,
-						//quindi anche il codice successivo a questo è fatto girare. E da errore.
+			return; // serve il return perché tutte le varie istruzioni come il
+					// redirect non fanno bloccare il codice,
+					// quindi anche il codice successivo a questo è fatto
+					// girare. E da errore.
 		}
 		
-
+		/////////////////////////////////
+		//HREF DALLE TABELLE DEI MESSAGGI
+		/////////////////////////////////
+		
+		System.out.println("VAL: " + val);
+		
+		//Se premo l'azione di lettura
+		if("readMex".equals(val)){
+			mx = (Messaggio) session.getAttribute("messaggio");
+			path = "/WEB-INF/messaggio.jsp";
+		}
+		
+		//Se premo l'azione di risposta
+		if("rispMex".equals(val)){
+			mx = (Messaggio) session.getAttribute("messaggio");
+			session.setAttribute("rispMex", true);	//Perché uso la stessa pagina di lettura e di risposta, mettendo questo attributo 
+													//posso modificarla per la risposta (con tasti appositi)
+			path = "/WEB-INF/messaggio.jsp"; 
+		}
+		
+		//Se premo l'azione di delete
+		if("delMex".equals(val)){
+			mx = (Messaggio) session.getAttribute("messaggio");
+			boolean result = mx.deleteMexR(u.getUsername(), request.getParameter("sender"), Date.valueOf(request.getParameter("date")));
+			if (result){
+				if(session.getAttribute("fromHome") != null){
+					path = "/WEB-INF/homepage";
+					session.removeAttribute("fromHome");	//Lo rimuovo altrimenti sarà sempre settato e tutta questa cosa non funzionerebbe più
+				}
+				else
+					path = "/WEB-INF/messaggi";
+				
+			}
+		}
+		
+		//se premo l'azione di segnalazione come letto
+		if("okReadMex".equals(val)){
+			mx = (Messaggio) session.getAttribute("messaggio");
+			boolean result = mx.markAsReadMex(u.getUsername(), request.getParameter("sender"), Date.valueOf(request.getParameter("date")));
+			if (result){
+				if(session.getAttribute("fromHome") != null){
+					System.out.println("OKASASASASA");
+					path = "/WEB-INF/homepage";
+					session.removeAttribute("fromHome");	//Lo rimuovo altrimenti sarà sempre settato e tutta questa cosa non funzionerebbe più
+				}
+				else
+					path = "/WEB-INF/messaggi";
+				
+			}
+		}
+		
+		
 		// Metodo finale che mi rimanda alla pagina giusta.
 		String url = path + ".jsp";
 		try {
@@ -234,24 +301,37 @@ public class ControllerServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Servlet doPost");
 		String val = request.getParameter("val"); // Intercetto il parametro val
-		HttpSession session = request.getSession(true); // Lavoro a livello di sessione
-		User u = (User) session.getAttribute("user"); // Se c'è già un utente lo prendo
-		// Paziente p = (Paziente) session.getAttribute("paziente"); //Se c'è già un paziente lo prendo
+		HttpSession session = request.getSession(true); // Lavoro a livello di
+														// sessione
+		User u = (User) session.getAttribute("user"); // Se c'è già un utente lo
+														// prendo
+		// Paziente p = (Paziente) session.getAttribute("paziente"); //Se c'è
+		// già un paziente lo prendo
 		Paziente p = new Paziente();
 		Monitoraggio m = new Monitoraggio();
 		Storico s = new Storico();
-		String path = ""; // path che indica la JSP dove voglio andare a seconda delle azioni
+		String path = ""; // path che indica la JSP dove voglio andare a seconda
+							// delle azioni
 		Reparto r = (Reparto) session.getAttribute("Reparto");
-		if(r == null)
+		if (r == null)
 			r = new Reparto();
+		Messaggio mx; // Variabile messaggio
 
 		// caso del signin
 		if ("signin".equals(val)) {
 			System.out.println("username che setto: "
 					+ request.getParameter("username"));
 
-			u = new User(request.getParameter("username")); // creo un oggetto utente con l'username passato
-			
+			String username = request.getParameter("username");
+			u = new User(username); // creo un oggetto utente con l'username
+									// passato
+			mx = new Messaggio(); // Quando entro qui di sicuro non ho ancora i
+									// messaggi settati
+			mx.readAndSetMex(username); // Setto i messaggi
+			session.setAttribute("messaggio", mx); // Setto l'oggetto messaggio
+													// nella sessione così da
+													// risprenderlo nella
+													// homepage
 
 			// Se non si trova corrispondenza nel database (e lo fa la Servlet)
 			// oppure l'utente è nullo allora sto nel login
@@ -259,8 +339,11 @@ public class ControllerServlet extends HttpServlet {
 				path = "/WEB-INF/signinErr";
 			// altrimenti vado alla homepage
 			else {
-				u.getProfileU();								//In questo modo vengono settati i dati nell'oggetto utente.
-				session.setAttribute("user", u);				//SEMBRA CHE QUI NON LA SETTIIIIIIIIIIIIIIIII AAAAAAAAAAAAA
+				u.getProfileU(); // In questo modo vengono settati i dati
+									// nell'oggetto utente.
+				session.setAttribute("user", u); // SEMBRA CHE QUI NON LA
+													// SETTIIIIIIIIIIIIIIIII
+													// AAAAAAAAAAAAA
 				path = "/WEB-INF/homepage";
 			}
 
@@ -283,23 +366,26 @@ public class ControllerServlet extends HttpServlet {
 			response.sendRedirect("signin.jsp");
 			return;
 		}
-		
-		//Anche qui se annullo, cancello tutto *****************DA DOVE VIENE QUESTO??? FORSE NON ESISTE ********
+
+		// Anche qui se annullo, cancello tutto *****************DA DOVE VIENE
+		// QUESTO??? FORSE NON ESISTE ********
 		if ("annullaModSignup".equals(val)) {
 			System.out.println("RICERCA STO COSO TERMINATA********");
 			session.invalidate();
 			response.sendRedirect("signin.jsp");
 			return;
 		}
-		
 
 		// bottoni aggiungi paziente e annulla. Dalla pagina pazienteMod
 		// riportano a pazientiLista
 		if ("insPaziente".equals(val)) {
 			// Paziente p = new Paziente(request.getParameter("IDPaziente"));
-			p.insPaziente(p.getIDDisp(), request.getParameter("nome"), request.getParameter("cognome"),
-					request.getParameter("dataNascita").toString(), request.getParameter("codFisc"),
-					request.getParameter("dataIn").toString(), request.getParameter("reparto"));
+			p.insPaziente(p.getIDDisp(), request.getParameter("nome"),
+					request.getParameter("cognome"),
+					request.getParameter("dataNascita").toString(),
+					request.getParameter("codFisc"),
+					request.getParameter("dataIn").toString(),
+					request.getParameter("reparto"));
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			path = "/WEB-INF/pazientiLista";
@@ -314,19 +400,20 @@ public class ControllerServlet extends HttpServlet {
 		// due funzioni per modificare il paziente
 		if ("insModPaziente".equals(val)) {
 			// Paziente p = new Paziente(request.getParameter("IDPaziente"));
-			p.modificaPaziente(session.getAttribute("IDpaz").toString(), request.getParameter("nome"), request.getParameter("cognome"),
-					request.getParameter("dataNascita").toString(), request.getParameter("codFisc"),
-					request.getParameter("dataIn").toString(), request.getParameter("dataOut").toString(),
-					request.getParameter("reparto"));
+			p.modificaPaziente(session.getAttribute("IDpaz").toString(),
+					request.getParameter("nome"), request
+							.getParameter("cognome"),
+					request.getParameter("dataNascita").toString(), request
+							.getParameter("codFisc"),
+					request.getParameter("dataIn").toString(), request
+							.getParameter("dataOut").toString(), request
+							.getParameter("reparto"));
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
-			if(session.getAttribute("categoria") != null)
-			{
+			if (session.getAttribute("categoria") != null) {
 				session.removeAttribute("categoria");
 				path = "/WEB-INF/pazientiCategoria";
-			}
-			else
-			{
+			} else {
 				path = "/WEB-INF/pazientiLista";
 			}
 		}
@@ -334,19 +421,16 @@ public class ControllerServlet extends HttpServlet {
 		if ("annModPaziente".equals(val)) {
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
-			if(session.getAttribute("categoria") != null)
-			{
+			if (session.getAttribute("categoria") != null) {
 				session.removeAttribute("categoria");
 				path = "/WEB-INF/pazientiCategoria";
-			}
-			else
-			{
+			} else {
 				path = "/WEB-INF/pazientiLista";
 			}
 		}
-		
-		/*MF*/
-		if("confermaSignup".equals(val)){
+
+		/* MF */
+		if ("confermaSignup".equals(val)) {
 			System.out.println("confermaSignup");
 			u = new User(request.getParameter("username"));
 			String username = request.getParameter("username");
@@ -356,81 +440,94 @@ public class ControllerServlet extends HttpServlet {
 			String surname = request.getParameter("cognome");
 			Date birthdate = Date.valueOf(request.getParameter("birthdate"));
 			ArrayList<String> deps = new ArrayList<String>();
-			
-			//Prendo i reparti che sono stati scelti nelle checkboxes
+
+			// Prendo i reparti che sono stati scelti nelle checkboxes
 			int numRep = r.getNumRep();
-			//byte count = 0;	//Per il massimo numero di reparti possibili
-			for(byte i = 0; i < numRep; ++i ){
+			// byte count = 0; //Per il massimo numero di reparti possibili
+			for (byte i = 0; i < numRep; ++i) {
 				String par = "check" + i;
 				String dep = request.getParameter(par);
 				System.out.println("Reparto preso:" + dep);
-				if(dep != null){
-					if(!dep.equals("null")){	//se una checkbox non è segnata, mi torna null, allora devo stare attento a non prenderla
-					System.out.println("Aggiungo il reparto:" + dep);
-					deps.add(dep);
-					//count++;	//Per renderlo più efficiente, si blocca se il numero di reparti aggiunti è 3
+				if (dep != null) {
+					if (!dep.equals("null")) { // se una checkbox non è segnata,
+												// mi torna null, allora devo
+												// stare attento a non prenderla
+						System.out.println("Aggiungo il reparto:" + dep);
+						deps.add(dep);
+						// count++; //Per renderlo più efficiente, si blocca se
+						// il numero di reparti aggiunti è 3
 					}
 				}
-			}	//notare che il numero di reparti selezionato potrebe essere maggiore di 3 e quindi non andrebbe bene, lo controllo dopo, in checkSignup.
-			
-			
-			//Controllo dei campi inseriti correttamente (una prima obbligatorietà è controllata tramite HTML5)
-			
-			//se c'è qualche errore allora torno alla pagina di signup ma quella di errore. Prima recupero i messaggi di errore e li setto nella sessione.
-			if(u.checkSignup(username, password, cpassword, name, surname, birthdate, deps)){
-				
-				//Setto gli errori da riprendere nella signupErr.jsp
-				session.setAttribute("err_username",u.getError("username"));
+			} // notare che il numero di reparti selezionato potrebe essere
+				// maggiore di 3 e quindi non andrebbe bene, lo controllo dopo,
+				// in checkSignup.
+
+			// Controllo dei campi inseriti correttamente (una prima
+			// obbligatorietà è controllata tramite HTML5)
+
+			// se c'è qualche errore allora torno alla pagina di signup ma
+			// quella di errore. Prima recupero i messaggi di errore e li setto
+			// nella sessione.
+			if (u.checkSignup(username, password, cpassword, name, surname,
+					birthdate, deps)) {
+
+				// Setto gli errori da riprendere nella signupErr.jsp
+				session.setAttribute("err_username", u.getError("username"));
 				session.setAttribute("err_password", u.getError("password"));
 				session.setAttribute("err_name", u.getError("nome"));
 				session.setAttribute("err_surname", u.getError("cognome"));
 				session.setAttribute("err_birthdate", u.getError("birthdate"));
 				session.setAttribute("err_deps0", u.getError("deps0"));
 				session.setAttribute("err_deps", u.getError("deps"));
-				
-				//Setto gli attributi che sono già stati inseriti in modo da poterli riprendere
+
+				// Setto gli attributi che sono già stati inseriti in modo da
+				// poterli riprendere
 				session.setAttribute("username", username);
 				session.setAttribute("password", password);
 				session.setAttribute("name", name);
 				session.setAttribute("surname", surname);
 				session.setAttribute("birthdate", birthdate);
 				session.setAttribute("deps", deps);
-				
-				
+
 				path = "/WEB-INF/signupErr";
 			}
-			
-			//se non ci sono errori posso inserire i dati nel database
-			else{
+
+			// se non ci sono errori posso inserire i dati nel database
+			else {
 				System.out.println("Inserimento nel database");
-				
-				//Se ho solo un reparto allora ne metto altri due vuoti
-				if(deps.size()==1){
+
+				// Se ho solo un reparto allora ne metto altri due vuoti
+				if (deps.size() == 1) {
 					deps.add("");
 					deps.add("");
 				}
-				
-				//Se è grande due ne aggiungo solo una vuota
-				if(deps.size()==2){
+
+				// Se è grande due ne aggiungo solo una vuota
+				if (deps.size() == 2) {
 					deps.add("");
 				}
-				
-				//faccio il signup e ritorno al login
-				u.signupU(username, cpassword, name, surname, birthdate, deps.get(0), deps.get(1), deps.get(2));
+
+				// faccio il signup e ritorno al login
+				u.signupU(username, cpassword, name, surname, birthdate,
+						deps.get(0), deps.get(1), deps.get(2));
 				session.invalidate();
 				response.sendRedirect("signin.jsp");
 				return;
 			}
-			
+
 		}
-		
-		//Qui ci arrivo da profiloDoc quando clicco su Modifica per confermare le modifiche ai dati personali
-		if("acceptMod".equals(val)){
+
+		// Qui ci arrivo da profiloDoc quando clicco su Modifica per confermare
+		// le modifiche ai dati personali
+		if ("acceptMod".equals(val)) {
 			System.out.println("acceptMod");
-			
-			//Prendo i valori passati dalla form
+
+			// Prendo i valori passati dalla form
 			String username = request.getParameter("username");
-			System.out.println("USERNAME: " + username);		//Ok risolto il null qua con readonly="readonly" sul campo input
+			System.out.println("USERNAME: " + username); // Ok risolto il null
+															// qua con
+															// readonly="readonly"
+															// sul campo input
 			String password = request.getParameter("password");
 			System.out.println("PASSWORD: " + password);
 			String cpassword = request.getParameter("cpassword");
@@ -439,102 +536,125 @@ public class ControllerServlet extends HttpServlet {
 			String surname = request.getParameter("cognome");
 			Date birthdate = Date.valueOf(request.getParameter("birthdate"));
 			ArrayList<String> deps = new ArrayList<String>();
-			
-			//Prendo i reparti che sono stati scelti nelle checkboxes (questo funziona perché è stato settatto l'oggetto reparto, per la sessione, dalla pagina jsp)
+
+			// Prendo i reparti che sono stati scelti nelle checkboxes (questo
+			// funziona perché è stato settatto l'oggetto reparto, per la
+			// sessione, dalla pagina jsp)
 			int numRep = r.getNumRep();
-			//byte count = 0;	//Per il massimo numero di reparti possibili
-			for(byte i = 0; i < numRep; ++i ){
+			// byte count = 0; //Per il massimo numero di reparti possibili
+			for (byte i = 0; i < numRep; ++i) {
 				String par = "check" + i;
 				String dep = request.getParameter(par);
 				System.out.println("Reparto preso:" + dep);
-				if(dep != null){
-					if(!dep.equals("null")){	//se una checkbox non è segnata, mi torna null, allora devo stare attento a non prenderla
-					System.out.println("Aggiungo il reparto:" + dep);
-					deps.add(dep);
-					//count++;	//Per renderlo più efficiente, si blocca se il numero di reparti aggiunti è 3
+				if (dep != null) {
+					if (!dep.equals("null")) { // se una checkbox non è segnata,
+												// mi torna null, allora devo
+												// stare attento a non prenderla
+						System.out.println("Aggiungo il reparto:" + dep);
+						deps.add(dep);
+						// count++; //Per renderlo più efficiente, si blocca se
+						// il numero di reparti aggiunti è 3
 					}
 				}
 			}
-			
-			if(u.checkSignup(username, password, cpassword, name, surname, birthdate, deps)){
-				
-				//Setto gli errori da riprendere nella signupErr.jsp
-				session.setAttribute("err_mod", "Errore inserimento dati nella modifica del profilo. Controllare i campi evidenziati in rosso");	//Errore per capire che veniamo dalla modifica (per cambiare il tasto)
-				//session.setAttribute("err_username",u.getError("username")); In questo caso non serve perché questo non può dare errore, esiste già
+
+			if (u.checkSignup(username, password, cpassword, name, surname,
+					birthdate, deps)) {
+
+				// Setto gli errori da riprendere nella signupErr.jsp
+				session.setAttribute(
+						"err_mod",
+						"Errore inserimento dati nella modifica del profilo. Controllare i campi evidenziati in rosso"); // Errore
+																															// per
+																															// capire
+																															// che
+																															// veniamo
+																															// dalla
+																															// modifica
+																															// (per
+																															// cambiare
+																															// il
+																															// tasto)
+				// session.setAttribute("err_username",u.getError("username"));
+				// In questo caso non serve perché questo non può dare errore,
+				// esiste già
 				session.setAttribute("err_password", u.getError("password"));
 				session.setAttribute("err_name", u.getError("nome"));
 				session.setAttribute("err_surname", u.getError("cognome"));
 				session.setAttribute("err_birthdate", u.getError("birthdate"));
 				session.setAttribute("err_deps0", u.getError("deps0"));
 				session.setAttribute("err_deps", u.getError("deps"));
-				
-				//Setto gli attributi che sono già stati inseriti in modo da poterli riprendere
+
+				// Setto gli attributi che sono già stati inseriti in modo da
+				// poterli riprendere
 				session.setAttribute("username", username);
 				session.setAttribute("password", password);
 				session.setAttribute("name", name);
 				session.setAttribute("surname", surname);
 				session.setAttribute("birthdate", birthdate);
 				session.setAttribute("deps", deps);
-				
-				
+
 				path = "/WEB-INF/signupErr";
 			}
-			
-			//se non ci sono errori posso inserire i dati nel database
-			else{
+
+			// se non ci sono errori posso inserire i dati nel database
+			else {
 				System.out.println("Inserimento nel database");
-				
-				//Se ho solo un reparto allora ne metto altri due vuoi
-				if(deps.size()==1){
+
+				// Se ho solo un reparto allora ne metto altri due vuoi
+				if (deps.size() == 1) {
 					deps.add("");
 					deps.add("");
 				}
-				
-				//Se è grande due ne aggiungo solo una vuota
-				if(deps.size()==2){
+
+				// Se è grande due ne aggiungo solo una vuota
+				if (deps.size() == 2) {
 					deps.add("");
 				}
-			
-			if(!u.modProfilo(password, name, surname, birthdate, deps.get(0), deps.get(1), deps.get(2), username))
-				session.setAttribute("err_mod1", "Errore nella modifica del profilo, riprovare.");
-			else{
-				u.getProfileU();
-				session.setAttribute("user", u);//Setto quello modificato
+
+				if (!u.modProfilo(password, name, surname, birthdate,
+						deps.get(0), deps.get(1), deps.get(2), username))
+					session.setAttribute("err_mod1",
+							"Errore nella modifica del profilo, riprovare.");
+				else {
+					u.getProfileU();
+					session.setAttribute("user", u);// Setto quello modificato
+				}
+				path = "/WEB-INF/profiloDoc";
 			}
-			path = "/WEB-INF/profiloDoc";
 		}
-	}
-		
-		
-		//quì ci arriva quando si schiaccia il bottone per aggiungere un valore da monitorare
+
+		// quì ci arriva quando si schiaccia il bottone per aggiungere un valore
+		// da monitorare
 		if ("addValore".equals(val)) {
-			m.insMonitoraggio(session.getAttribute("IDpaz").toString(), request.getParameter("nomeValore"), request.getParameter("valMin").toString(), request.getParameter("valMax").toString());
-			//System.out.println("prova IDPAZ: "+session.getAttribute("IDpaz"));
+			m.insMonitoraggio(session.getAttribute("IDpaz").toString(), request
+					.getParameter("nomeValore"), request.getParameter("valMin")
+					.toString(), request.getParameter("valMax").toString());
+			// System.out.println("prova IDPAZ: "+session.getAttribute("IDpaz"));
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/paziente";
 		}
-		
+
 		if ("addDato".equals(val)) {
-			s.insDato(session.getAttribute("IDpaz").toString(), request.getParameter("valoreStorico"), request.getParameter("dato"));
+			s.insDato(session.getAttribute("IDpaz").toString(),
+					request.getParameter("valoreStorico"),
+					request.getParameter("dato"));
 			path = "/WEB-INF/paziente";
 		}
-		
-		//quando si chiude il profilo del paziente
+
+		// quando si chiude il profilo del paziente
 		if ("closeProfiloPaziente".equals(val)) {
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
-			if(session.getAttribute("categoria") != null)
-			{
+			if (session.getAttribute("categoria") != null) {
 				session.removeAttribute("categoria");
 				path = "/WEB-INF/pazientiCategoria";
-			}
-			else
-			{
+			} else {
 				path = "/WEB-INF/pazientiLista";
 			}
 		}
-		
+
 		// Prima di uscire dal post, raccolgo quello che ho seminato, e vado
 		// dove devo andare.
 		String url = path + ".jsp";
