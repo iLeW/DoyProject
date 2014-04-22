@@ -24,12 +24,46 @@ public class Storico {
 	private Vector<String> valore = new Vector<String>();
 	private Vector<Integer> dato = new Vector<Integer>();
 	private Vector<String> monitor = new Vector<String>();
-	
-	
+	Vector<Date> d = new Vector<Date>();
+	private String valGrafico = "";
+	private Date inizio, fine;
+		
 	
 	public Storico() {
 
 	}
+	
+	//funzioni per lavorare con i dati da passare per la costruzione dei grafici
+	public void setValGrafico(String v) {
+		this.valGrafico = v;
+	}
+	public String getValGrafico() {
+		if(valGrafico.isEmpty())
+		{ return monitor.get(0); }
+		else
+		{ return this.valGrafico; }
+	}
+	public void setDataInizio(Date d) {
+		this.inizio = d;
+	}
+	public Date getDataInizio() {
+		return this.inizio;
+	}
+	/*
+	public Date getDataInizio(int ID) {
+	se inizio è nullo allora
+	{
+		returnData(ID, getValGrafico(), "primo")
+	}
+		return this.inizio;
+	}*/
+	public void setDataFine(Date d) {
+		this.fine = d;
+	}
+	public Date getDataFine() {
+		return this.fine;
+	}
+	
 	
 	public void insDato(String ID, String valoreStorico, String dato){
 		try {
@@ -91,12 +125,11 @@ public class Storico {
 	}
 	
 	//funzione che ritorna la prima o l'ultima data
-	/*public Date returnData(int ID, String valore, String quale){
-		
+	public Date returnData(int ID, String valore, String quale){		
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
-			String query ="select * from monitoraggio where IDPaziente=? and valore=?";
+			String query ="select * from storico where IDPaziente=? and valore=?";
 			PreparedStatement ps = con.prepareStatement(query);
 					
 			Integer id = ID;
@@ -106,8 +139,8 @@ public class Storico {
 	        ResultSet rs = ps.executeQuery();
 	       	
 	        while(rs.next()){
-				String mon = rs.getString("valore");
-				monitor.add(mon);
+				Date data = rs.getDate("data");
+				d.add(data);
 			}
 			ps.close();
 			con.close();
@@ -116,7 +149,12 @@ public class Storico {
 		catch (Exception e) {
 		e.printStackTrace();
 		}
-	}*/
+		
+		if((quale).equals("primo"))
+		{ return d.firstElement(); }
+		else
+		{ return d.lastElement(); }
+	}
 	
 	
 	

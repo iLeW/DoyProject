@@ -8,7 +8,7 @@
 <%
 Paziente p = (Paziente) session.getAttribute("paziente");
 Monitoraggio m = (Monitoraggio) session.getAttribute("monitoraggio");
-Storico s = new Storico();
+Storico s = (Storico) session.getAttribute("storico");
 //int ID = Integer.parseInt(request.getParameter("ID"));
 int ID = Integer.parseInt(session.getAttribute("IDpaz").toString());
 int indice = p.getIndice(ID);
@@ -156,7 +156,7 @@ int conta = m.contaMonitor();
 
 	<div class="col_2">
 			<label for="select1">Aggiungi un dato a:</label></div>
-		<div class="col_10" style="margin-bottom: 30px">
+		<div class="col_10">
 			<select id="ValoreMon" name="valoreStorico" required>
 			<% dim = s.viewMonitorPaziente(ID);
 			for(int i=0; i<dim; i++)
@@ -178,22 +178,47 @@ int conta = m.contaMonitor();
 
 	<div class="col_2">
 			<label for="select1">Visualizza il grafico di:</label></div>
-		<div class="col_10" style="margin-bottom: 30px">
-			<select id="ValoreMon" name="valoreStorico" required>
+		<div class="col_10">
+			<select id="visStorico" name="visStorico" required>
 			<%for(int i=0; i<dim; i++)
 			{%>
 			<option value="<%=s.getMon(i)%>"><%=s.getMon(i)%></option>
 			<%} %>
 			</select>
+		<% //s.setValGrafico(session.getAttribute("valStorico").toString()); 
+		System.out.println(s.getValGrafico());
+		System.out.println(s.getDataInizio());%>
+		<!-- l'unico modo per settare in modo giusto il campo del select è usare una script -->
+		<script>
+        document.getElementById("visStorico").value = '<%= s.getValGrafico() %>';
+        </script>
+        		
+		<label style="margin-left: 20px">Dal</label>
+		<input id="dataInizio" name="dataInizio" type="date" style="margin-left: 20px"
+		value="<%= s.returnData(ID, s.getValGrafico(), "primo")%>" required />
+		<!-- fare in modo che la funzione returnData ritorni la data iniziale nel primo caso, altrimenti la data nuova 
+		sfruttare la funzione s.getDataInizio() a cui si deve passare anche ID
+		che ritorna s.returnData(ID, s.getValGrafico(), "primo") in caso in cui la variabile inizio sia nulla -->
+		
+		<label style="margin-left: 20px">al</label>
+		<input id="dataFine" name="dataFine" type="date" style="margin-left: 20px"
+		value="<%= s.returnData(ID, s.getValGrafico(), "ultimo")%>" required />
+		
 		<button class="orange" type="submit" name="val" style="margin-left: 20px" value="aggiornaGrafico">
 		<i class="icon-bolt"></i> Aggiorna</button>
+		
 	</div>
 
-	
 
 
 
 
+
+</div>
+</form>
+
+<form method="post" action="ControllerServlet">
+<div class="grid flex">	
 	<!-- bottone per chiudere il prfilo del paziente -->
 	<div class="center" style="margin-bottom: 80px; margin-top: 100px">
 		<button class="red" style="margin-left: 20px" type="submit" name="val" value="closeProfiloPaziente" formnovalidate>

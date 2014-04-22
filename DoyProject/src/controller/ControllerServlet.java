@@ -50,6 +50,7 @@ public class ControllerServlet extends HttpServlet {
 		User u = (User) session.getAttribute("user"); // Mi prendo l'utente se
 														// esiste già
 		// 4)creare il nuovo paziente all'inizio sia del doGet che del doPost
+		Storico s = new Storico();
 		Paziente p = new Paziente();
 		Monitoraggio m = new Monitoraggio();
 
@@ -186,6 +187,8 @@ public class ControllerServlet extends HttpServlet {
 			session.setAttribute("IDpaz", request.getParameter("ID"));
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
+			//session.setAttribute("valStorico", "");
+			session.setAttribute("storico", s);
 			path = "/WEB-INF/paziente";
 		}
 		if ("profiloPazienteCat".equals(val)) {
@@ -195,6 +198,8 @@ public class ControllerServlet extends HttpServlet {
 			session.setAttribute("categoria", 1);
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
+			//session.setAttribute("valStorico", "");
+			session.setAttribute("storico", s);
 			path = "/WEB-INF/paziente";
 		}
 		// per eliminare un valore seguito
@@ -310,6 +315,7 @@ public class ControllerServlet extends HttpServlet {
 		Paziente p = new Paziente();
 		Monitoraggio m = new Monitoraggio();
 		Storico s = new Storico();
+		//Storico s = (Storico) session.getAttribute("storico");
 		String path = ""; // path che indica la JSP dove voglio andare a seconda
 							// delle azioni
 		Reparto r = (Reparto) session.getAttribute("Reparto");
@@ -640,6 +646,7 @@ public class ControllerServlet extends HttpServlet {
 			s.insDato(session.getAttribute("IDpaz").toString(),
 					request.getParameter("valoreStorico"),
 					request.getParameter("dato"));
+			session.setAttribute("storico", s);
 			path = "/WEB-INF/paziente";
 		}
 
@@ -653,6 +660,16 @@ public class ControllerServlet extends HttpServlet {
 			} else {
 				path = "/WEB-INF/pazientiLista";
 			}
+			//session.removeAttribute("valStorico");
+		}
+		
+		if ("aggiornaGrafico".equals(val)) {
+			//session.setAttribute("valStorico", request.getParameter("visStorico"));
+			s.setValGrafico(request.getParameter("visStorico").toString());
+			s.setDataInizio(Date.valueOf(request.getParameter("dataInizio")));
+			s.setDataFine(Date.valueOf(request.getParameter("dataFine")));
+			session.setAttribute("storico", s);
+			path = "/WEB-INF/paziente";
 		}
 
 		// Prima di uscire dal post, raccolgo quello che ho seminato, e vado
