@@ -35,6 +35,11 @@ public class Messaggio {
 	private ArrayList<String> messagesR; // I messaggi letti
 	private ArrayList<String> datesR;
 
+	// Variabili per il messaggio corrente
+	private String sender;
+	private String message;
+	private String date;
+
 	/**
 	 * Metodo costruttore per rispecchiare la costruzione di un Bean
 	 */
@@ -45,6 +50,30 @@ public class Messaggio {
 	// ///////////////////////////////////////
 	// METODI PUBBLICI UTILIZZATI DALL'ESTERNO
 	// ///////////////////////////////////////
+
+	public void setSender(String sender) {
+		this.sender = sender;
+	}
+
+	public String getSender() {
+		return this.sender;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getMessage() {
+		return this.message;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getDate() {
+		return this.date;
+	}
 
 	/**
 	 * Funzione che ritorna il numero dei messaggi per il dottore loggato
@@ -81,11 +110,66 @@ public class Messaggio {
 	 *            Il dottore loggato
 	 */
 	public void readAndSetMex(String receiver) {
-		if (this.messagesR == null && this.messagesU == null)
-			this.getMexDB(receiver);
+		// if (this.messagesR == null && this.messagesU == null) //sbagliato
+		this.getMexDB(receiver);
 	}
 
-	/* *********** PER MESSAGGI LETTI************* */
+	/**
+	 * Funzione per cancellare un messaggio, chiama una funzione che poi agisce
+	 * effettivamente sul risultato
+	 * 
+	 * @param receiver
+	 *            Il destinatario del messaggio (il dottore loggato)
+	 * @param sender
+	 *            Il mittente
+	 * @param date
+	 *            La data del messaggio
+	 * @return Vero se è stato correttamente cancellata la riga corrispondente
+	 */
+	public boolean deleteMex(String receiver, String sender, String date) {
+		return this.deleteMexDB(receiver, date, sender);
+	}
+
+	/**
+	 * Metodo per settare il messaggio corrente
+	 * 
+	 * @param receiver
+	 *            Il desstinatario
+	 * @param sender
+	 *            Il mittente
+	 * @param date
+	 *            La data
+	 */
+	public void setMex(String receiver, String sender, String date) {
+		this.setSender(sender);
+		this.setDate(date);
+		this.setMessage(this.getMexStringDB(receiver, sender, date));
+	}
+
+	/**
+	 * Funzione per mandare un messaggio a un dottore, compresa la risposta
+	 * 
+	 * @param receiver
+	 *            Il destinatario
+	 * @param sender
+	 *            Il mittente(dottore loggato)
+	 * @param mex
+	 *            Il messaggio
+	 * @param date
+	 *            La data corrente
+	 * @return Vero se a buon fine, altrimenti falso
+	 */
+	public boolean sendMex(String receiver, String sender, String mex,
+			String date) {
+
+		return this.sendMexDB(receiver, sender, mex, date);
+
+	}
+
+	/*
+	 * *********** PER MESSAGGI LETTI*************
+	 * *****************************************
+	 */
 
 	/**
 	 * MESSAGGI LETTI Per avere il numero di messaggi LETTI
@@ -169,23 +253,10 @@ public class Messaggio {
 		return this.datesR.get(idx);
 	}
 
-	/**
-	 * Funzione per cancellare un messaggio, chiama una funzione che poi agisce
-	 * effettivamente sul risultato
-	 * 
-	 * @param receiver
-	 *            Il destinatario del messaggio (il dottore loggato)
-	 * @param sender
-	 *            Il mittente
-	 * @param date
-	 *            La data del messaggio
-	 * @return Vero se è stato correttamente cancellata la riga corrispondente
+	/*
+	 * *********** PER MESSAGGI NON LETTI*************
+	 * *********************************************
 	 */
-	public boolean deleteMexR(String receiver, String sender, String date) {
-		return this.deleteMexDB(receiver, date, sender);
-	}
-
-	/* *********** PER MESSAGGI NON LETTI************* */
 
 	/**
 	 * MESSAGGI NON LETTI Per avere il numero di messaggi NON LETTI
@@ -267,12 +338,14 @@ public class Messaggio {
 	 * @return La data del messaggio all'indice idx
 	 */
 	public String getDateU(int idx) {
-		return this.datesU.get(idx);
+			return this.datesU.get(idx);
 	}
 
 	/**
 	 * 
-	* Funzione pubblica che agisce sul database per modificare il messaggio e metterlo come letto
+	 * Funzione pubblica che agisce sul database per modificare il messaggio e
+	 * metterlo come letto
+	 * 
 	 * @param receiver
 	 *            Il destinatario del messaggio (il dottore loggato)
 	 * @param sender
@@ -282,7 +355,7 @@ public class Messaggio {
 	 * @return Vero se la riga è stata correttamente modificata
 	 * 
 	 */
-	public boolean markAsReadMex(String receiver, String sender, Date date) {
+	public boolean markAsReadMex(String receiver, String sender, String date) {
 		return this.markAsReadMexDB(receiver, sender, date);
 	}
 
@@ -322,7 +395,8 @@ public class Messaggio {
 			else {
 				result = true;
 
-				//Metto nella lista dei messaggi non letti (U=unread) oppure in quelli letti (R=Read);
+				// Metto nella lista dei messaggi non letti (U=unread) oppure in
+				// quelli letti (R=Read);
 				do {
 					if (!rs.getBoolean("readbool")) {
 						this.sendersU.add(rs.getString("sender"));
@@ -332,7 +406,7 @@ public class Messaggio {
 						this.sendersR.add(rs.getString("sender"));
 						this.messagesR.add(rs.getString("message"));
 						this.datesR.add(rs.getString("date"));
-						
+
 					}
 
 				} while (rs.next());
@@ -431,7 +505,8 @@ public class Messaggio {
 			ps.setString(1, receiver);
 			ps.setString(2, sender);
 			ps.setString(3, date);
-			System.out.println("Receiver: " + receiver + " ,sender: " + sender + ", DATE in Messaggio: " + date);
+			System.out.println("Receiver: " + receiver + " ,sender: " + sender
+					+ ", DATE in Messaggio: " + date);
 			int num = ps.executeUpdate(); // torna o il numero di righe affette
 											// (cancellate nel nostro caso)
 											// oppure 0 se non c'è stato nessun
@@ -456,7 +531,9 @@ public class Messaggio {
 	}
 
 	/**
-	 * Funzione privata che agisce sul database per modificare il messaggio e metterlo come letto
+	 * Funzione privata che agisce sul database per modificare il messaggio e
+	 * metterlo come letto
+	 * 
 	 * @param receiver
 	 *            Il destinatario del messaggio (il dottore loggato)
 	 * @param sender
@@ -465,7 +542,7 @@ public class Messaggio {
 	 *            La data del messaggio
 	 * @return Vero se la riga è stata correttamente modificata
 	 */
-	private boolean markAsReadMexDB(String receiver, String sender, Date date) {
+	private boolean markAsReadMexDB(String receiver, String sender, String date) {
 		boolean result = false;
 
 		try {
@@ -476,7 +553,7 @@ public class Messaggio {
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, receiver);
 			ps.setString(2, sender);
-			ps.setDate(3, date);
+			ps.setString(3, date);
 			int num = ps.executeUpdate(); // torna o il numero di righe affette
 											// (cancellate nel nostro caso)
 											// oppure 0 se non c'è stato nessun
@@ -493,6 +570,104 @@ public class Messaggio {
 							+ e.getMessage());
 			e.printStackTrace();
 			result = false;
+		}
+
+		return result;
+	}
+
+	/**
+	 * Funzione che torna il testo di un messaggio specifico
+	 * 
+	 * @param receiver
+	 *            Il destinatario
+	 * @param sender
+	 *            Il mittente
+	 * @param date
+	 *            La data del messaggio
+	 * @return Il messaggio
+	 */
+	private String getMexStringDB(String receiver, String sender, String date) {
+		String message = "";
+
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME,
+					SQLUSERNAME, SQLPW);
+			String query = "SELECT message FROM messages WHERE receiver=? and sender=? and date=?";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, receiver);
+			ps.setString(2, sender);
+			ps.setString(3, date);
+			ResultSet rs = ps.executeQuery();
+
+			if (!rs.next())
+				message = ""; // Non c'è niente
+			else {
+
+				message = rs.getString("message");
+			}
+
+			ps.close();
+			con.close();
+
+		} catch (Exception e) {
+			System.out
+					.println("Errore query in Messaggio.java, funzione getMex(): "
+							+ e.getMessage());
+			e.printStackTrace();
+
+		}
+
+		return message;
+
+	}
+
+	/**
+	 * Funzione per mandare un messaggio. Privata che lavora sul database.
+	 * 
+	 * @param receiver
+	 *            Il destinatario
+	 * @param sender
+	 *            Il mittente(dottore loggato)
+	 * @param mex
+	 *            Il messaggio
+	 * @param date
+	 *            La data corrente
+	 * @return Vero se a buon fine, altrimenti falso
+	 */
+	private boolean sendMexDB(String receiver, String sender, String mex,
+			String date) {
+		boolean result = false;
+
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME,
+					SQLUSERNAME, SQLPW);
+
+			String query = "INSERT INTO messages (receiver, sender, message, date, readbool) VALUES (?, ?, ?, ?, ?)";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, receiver);
+			ps.setString(2, sender);
+			ps.setString(3, mex);
+			ps.setString(4, date);
+			ps.setBoolean(5, false);
+			int num = ps.executeUpdate();
+
+			if (num > 0)
+				result = true;
+			else
+				result = false;
+
+			ps.close();
+			con.close();
+
+		}
+
+		catch (Exception e) {
+			System.out
+					.println("Errore query in Messaggio.java, funzione sendMexDB(): "
+							+ e.getMessage());
+			e.printStackTrace();
 		}
 
 		return result;

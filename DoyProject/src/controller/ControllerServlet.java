@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,12 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.Messaggio;
+import model.Monitoraggio;
 import model.Paziente;
 import model.Reparto;
-import model.User;
-import model.Monitoraggio;
 import model.Storico;
-import model.Messaggio;
+import model.User;
 
 /**
  * Servlet implementation class ControllerServlet
@@ -47,11 +48,11 @@ public class ControllerServlet extends HttpServlet {
 		// mandare al client
 		String val = request.getParameter("val"); // intercetto il parametro val
 		HttpSession session = request.getSession(true); // Con il true, se non
-														// esiste già una
-														// sessione ne creo una
-														// nuova!
+		// esiste già una
+		// sessione ne creo una
+		// nuova!
 		User u = (User) session.getAttribute("user"); // Mi prendo l'utente se
-														// esiste già
+		// esiste già
 		// 4)creare il nuovo paziente all'inizio sia del doGet che del doPost
 		Storico s = new Storico();
 		Paziente p = new Paziente();
@@ -60,7 +61,7 @@ public class ControllerServlet extends HttpServlet {
 		Messaggio mx; // Variabile messaggio
 
 		String path = ""; // path che indica la JSP dove voglio andare a seconda
-							// delle azioni
+		// delle azioni
 
 		/****
 		 * Intercetto le richieste dal menù orizzontale delle pagine jsp
@@ -72,10 +73,11 @@ public class ControllerServlet extends HttpServlet {
 		if ("homepage".equals(val)) {
 			if (session.getAttribute("fromMessaggi") != null)
 				session.removeAttribute("fromMessaggi"); // Rimuovo l'attributo
-															// messaggi se c'è
-															// (Serve per capire
-															// dove sono per la
-															// tabella)
+			// messaggi se c'è
+			// (Serve per capire
+			// dove sono per la
+			// tabella)
+			session.setAttribute("fromHome", "1"); // ***//
 			path = "/WEB-INF/homepage";
 		}
 
@@ -84,12 +86,13 @@ public class ControllerServlet extends HttpServlet {
 			if (session.getAttribute("fromHome") != null)
 				session.removeAttribute("fromHome");
 			mx = new Messaggio(); // La assegno se arrivo qua. In ogni caso la
-									// creo sempre nuova,
-									// perché nel frattempo potrebbero essermi
-									// arrivati nuovi messaggi
+			// creo sempre nuova,
+			// perché nel frattempo potrebbero essermi
+			// arrivati nuovi messaggi
 			mx.readAndSetMex(u.getUsername()); // Leggo e setto i messaggi
 			session.setAttribute("messaggio", mx); // Setto l'oggetto nella
-													// sessione
+			// sessione
+			session.setAttribute("fromMessaggi", "1"); // ***//
 			path = "/WEB-INF/messaggi";
 		}
 
@@ -103,7 +106,7 @@ public class ControllerServlet extends HttpServlet {
 			if (!u.getProfileU() || u == null) {
 				path = "/WEB-INF/Err";
 				System.out.println("Err"); // Fare questa pagina di errore!!!!!!
-											// ****************************************************
+				// ****************************************************
 			} else {
 				path = "/WEB-INF/profiloDoc";
 				System.out.println("profiloDoc");
@@ -241,9 +244,9 @@ public class ControllerServlet extends HttpServlet {
 			System.out.println("signout");
 			response.sendRedirect("signin.jsp");
 			return; // serve il return perché tutte le varie istruzioni come il
-					// redirect non fanno bloccare il codice,
-					// quindi anche il codice successivo a questo è fatto
-					// girare. E da errore.
+			// redirect non fanno bloccare il codice,
+			// quindi anche il codice successivo a questo è fatto
+			// girare. E da errore.
 		}
 
 		// ///////////////////////////////
@@ -255,82 +258,166 @@ public class ControllerServlet extends HttpServlet {
 		// Se premo l'azione di lettura
 		if ("readMex".equals(val)) {
 			mx = (Messaggio) session.getAttribute("messaggio");
-			path = "/WEB-INF/messaggio.jsp";
+
+			// Metto subito il messaggio come letto però solo se non è già stato
+			// letto
+			if (request.getParameter("r") == null) {
+				String stringDate = this
+						.stringdateToMYSQLFormattedStringdate(request
+								.getParameter("date"));
+				mx.markAsReadMex(u.getUsername(),
+						request.getParameter("sender"), stringDate);
+				mx.readAndSetMex(u.getUsername());
+			}
+
+			// Setto comunque i valori del messaggio
+			mx.setMex(u.getUsername(), request.getParameter("sender"), this
+					.stringdateToMYSQLFormattedStringdate(request
+							.getParameter("date")));
+
+			session.setAttribute("readMex", "1");
+
+			// Poi vado a chiamare la pagina messaggio.jsp
+			path = "/WEB-INF/messaggio";
 		}
 
 		// Se premo l'azione di risposta
 		if ("rispMex".equals(val)) {
 			mx = (Messaggio) session.getAttribute("messaggio");
-			session.setAttribute("rispMex", true); // Perché uso la stessa
-													// pagina di lettura e di
-													// risposta, mettendo questo
-													// attributo
-													// posso modificarla per la
-													// risposta (con tasti
-													// appositi)
-			path = "/WEB-INF/messaggio.jsp";
+			session.setAttribute("rispMex", "1"); /*
+												 * Perché uso la stessa pagina
+												 * di lettura e di risposta,
+												 * mettendo questo attributo
+												 * posso modificarla per la
+												 * risposta (con tasti appositi)
+												 */
+
+			System.out.println("DATE: " + request.getParameter("date"));
+			// Setto anche qui i valori del messaggio
+			mx.setMex(u.getUsername(), request.getParameter("sender"), this
+					.stringdateToMYSQLFormattedStringdate(request
+							.getParameter("date")));
+
+			path = "/WEB-INF/messaggio";
 		}
 
-		//Se premo l'azione di delete
-				if("delMex".equals(val)){
-					mx = (Messaggio) session.getAttribute("messaggio");
-					
-					////////////////////////////
-			
-//					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-//					String formattedDate = formatter.format(request.getParameter("date"));
-//					System.out.println("DATA: " + formattedDate);
-					
-					DateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		// Se premo l'azione di delete
+		if ("delMex".equals(val)) {
+			mx = (Messaggio) session.getAttribute("messaggio");
 
-					String inputText = request.getParameter("date");
-					System.out.println("InputText: " + inputText);
-					java.util.Date date = null;
-					try {
-						date = inputFormat.parse(inputText);
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					String outputText = outputFormat.format(date);
-					
-					System.out.println("OutputText: " + outputText);
-					//////////////////////////////////// 
-					boolean result = mx.deleteMexR(u.getUsername(), request.getParameter("sender"), outputText);
-					System.out.println("************: RESULT : " + result );
-					if (result){
-						if(session.getAttribute("fromHome") != null){
-							mx.readAndSetMex(u.getUsername());
-							session.setAttribute("messaggio", mx);
-							session.removeAttribute("fromHome");	//Lo rimuovo altrimenti sarà sempre settato e tutta questa cosa non funzionerebbe più
-							path = "/WEB-INF/homepage";
-						}
-						else{
-							mx.readAndSetMex(u.getUsername());
-							session.setAttribute("messaggio", mx);
-							session.removeAttribute("fromMessagi");	//Lo rimuovo altrimenti sarà sempre settato e tutta questa cosa non funzionerebbe più
-							path = "/WEB-INF/messaggi";
-						}
-						
-					}
+			String stringDate = request.getParameter("date");
+
+			// Solo se non sono nella pagina messaggio
+			if (session.getAttribute("rispMex") == null
+					&& session.getAttribute("readMex") == null) {
+				stringDate = this.stringdateToMYSQLFormattedStringdate(request
+						.getParameter("date"));
+			}
+
+			boolean result = mx.deleteMex(u.getUsername(),
+					request.getParameter("sender"), stringDate);
+			System.out.println("************: RESULT : " + result);
+			if (result) {
+				if (session.getAttribute("fromHome") != null) {
+					mx.readAndSetMex(u.getUsername()); /*
+														 * Invece di fare questo
+														 * sarebbe stato meglio
+														 * gestire gli array
+														 * direttamente, dalla
+														 * classe messaggio, per
+														 * evitare questa
+														 * chiamata in più al
+														 * database. Oppure
+														 * comunque questa
+														 * chiamata lasciarla
+														 * dentro alla classe
+														 * Messaggio.
+														 */
+
+					// session.setAttribute("messaggio", mx); //NON SERVE
+					// RISETTARE L'ATTRIBUTO !!!
+					path = "/WEB-INF/homepage";
+				} else {
+					mx.readAndSetMex(u.getUsername());
+					// session.setAttribute("messaggio", mx);
+					path = "/WEB-INF/messaggi";
 				}
-				
-				//se premo l'azione di segnalazione come letto
-				if("okReadMex".equals(val)){
-					mx = (Messaggio) session.getAttribute("messaggio");
-					boolean result = mx.markAsReadMex(u.getUsername(), request.getParameter("sender"), Date.valueOf(request.getParameter("date")));
-					if (result){
-						if(session.getAttribute("fromHome") != null){
-							System.out.println("OKASASASASA");
-							path = "/WEB-INF/homepage";
-							session.removeAttribute("fromHome");	//Lo rimuovo altrimenti sarà sempre settato e tutta questa cosa non funzionerebbe più
-						}
-						else
-							path = "/WEB-INF/messaggi";
-						
-					}
+
+			}
+		}
+
+		// se premo l'azione di segnalazione come letto
+		if ("okReadMex".equals(val)) {
+			mx = (Messaggio) session.getAttribute("messaggio");
+			String stringDate = this
+					.stringdateToMYSQLFormattedStringdate(request
+							.getParameter("date"));
+			boolean result = mx.markAsReadMex(u.getUsername(),
+					request.getParameter("sender"), stringDate);
+			if (result) {
+				if (session.getAttribute("fromHome") != null) {
+					mx.readAndSetMex(u.getUsername());
+					// session.setAttribute("messaggio", mx);
+					path = "/WEB-INF/homepage";
+					/*
+					 * session.removeAttribute("fromHome"); Lo rimuovo
+					 * altrimenti sarà sempre settato e tutta questa cosa non
+					 * funzionerebbe più
+					 */
+				} else {
+					mx.readAndSetMex(u.getUsername());
+					// session.setAttribute("messaggio", mx);
+					path = "/WEB-INF/messaggi";
 				}
+
+			}
+		}
+
+		// //////////////////////////////
+		// DENTRO LA PAGINA messaggio.jsp
+		// //////////////////////////////
+
+		// Se decido di tornare indietro
+		if ("backToMessaggi".equals(val)) {
+			if (session.getAttribute("readMex") != null)
+				session.removeAttribute("readMex");
+			if (session.getAttribute("rispMex") != null)
+				session.removeAttribute("rispMex");
+
+			if (session.getAttribute("fromHome") != null)
+				path = "/WEB-INF/homepage";
+			else
+				path = "/WEB-INF/messaggi";
+		}
+
+		// Se premo il bottone per inviare un messaggio
+		if ("sendRisp".equals(val)) {
+			mx = (Messaggio) session.getAttribute("messaggio");
+
+			// Prendo i dati e invio un messaggio, cioè lo aggiungo al database
+			// dei messaggi, del sender (che diventa il destinatario)
+			String receiver = request.getParameter("sender");
+			String sender = u.getUsername();
+			String mex = request.getParameter("mex");
+
+			java.util.Date date = new java.util.Date();
+			String datenow = this
+					.stringdateToMYSQLFormattedStringdate(new Timestamp(date
+							.getTime()).toString());
+			boolean result = mx.sendMex(receiver, sender, mex, datenow);
+
+			if (result)
+				System.out.println("Messaggio inviato correttamente");
+			mx.readAndSetMex(u.getUsername()); // Questo a dire la verità non
+												// servirebbe perché di solito
+												// uno no si automanda i
+												// messaggi, però, non si sa mai
+
+			if (session.getAttribute("fromHome") != null)
+				path = "/WEB-INF/homepage";
+			else
+				path = "/WEB-INF/messaggi";
+		}
 
 		// Metodo finale che mi rimanda alla pagina giusta.
 		String url = path + ".jsp";
@@ -352,9 +439,9 @@ public class ControllerServlet extends HttpServlet {
 		System.out.println("Servlet doPost");
 		String val = request.getParameter("val"); // Intercetto il parametro val
 		HttpSession session = request.getSession(true); // Lavoro a livello di
-														// sessione
+		// sessione
 		User u = (User) session.getAttribute("user"); // Se c'è già un utente lo
-														// prendo
+		// prendo
 		// Paziente p = (Paziente) session.getAttribute("paziente"); //Se c'è
 		// già un paziente lo prendo
 		Paziente p = new Paziente();
@@ -362,7 +449,7 @@ public class ControllerServlet extends HttpServlet {
 		Storico s = new Storico();
 		// Storico s = (Storico) session.getAttribute("storico");
 		String path = ""; // path che indica la JSP dove voglio andare a seconda
-							// delle azioni
+		// delle azioni
 		Reparto r = (Reparto) session.getAttribute("Reparto");
 		if (r == null)
 			r = new Reparto();
@@ -375,14 +462,14 @@ public class ControllerServlet extends HttpServlet {
 
 			String username = request.getParameter("username");
 			u = new User(username); // creo un oggetto utente con l'username
-									// passato
+			// passato
 			mx = new Messaggio(); // Quando entro qui di sicuro non ho ancora i
-									// messaggi settati
+			// messaggi settati
 			mx.readAndSetMex(username); // Setto i messaggi
 			session.setAttribute("messaggio", mx); // Setto l'oggetto messaggio
-													// nella sessione così da
-													// risprenderlo nella
-													// homepage
+			// nella sessione così da
+			// risprenderlo nella
+			// homepage
 
 			// Se non si trova corrispondenza nel database (e lo fa la Servlet)
 			// oppure l'utente è nullo allora sto nel login
@@ -391,10 +478,9 @@ public class ControllerServlet extends HttpServlet {
 			// altrimenti vado alla homepage
 			else {
 				u.getProfileU(); // In questo modo vengono settati i dati
-									// nell'oggetto utente.
-				session.setAttribute("user", u); // SEMBRA CHE QUI NON LA
-													// SETTIIIIIIIIIIIIIIIII
-													// AAAAAAAAAAAAA
+				// nell'oggetto utente.
+				session.setAttribute("user", u);
+				session.setAttribute("fromHome", "1"); // ***//
 				path = "/WEB-INF/homepage";
 			}
 
@@ -501,8 +587,8 @@ public class ControllerServlet extends HttpServlet {
 				System.out.println("Reparto preso:" + dep);
 				if (dep != null) {
 					if (!dep.equals("null")) { // se una checkbox non è segnata,
-												// mi torna null, allora devo
-												// stare attento a non prenderla
+						// mi torna null, allora devo
+						// stare attento a non prenderla
 						System.out.println("Aggiungo il reparto:" + dep);
 						deps.add(dep);
 						// count++; //Per renderlo più efficiente, si blocca se
@@ -576,9 +662,9 @@ public class ControllerServlet extends HttpServlet {
 			// Prendo i valori passati dalla form
 			String username = request.getParameter("username");
 			System.out.println("USERNAME: " + username); // Ok risolto il null
-															// qua con
-															// readonly="readonly"
-															// sul campo input
+			// qua con
+			// readonly="readonly"
+			// sul campo input
 			String password = request.getParameter("password");
 			System.out.println("PASSWORD: " + password);
 			String cpassword = request.getParameter("cpassword");
@@ -599,8 +685,8 @@ public class ControllerServlet extends HttpServlet {
 				System.out.println("Reparto preso:" + dep);
 				if (dep != null) {
 					if (!dep.equals("null")) { // se una checkbox non è segnata,
-												// mi torna null, allora devo
-												// stare attento a non prenderla
+						// mi torna null, allora devo
+						// stare attento a non prenderla
 						System.out.println("Aggiungo il reparto:" + dep);
 						deps.add(dep);
 						// count++; //Per renderlo più efficiente, si blocca se
@@ -616,16 +702,16 @@ public class ControllerServlet extends HttpServlet {
 				session.setAttribute(
 						"err_mod",
 						"Errore inserimento dati nella modifica del profilo. Controllare i campi evidenziati in rosso"); // Errore
-																															// per
-																															// capire
-																															// che
-																															// veniamo
-																															// dalla
-																															// modifica
-																															// (per
-																															// cambiare
-																															// il
-																															// tasto)
+				// per
+				// capire
+				// che
+				// veniamo
+				// dalla
+				// modifica
+				// (per
+				// cambiare
+				// il
+				// tasto)
 				// session.setAttribute("err_username",u.getError("username"));
 				// In questo caso non serve perché questo non può dare errore,
 				// esiste già
@@ -728,6 +814,38 @@ public class ControllerServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * Funzione per tornare una stringa correttamente formattata per coincidere
+	 * con il formato Date di MYSQL. Trasforma il formato yyyy-MM-dd
+	 * HH:mm:ss.SSS in yyyy-MM-dd HH:mm:ss
+	 * 
+	 * @param inputStringdate
+	 *            la stringa data del tipo yyyy-MM-dd HH:mm:ss.SSS
+	 * @return outputStringdate La stringa corretta in forma yyyy-MM-dd HH:mm:ss
+	 */
+	private String stringdateToMYSQLFormattedStringdate(String inputStringdate) {
+		DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); // forma
+		// attuale
+		DateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // nuova
+		// forma
+		// accettata
+		// da
+		// mysql
+
+		java.util.Date date = null;
+		try {
+			date = inputFormat.parse(inputStringdate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String outputStringdate = outputFormat.format(date);
+
+		System.out.println("OutputText: " + outputStringdate);
+
+		return outputStringdate;
 	}
 
 }

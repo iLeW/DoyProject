@@ -3,21 +3,14 @@
 <!-- <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/j2ee" 
 	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4"> </web-app> -->
+
 <!-- Servlets 2.5 and JSP 2.1(Tomcat 6, and so on) QUESTA E' QUELLA CHE USEREMO -->
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>default.html</welcome-file>
-		<welcome-file>default.htm</welcome-file>
-		<welcome-file>default.jsp</welcome-file>
-		<welcome-file>login.html</welcome-file>
-		<welcome-file>login.htm</welcome-file>
-		<welcome-file>login.jsp</welcome-file>
+		<welcome-file>signin.jsp</welcome-file>
 	</welcome-file-list>
 
 	<error-page>
@@ -32,6 +25,7 @@
 		</jsp-property-group>
 	</jsp-config>
 </web-app>
+
 <!-- Servlets 3.0 and JSP 2.1 (Tomcat 7, and so on) -->
 <!-- <web-app xmlns="http://java.sun.com/xml/ns/javaee" -->
 <!-- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" -->
