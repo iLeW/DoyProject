@@ -145,10 +145,10 @@ int conta = m.contaMonitor();
 </form>
 
 
+<!-- piccola form per la simulazione dell'aggiunta di un parametro -->
 <form method="post" action="ControllerServlet">
 <div class="grid flex">
 
-	<!-- da qui c'è la zona dei grafici -->
 	<h4 style="color: #999; margin-bottom: 10px; margin-top: 80px" class="center">
 			Grafici:
 		</h4>
@@ -173,6 +173,9 @@ int conta = m.contaMonitor();
 </form>
 
 
+<!-- da qui c'è la zona dei grafici, da mettere solo se il paziente è presente nella tabella storico-->
+<%if(s.presenzaStorico(ID))
+{%>
 <form method="post" action="ControllerServlet">
 <div class="grid flex">
 
@@ -185,9 +188,6 @@ int conta = m.contaMonitor();
 			<option value="<%=s.getMon(i)%>"><%=s.getMon(i)%></option>
 			<%} %>
 			</select>
-		<% //s.setValGrafico(session.getAttribute("valStorico").toString()); 
-		System.out.println(s.getValGrafico());
-		System.out.println(s.getDataInizio());%>
 		<!-- l'unico modo per settare in modo giusto il campo del select è usare una script -->
 		<script>
         document.getElementById("visStorico").value = '<%= s.getValGrafico() %>';
@@ -195,14 +195,11 @@ int conta = m.contaMonitor();
         		
 		<label style="margin-left: 20px">Dal</label>
 		<input id="dataInizio" name="dataInizio" type="date" style="margin-left: 20px"
-		value="<%= s.returnData(ID, s.getValGrafico(), "primo")%>" required />
-		<!-- fare in modo che la funzione returnData ritorni la data iniziale nel primo caso, altrimenti la data nuova 
-		sfruttare la funzione s.getDataInizio() a cui si deve passare anche ID
-		che ritorna s.returnData(ID, s.getValGrafico(), "primo") in caso in cui la variabile inizio sia nulla -->
+		value="<%= s.getDataInizio(ID) %>" required />
 		
 		<label style="margin-left: 20px">al</label>
 		<input id="dataFine" name="dataFine" type="date" style="margin-left: 20px"
-		value="<%= s.returnData(ID, s.getValGrafico(), "ultimo")%>" required />
+		value="<%= s.getDataFine(ID) %>" required />
 		
 		<button class="orange" type="submit" name="val" style="margin-left: 20px" value="aggiornaGrafico">
 		<i class="icon-bolt"></i> Aggiorna</button>
@@ -211,11 +208,9 @@ int conta = m.contaMonitor();
 
 
 
-
-
-
 </div>
 </form>
+<%}//fine if per mettere i grafici %>
 
 <form method="post" action="ControllerServlet">
 <div class="grid flex">	

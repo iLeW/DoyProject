@@ -23,7 +23,8 @@ import java.util.Vector;
  * 10) fare i grafici
  * 11) fare la pagina del progilo del paziente, che è paziente.jsp
  * 12) popup per l'eliminazione del paziente
- * 13) fare la selezione del reparto con il menu a tendina
+ * 13) fare la selezione del reparto con il menu a tendina		[fatto]
+ * 14) fare la modifica della tabella dei monitoraggi nella pagina profilo del paziente
  */
 
 public class Paziente {

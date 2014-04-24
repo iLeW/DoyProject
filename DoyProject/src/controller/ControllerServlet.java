@@ -772,7 +772,8 @@ public class ControllerServlet extends HttpServlet {
 			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/paziente";
 		}
-
+		
+		//aggiunge un dato al monitoraggio selezionato
 		if ("addDato".equals(val)) {
 			s.insDato(session.getAttribute("IDpaz").toString(),
 					request.getParameter("valoreStorico"),
@@ -800,6 +801,7 @@ public class ControllerServlet extends HttpServlet {
 			s.setValGrafico(request.getParameter("visStorico").toString());
 			s.setDataInizio(Date.valueOf(request.getParameter("dataInizio")));
 			s.setDataFine(Date.valueOf(request.getParameter("dataFine")));
+			s.selezionaStorico(session.getAttribute("IDpaz").toString(), request.getParameter("visStorico").toString(), request.getParameter("dataInizio"), request.getParameter("dataFine"));
 			session.setAttribute("storico", s);
 			path = "/WEB-INF/paziente";
 		}

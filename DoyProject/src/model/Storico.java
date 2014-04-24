@@ -20,14 +20,17 @@ public class Storico {
 	private static String SQLPW = "root";
 
 	//variabili locali
-	private Vector<String> ID = new Vector<String>();
+	private Vector<Integer> ID = new Vector<Integer>();
 	private Vector<String> valore = new Vector<String>();
-	private Vector<Integer> dato = new Vector<Integer>();
+	//private Vector<Integer> dato = new Vector<Integer>();
+	private Vector<Integer> Storico = new Vector<Integer>();
+	private Vector<Date> data = new Vector<Date>();
 	private Vector<String> monitor = new Vector<String>();
-	Vector<Date> d = new Vector<Date>();
+	private Vector<Date> d = new Vector<Date>();
 	private String valGrafico = "";
-	private Date inizio, fine;
-		
+	private String dataDefault = "1900-01-01";
+	private Date inizio = Date.valueOf(dataDefault);
+	private Date fine = Date.valueOf(dataDefault);		
 	
 	public Storico() {
 
@@ -36,6 +39,8 @@ public class Storico {
 	//funzioni per lavorare con i dati da passare per la costruzione dei grafici
 	public void setValGrafico(String v) {
 		this.valGrafico = v;
+		inizio = Date.valueOf(dataDefault);
+		fine = Date.valueOf(dataDefault);
 	}
 	public String getValGrafico() {
 		if(valGrafico.isEmpty())
@@ -46,25 +51,23 @@ public class Storico {
 	public void setDataInizio(Date d) {
 		this.inizio = d;
 	}
-	public Date getDataInizio() {
-		return this.inizio;
+	public Date getDataInizio(int id) {
+		if((inizio.toString()).equals(dataDefault))
+		{ return returnData(id, getValGrafico(), "primo"); }
+		else
+		{ return this.inizio; }
 	}
-	/*
-	public Date getDataInizio(int ID) {
-	se inizio è nullo allora
-	{
-		returnData(ID, getValGrafico(), "primo")
-	}
-		return this.inizio;
-	}*/
 	public void setDataFine(Date d) {
 		this.fine = d;
 	}
-	public Date getDataFine() {
-		return this.fine;
+	public Date getDataFine(int id) {
+		if((fine.toString()).equals(dataDefault))
+		{ return returnData(id, getValGrafico(), "ultimo"); }
+		else
+		{ return this.fine; }
 	}
 	
-	
+	//funzione per inserire un nuovo dato nello storico
 	public void insDato(String ID, String valoreStorico, String dato){
 		try {
 			Class.forName(DRIVER).newInstance();
@@ -97,7 +100,14 @@ public class Storico {
 	public String getMon(int i){
 		return monitor.get(i);
 	}
+	public boolean controllaMon(){
+		if(monitor.size()==0)
+			return false;
+		else
+			return true;
+	}
 	public int viewMonitorPaziente(int ID){
+		monitor.clear();
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
@@ -126,6 +136,8 @@ public class Storico {
 	
 	//funzione che ritorna la prima o l'ultima data
 	public Date returnData(int ID, String valore, String quale){		
+		d.clear();
+		
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
@@ -156,6 +168,78 @@ public class Storico {
 		{ return d.lastElement(); }
 	}
 	
+	//funzione per selezionare i dati dell storico nel tempo giusto
+	public void selezionaStorico(String IDp, String valore, String dataInizio, String dataFine){
+		Storico.clear();
+		data.clear();
+		Timestamp dInizio = Timestamp.valueOf(dataInizio + " 00:00:00.000000");
+		Timestamp dFine = Timestamp.valueOf(dataFine + " 23:59:59.999999");
+		int ID = Integer.parseInt(IDp);
+		
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			String strQuery="select * from storico where IDPaziente=? and valore=? and data>=? and data<=?";
+	        PreparedStatement ps = con.prepareStatement(strQuery);
+	        
+	        ps.setInt(1, ID);
+	        ps.setString(2, valore);
+	        ps.setTimestamp(3, dInizio);
+	        ps.setTimestamp(4, dFine);
+	        
+	       	ResultSet rs = ps.executeQuery();
+	       	while(rs.next()){
+	       		data.add(rs.getDate("data"));
+				Storico.add(rs.getInt("dato"));
+			}
+			ps.close();
+			con.close();
+		}
+				
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+		
+		/*for(int i=0; i<datoStorico.size();i++){
+			System.out.println(i+" datoStorico: "+datoStorico.get(i));
+		}*/
+	}
+	public int getSto(){
+		return Storico.size();
+	}
+	public Date getData(int i) {
+		return data.get(i);
+	}
+	public int getStorico(int i) {
+		return Storico.get(i);
+	}
 	
+	public boolean presenzaStorico(int IDp){
+		ID.clear();
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			String strQuery="select * from storico where IDPaziente=?";
+	        PreparedStatement ps = con.prepareStatement(strQuery);
+	        
+	        ps.setInt(1, IDp);
+	        
+	       	ResultSet rs = ps.executeQuery();
+	       	while(rs.next()){
+	       		ID.add(rs.getInt("IDPaziente"));
+			}
+			ps.close();
+			con.close();
+		}
+				
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+		
+		if(ID.size()==0)
+			return false;
+		else
+			return true;
+	}
 	
 }//fine classe Storico
