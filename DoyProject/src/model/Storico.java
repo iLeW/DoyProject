@@ -200,9 +200,9 @@ public class Storico {
 		e.printStackTrace();
 		}
 		
-		/*for(int i=0; i<datoStorico.size();i++){
-			System.out.println(i+" datoStorico: "+datoStorico.get(i));
-		}*/
+		for(int i=0; i<Storico.size();i++){
+			System.out.println(i+" datoStorico: "+Storico.get(i));
+		}
 	}
 	public int getSto(){
 		return Storico.size();
