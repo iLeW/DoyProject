@@ -20,6 +20,23 @@
 }
 
 
+/*----------------- Menu basso, AGGIUNTO IO ----------------*/
+
+.menu.bottom {
+	bottom: 0;	/*Sta sempre in basso*/
+	margin: 0;
+	padding: 0;
+	line-height: 100%;
+	font-size: 0; /* Kill white space gap between LI elements */
+	/*position: relative;*/
+	z-index: 1000;	/*Davanti a tutto*/
+	position: fixed;	
+	width: 100%;		
+	white-space:nowrap;
+}
+/*---------------------------------------------------------*/
+
+
 .menu:after {
 	clear: both;
 	content: ' ';
@@ -86,6 +103,7 @@
 	top: 0;
 	left: 100%;
 }
+
 
 /*--------------Dividers-------------------*/
 .menu ul li.divider {

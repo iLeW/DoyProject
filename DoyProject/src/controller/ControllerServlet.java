@@ -303,6 +303,11 @@ public class ControllerServlet extends HttpServlet {
 
 		// Se premo l'azione di delete
 		if ("delMex".equals(val)) {
+			
+			//Elimino l'attributo newMex se era presente
+			if(session.getAttribute("newMex") != null)
+				session.removeAttribute("newMex");
+			
 			mx = (Messaggio) session.getAttribute("messaggio");
 
 			String stringDate = request.getParameter("date");
@@ -372,6 +377,8 @@ public class ControllerServlet extends HttpServlet {
 
 			}
 		}
+		
+
 
 		// //////////////////////////////
 		// DENTRO LA PAGINA messaggio.jsp
@@ -383,20 +390,39 @@ public class ControllerServlet extends HttpServlet {
 				session.removeAttribute("readMex");
 			if (session.getAttribute("rispMex") != null)
 				session.removeAttribute("rispMex");
+			if(session.getAttribute("newMex") != null)
+				session.removeAttribute("newMex");
 
 			if (session.getAttribute("fromHome") != null)
 				path = "/WEB-INF/homepage";
 			else
 				path = "/WEB-INF/messaggi";
 		}
+		
 
 		// Se premo il bottone per inviare un messaggio
 		if ("sendRisp".equals(val)) {
+			
 			mx = (Messaggio) session.getAttribute("messaggio");
+			String receiver = u.getUsername();	//La dichiaro qua e di base ci metto l'user stesso (ma giusto per non creare errori nel database)
 
+			if(session.getAttribute("newMex") == null) {
 			// Prendo i dati e invio un messaggio, cioè lo aggiungo al database
 			// dei messaggi, del sender (che diventa il destinatario)
-			String receiver = request.getParameter("sender");
+			 receiver = request.getParameter("sender");
+			}
+			
+			else
+			{
+				
+				//Elimino l'attributo newMex se era presente
+				if(session.getAttribute("newMex") != null)
+					session.removeAttribute("newMex");
+				
+				 receiver = request.getParameter("option");
+				 System.out.println("ECCO IL VALORE:::::: " + request.getParameter("option"));
+				
+			}
 			String sender = u.getUsername();
 			String mex = request.getParameter("mex");
 
@@ -417,6 +443,15 @@ public class ControllerServlet extends HttpServlet {
 				path = "/WEB-INF/homepage";
 			else
 				path = "/WEB-INF/messaggi";
+		}
+		
+		////////////////////////////////////
+		// DAL MENU IN BASSO in messaggi.jsp
+		////////////////////////////////////
+		
+		if("newMex".equals(val)){
+			session.setAttribute("newMex", "1");
+			path = "/WEB-INF/messaggio";
 		}
 
 		// Metodo finale che mi rimanda alla pagina giusta.
@@ -835,15 +870,21 @@ public class ControllerServlet extends HttpServlet {
 		// accettata
 		// da
 		// mysql
-
+	
+		String outputStringdate = "";
+		Exception ee = null;
+		
 		java.util.Date date = null;
 		try {
 			date = inputFormat.parse(inputStringdate);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			outputStringdate = outputFormat.format(date);
+		} catch (Exception e) {
+			System.out.println("**Errore nel parsing nella Servlet, della funzione stringdateToMYSQLFormattedStringdate. L'errore è stato gestito correttamente.**");
+			ee = e;
 		}
-		String outputStringdate = outputFormat.format(date);
+		
+		if(ee != null)
+			outputStringdate = inputStringdate;
 
 		System.out.println("OutputText: " + outputStringdate);
 

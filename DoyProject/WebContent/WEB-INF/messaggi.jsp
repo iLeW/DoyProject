@@ -168,5 +168,7 @@
 	}
 %>
 
+<%@ include file="/WEB-INF/footerMenu.jsp"%>
+
 </body>
 </html>

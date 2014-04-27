@@ -1,14 +1,17 @@
 <%@ include file="/WEB-INF/header.jsp"%>
 <%@ page import="model.Messaggio"%>
 <%@ page import="model.User"%>
+<%@ page import="java.util.ArrayList"%>
 <%
 	Messaggio mx = (Messaggio) session.getAttribute("messaggio");
 	User u = (User) session.getAttribute("user");
-	
-	if(session.getAttribute("readMex") != null)
+
+	//DEBUG ////////////////////////////////////////////////////
+	if (session.getAttribute("readMex") != null)
 		System.out.println("messaggio.jsp -> esiste readMex");
-	if(session.getAttribute("rispMex") != null)
+	if (session.getAttribute("rispMex") != null)
 		System.out.println("messaggio.jsp -> esiste rispMex");
+	////////////////////////////////////////////////////////////
 %>
 
 <form method="get" action="ControllerServlet">
@@ -20,11 +23,16 @@
 			</h1>
 		</div>
 
+		<!-- Campo del messaggio ricevuto -->
+		<%
+			if (session.getAttribute("newMex") == null) {
+		%>
+
 		<div class="col_12 ">
 			<label for="Message"><span style="font-size: 1.5em">
 					Da:</span> </label> <input class="trans" id="From" type="text" name="sender"
 				placeholder="" value="${messaggio.sender}" readonly="readonly" /> <label><span
-				style="font-size: 1.5em"> Data:</span></label> <input class="trans"
+				style="font-size: 1.5em"> Data ricezione:</span></label> <input class="trans"
 				id="Date" type="text" name="date" placeholder=""
 				value="${messaggio.date}" readonly="readonly" />
 		</div>
@@ -38,7 +46,14 @@
 		</div>
 
 		<%
-			if (session.getAttribute("rispMex") == null) {
+			}
+		%>
+
+		<!-- Mostro questi bottoni solo se devo rispondere a un messaggio -->
+
+		<%
+			if (session.getAttribute("rispMex") == null
+					&& session.getAttribute("newMex") == null) {
 		%>
 
 
@@ -53,8 +68,7 @@
 		</div>
 
 		<div class="col_8">
-			<button type="submit" class="medium" name="val"
-				value="delMex">Elimina</button>
+			<button type="submit" class="medium" name="val" value="delMex">Elimina</button>
 		</div>
 
 		<%
@@ -62,9 +76,11 @@
 		%>
 
 
-		<!-- Solo se ho scelto di rispondere al messaggio mostro questa parte -->
+		<!-- Campo di scrittura del messaggio e bottoni corrispondenti. Solo se ho scelto di rispondere, 
+		o inviare un nuovo messaggio mostro questa parte -->
 		<%
-			if (session.getAttribute("rispMex") != null) {
+			if (session.getAttribute("rispMex") != null
+					|| session.getAttribute("newMex") != null) {
 		%>
 		<hr class="alt2" />
 
@@ -72,6 +88,24 @@
 			<label for="Message"><span style="font-size: 1.5em">
 					Da:</span> ${user.username}</label>
 		</div>
+		<%
+			if (session.getAttribute("newMex") != null) {
+				ArrayList<String> docs = new ArrayList<String>(u.getDocs());
+		%>
+		<div class="col_1">
+			<label for="Message"><span style="font-size: 1.5em">
+					A:</span></label>
+		</div>
+		<div class="col_11">
+		 <select id="select" name="option">
+				<% for(byte i=0; i<docs.size(); ++i){
+				out.print("<option value=\"" + docs.get(i) + "\">" + docs.get(i) + "</option>");	//I vari campi hanno nome option. Posso selezionare solo una opzione.
+				} %>
+			</select>
+		</div>
+		<%
+			}
+		%>
 		<div class="col_12">
 			<textarea id="Message" name="mex"
 				placeholder="Scrivi il tuo messaggio" style="width: inherit"></textarea>
@@ -90,8 +124,7 @@
 		</div>
 
 		<div class="col_8">
-			<button type="submit" class="medium" name="val"
-				value="delMex">Elimina</button>
+			<button type="submit" class="medium" name="val" value="delMex">Elimina</button>
 		</div>
 
 		<%

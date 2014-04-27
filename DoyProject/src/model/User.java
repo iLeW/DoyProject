@@ -7,9 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Hashtable;
-import java.util.Calendar;
 
 /**
  * 
@@ -35,11 +33,11 @@ public class User {
 	private String dep1 = "";
 	private String dep2 = "";
 	private String dep3 = "";
-	private ArrayList<String> depArray;
+	//private ArrayList<String> depArray;
 	private int numDep = 0;
 	private Hashtable<String, String> errors; // Per definire la lista degli
 												// errori
-	private ArrayList<String> messages; // Lista dei messaggi di altri dottori
+	private ArrayList<String> docs;		//La lista di tutti i dottori
 
 	/**
 	 * Metodo costruttore vuoto che rispecchia la caratteristica dei Bean
@@ -185,27 +183,21 @@ public class User {
 	public String getDep3() {
 		return this.dep3;
 	}
-
+	
 	/**
-	 * Metodo che uso per copiare tutti i messaggi presi dal database nell'array
-	 * di messaggi
-	 * 
-	 * @param messages
-	 *            I messaggi che prendo dal database
+	 * Funzione che torna la lista dei dottori dal database
+	 * @return
 	 */
-	private void setMessages(ArrayList<String> messages) {
-		Collections.copy(this.messages, messages);
+	public ArrayList<String> getDocs(){
+		if(this.docs == null)
+			this.getDocsDB();
+		return this.docs;
 	}
-
-	/**
-	 * Metodo pubblico che uso per prendere i dati, lo userò dalla servlet
-	 * 
-	 * @return Ritorno la lista di messaggi
-	 */
-	public ArrayList<String> getMessages() {
-		return this.messages;
-	}
-
+	
+	////////////////////////////////////////
+	//MEOTDI CHE VANNO AD AGIRE SUL DATABASE
+	////////////////////////////////////////
+	
 	/**
 	 * Funzione che mi ritorna se sono riuscito a fare il login e mi prende e
 	 * salva anche gli eventuali messaggi che il dottore ha sulla bacheca
@@ -265,7 +257,6 @@ public class User {
 		return signin; // torno il valore booleano (vero o falso)
 	}
 
-	/* MF */
 	public boolean signupU(String username, String password, String nome,
 			String cognome, Date birthdate, String dep1, String dep2,
 			String dep3) {
@@ -310,6 +301,7 @@ public class User {
 
 		return signup;
 	}
+	
 
 	/**
 	 * Metodo che serve per andare a prendere i dati personali del dottore dal
@@ -445,8 +437,52 @@ public class User {
 		return result;
 	}
 
+	
+	
+	
+	private boolean getDocsDB(){
+		boolean result = false;
+		this.docs = new ArrayList<String>();	//La setto, se non c'è nessun dottore la size sarà zero.
+												//Cosa comunque impossibile perché un dottore, anche solo quello
+												//loggato c'è sempre
+		
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME,
+					SQLUSERNAME, SQLPW);
+			// il punto di domanda richiama il ps.setString da cui poi vai a
+			// prendere i dati
+			String query = "SELECT username FROM users";
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery(); 
+			if (rs.next()) {
+				result = true;
+				
+				do{
+					this.docs.add(rs.getString("username"));
+				}while(rs.next());
+			}
+
+			ps.close();
+			con.close();
+
+		} catch (Exception e) {
+			System.out.println("Errore in User.java, getDocsDB(): " + e.getMessage());
+			result = false;
+			e.printStackTrace();
+
+		}
+				
+		return result;
+	}
+	
+	
+	//////////////////////////////////////////////////////////////
+	//METODI PER LA GESTIONE DELLA CORRETTEZZA (errori e anti-XSS)
+	//////////////////////////////////////////////////////////////
+	
 	/**
-	 * Classe per verificare se ci sono degli errori nei dati inseriti della
+	 * Funzione per verificare se ci sono degli errori nei dati inseriti della
 	 * registrazione
 	 * 
 	 * @param username
@@ -528,7 +564,8 @@ public class User {
 
 		return bad_signup;
 	}
-
+	
+	
 	/**
 	 * Funzione che utilizzo per recuperare il messaggio di errore
 	 * 
