@@ -22,7 +22,7 @@ import java.util.Vector;
  * 9) controllare che le date in e out vadano bene
  * 10) fare i grafici
  * 11) fare la pagina del progilo del paziente, che è paziente.jsp
- * 12) popup per l'eliminazione del paziente
+ * 12) popup per l'eliminazione del paziente					[fatto]
  * 13) fare la selezione del reparto con il menu a tendina		[fatto]
  * 14) fare la modifica della tabella dei monitoraggi nella pagina profilo del paziente
  */
@@ -254,6 +254,7 @@ public class Paziente {
 	
 	public void removePaziente (String ID)
 	{
+		//cancella dalla tabella pazienti
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
@@ -266,6 +267,37 @@ public class Paziente {
         	con.close();
         	
         	System.out.println("paziente eliminato!! :)");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		//cancella dalla tabella storico
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			String strQuery="DELETE FROM storico WHERE IDPaziente=?";
+            PreparedStatement ps = con.prepareStatement(strQuery);
+            ps.setString(1, ID);
+            
+            ps.executeUpdate();
+        	ps.close();
+        	con.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			String strQuery="DELETE FROM monitoraggio WHERE IDPaziente=?";
+            PreparedStatement ps = con.prepareStatement(strQuery);
+            ps.setString(1, ID);
+            
+            ps.executeUpdate();
+        	ps.close();
+        	con.close();
+        	
 		}
 		catch (Exception e) {
 			e.printStackTrace();

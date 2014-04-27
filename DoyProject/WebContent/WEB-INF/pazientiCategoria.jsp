@@ -70,8 +70,19 @@ User u = (User) session.getAttribute("user");
 			<a href="ControllerServlet?val=modPazienteCat&ID=<%=p.getIDPaziente(i)%>">
 			<i class="icon-pencil tooltip-top" title="Modifica"> </i></a>
 			
-			<a href="ControllerServlet?val=delPazienteCat&ID=<%=p.getIDPaziente(i)%>">
-			<i class="icon-trash tooltip-top" title="Elimina"> </i></a>
+			<a href="ControllerServlet?val=delPaziente&ID=<%=p.getIDPaziente(i)%>">
+			<i class="icon-trash tooltip-top" title="Elimina" onclick="return confermaElimina(<%=p.getIDPaziente(i)%>);"> </i></a>
+			
+			<script>
+			function confermaElimina(i)
+			{
+				var r=confirm("Sicuro di voler eliminare il paziente " + i + "?");
+				if (r==true)
+				{ return true; }
+				else
+  				{ return false; }
+			}
+			</script>
 						
 			</td>
 		</tr>
