@@ -208,6 +208,7 @@ public class Storico {
 		return Storico.size();
 	}
 	public Date getData(int i) {
+		System.out.println(i+" Data: "+data.get(i));
 		return data.get(i);
 	}
 	public int getStorico(int i) {
