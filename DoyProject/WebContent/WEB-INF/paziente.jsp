@@ -130,7 +130,18 @@ int conta = m.contaMonitor();
 			<i class="icon-pencil tooltip-top" title="Modifica"> </i></a>
 			
 			<a href="ControllerServlet?val=delMonitor&ID=<%=m.getIDPaziente(i)%>&VAL=<%=m.getValore(i)%>">
-			<i class="icon-trash tooltip-top" title="Elimina"> </i></a>
+			<i class="icon-trash tooltip-top" title="Elimina" onclick="return conferma();"> </i></a>
+				
+			<script>
+			function conferma()
+			{
+				var r=confirm("Sicuro di voler eliminare il monitoraggio?");
+				if (r==true)
+				{ return true; }
+				else
+  				{ return false; }
+			}
+			</script>				
 						
 			</td>
 		</tr>
@@ -149,6 +160,8 @@ int conta = m.contaMonitor();
 <form method="post" action="ControllerServlet">
 <div class="grid flex">
 
+	<%if(m.controllaPresenza(p.getIDPaziente(indice)))
+	{%>
 	<h4 style="color: #999; margin-bottom: 10px; margin-top: 80px" class="center">
 			Grafici:
 		</h4>
@@ -168,6 +181,7 @@ int conta = m.contaMonitor();
 		<button class="orange" type="submit" name="val" style="margin-left: 20px" value="addDato">
 		<i class="icon-tag"></i> Aggiungi</button>
 	</div>
+	<%} %>
 	
 </div>
 </form>
@@ -206,30 +220,33 @@ int conta = m.contaMonitor();
 		
 	</div>
 
-	<%if(s.getSto() != 0)
+	<%if(s.getDimSto() != 0)
 	{%>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 	<script type="text/javascript">
     	google.load("visualization", "1", {packages:["corechart"]});
       	
-    	
     	google.setOnLoadCallback(drawChart);
-        function drawChart() {
-          var data = google.visualization.arrayToDataTable([
-            ['Giorno', 'Valore misurato'],
-            <% dim=s.getSto(); int i; for(i=0; i<dim-1; i++){ %>
-            ['<%= s.getData(i) %>',  <%= s.getStorico(i) %>], <%}%>
-            ['<%= s.getData(i) %>',  <%= s.getStorico(i) %>]
+		function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+        	['Giorno', 'Valore misurato', 'Massimo', 'Minimo'],
+            <% dim=s.getDimSto(); int i; for(i=0; i<dim-1; i++){ %>
+            ['<%= s.getData(i) %>', <%= s.getStorico(i) %>, <%= s.getMax() %>, <%= s.getMin() %>], <%}%>
+            ['<%= s.getData(i) %>', <%= s.getStorico(i) %>, <%= s.getMax() %>, <%= s.getMin() %>]
             
-          ]);
+		]);
 
-          var options = {
-            title: 'Andamento <%= s.getValGrafico() %> dal <%= s.getDataInizio(ID) %> al <%= s.getDataFine(ID) %>'
-          };
-    	      
-    	    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-    	   	chart.draw(data, options);
-    	    }
+        var options = {
+        	title: 'Andamento <%= s.getValGrafico() %> dal <%= s.getDataInizio(ID) %> al <%= s.getDataFine(ID) %>',
+            series: {0:{pointSize: '3'},
+            		 1:{color: 'red'},
+            		 2:{color: 'green'}
+            }
+		};
+              
+		var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+    	chart.draw(data, options);
+     	}
     	    
     </script>
 	<div id="chart_div" style="width: 1600px; height: 500px; margin-top: 80px"></div>
@@ -243,7 +260,7 @@ int conta = m.contaMonitor();
 <form method="post" action="ControllerServlet">
 <div class="grid flex">	
 	<!-- bottone per chiudere il prfilo del paziente -->
-	<div class="center" style="margin-bottom: 80px; margin-top: 100px">
+	<div class="center" style="margin-bottom: 80px; margin-top: 40px">
 		<button class="red" style="margin-left: 20px" type="submit" name="val" value="closeProfiloPaziente" formnovalidate>
 		<i class="icon-ok"></i> Chiudi profilo paziente</button>
 	</div>

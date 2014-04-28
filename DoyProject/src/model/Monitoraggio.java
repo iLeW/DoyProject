@@ -122,6 +122,7 @@ public class Monitoraggio {
 	}
 	
 	public void removeValore(String ID, String val){
+		//elimina da monitoraggio
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
@@ -135,6 +136,23 @@ public class Monitoraggio {
         	con.close();
         	
         	System.out.println("monitoraggio eliminato!! :)");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		//elimina anche da storico
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			String strQuery="DELETE FROM storico WHERE IDPaziente=? AND valore=?";
+            PreparedStatement ps = con.prepareStatement(strQuery);
+            ps.setString(1, ID);
+            ps.setString(2, val);
+            
+            ps.executeUpdate();
+        	ps.close();
+        	con.close();
+        	
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -162,6 +180,7 @@ public class Monitoraggio {
 	}
 	//ritorna tutti i valori che si possono monitorare
 	public int viewAllMonitor(){
+		monitor.clear();
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);

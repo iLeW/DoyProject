@@ -12,7 +12,7 @@ import java.util.Vector;
 /*
  * cose da fare:
  * 1) fare tutti i metodi get e set					[fatto]
- * 2) se possibile trasformare IDPAziente in int,
+ * 2) se possibile trasformare IDPaziente in int,
  * 3) aggiungere la pagina di inserimento effettuato	[fatto, aggiunto il messaggio]
  * 4) nella pagina pazientiLista mettere la tabella		[fatto, guardare bene la questione della data d'uscita]
  * 5) dalla tabella si può selezionare un paziente e premere un tasto per modificarlo ->
@@ -20,11 +20,12 @@ import java.util.Vector;
  * 7) pazientiCategoria											[fatto]
  * 8) controllo per il codice fiscale da gestire le eccezioni
  * 9) controllare che le date in e out vadano bene
- * 10) fare i grafici
- * 11) fare la pagina del progilo del paziente, che è paziente.jsp
+ * 10) fare i grafici											[fatto]
+ * 11) fare la pagina del profilo del paziente, che è paziente.jsp	[fatto]
  * 12) popup per l'eliminazione del paziente					[fatto]
  * 13) fare la selezione del reparto con il menu a tendina		[fatto]
  * 14) fare la modifica della tabella dei monitoraggi nella pagina profilo del paziente
+ * 15) mettere nella tabella pazienti il campo "dottore che lo segue"
  */
 
 public class Paziente {
@@ -286,7 +287,7 @@ public class Paziente {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		//cancella dalla tabella monitoraggio
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
@@ -413,6 +414,10 @@ public class Paziente {
                  break;
         case "Nefrologia":  colore = "#FFFD9D";
                  break;
+        case "Pediatria":  colore = "#EFB361";
+        		break;
+        case "Pronto soccorso":  colore = "#FFA6FD";
+        		break;
         default: colore = "#FFFFFF";
                  break;
 		}//fine switch

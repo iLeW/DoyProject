@@ -21,7 +21,7 @@ public class Storico {
 
 	//variabili locali
 	private Vector<Integer> ID = new Vector<Integer>();
-	private Vector<String> valore = new Vector<String>();
+	//private Vector<String> valore = new Vector<String>();
 	//private Vector<Integer> dato = new Vector<Integer>();
 	private Vector<Integer> Storico = new Vector<Integer>();
 	private Vector<Date> data = new Vector<Date>();
@@ -30,7 +30,8 @@ public class Storico {
 	private String valGrafico = "";
 	private String dataDefault = "1900-01-01";
 	private Date inizio = Date.valueOf(dataDefault);
-	private Date fine = Date.valueOf(dataDefault);		
+	private Date fine = Date.valueOf(dataDefault);	
+	private int max, min;
 	
 	public Storico() {
 
@@ -65,6 +66,12 @@ public class Storico {
 		{ return returnData(id, getValGrafico(), "ultimo"); }
 		else
 		{ return this.fine; }
+	}
+	public int getMin(){
+		return this.min;
+	}
+	public int getMax(){
+		return this.max;
 	}
 	
 	//funzione per inserire un nuovo dato nello storico
@@ -200,15 +207,38 @@ public class Storico {
 		e.printStackTrace();
 		}
 		
-		for(int i=0; i<Storico.size();i++){
+		/*for(int i=0; i<Storico.size();i++){
 			System.out.println(i+" datoStorico: "+Storico.get(i));
+		}*/
+		//per settare il massimo e il minimo per il grafico
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			String strQuery="select * from monitoraggio where IDPaziente=? and valore=?";
+	        PreparedStatement ps = con.prepareStatement(strQuery);
+	        
+	        ps.setInt(1, ID);
+	        ps.setString(2, valore);
+	        
+	       	ResultSet rs = ps.executeQuery();
+	       	while(rs.next()){
+	       		min = rs.getInt("minimo");
+				max = rs.getInt("massimo");
+			}
+			ps.close();
+			con.close();
+		}
+				
+		catch (Exception e) {
+		e.printStackTrace();
 		}
 	}
-	public int getSto(){
+	
+	public int getDimSto(){
 		return Storico.size();
 	}
 	public Date getData(int i) {
-		System.out.println(i+" Data: "+data.get(i));
+		//System.out.println(i+" Data: "+data.get(i));
 		return data.get(i);
 	}
 	public int getStorico(int i) {
