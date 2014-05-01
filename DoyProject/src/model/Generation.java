@@ -105,6 +105,8 @@ public class Generation extends Thread {
 					ps.setString(4, date);
 					ps.setBoolean(5, false);
 					int num = ps.executeUpdate();
+					
+					//SE IL DATO CREATO SUPERA IL val_max ALLORA MANDO UN MESSAGGIO AL DOTTORE (quindi altra chiamata al database dei messaggi, il campo sender lo metto come speciale "ALERT")
 
 					if (num > 0)
 						result = true;
