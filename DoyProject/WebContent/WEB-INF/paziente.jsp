@@ -85,7 +85,7 @@ int conta = m.contaMonitor();
 		<i class="icon-tag"></i> Aggiungi</button>
 	</div>
 	
-	<!-- vedo se mettere la tabella o no -->
+	<!-- vedo se mettere la tabella e il campo di inserimento dei dati di simulazione -->
 	<%if(m.controllaPresenza(p.getIDPaziente(indice)))
 	{%>
 	<!-- Tabella con i monitoraggi del paziente -->
@@ -116,9 +116,7 @@ int conta = m.contaMonitor();
 			<td> <%= m.getMassimo(i).toString()
 			%> </td>
 			<!-- non riesco a modificare il colore delle icone -->
-			<td><a href="ControllerServlet?val=modMonitor&ID=<%=m.getIDPaziente(i)%>&VAL=<%=m.getValore(i)%>">
-			<i class="icon-pencil tooltip-top" title="Modifica"> </i></a>
-			
+			<td>
 			<a href="ControllerServlet?val=delMonitor&ID=<%=m.getIDPaziente(i)%>&VAL=<%=m.getValore(i)%>">
 			<i class="icon-trash tooltip-top" title="Elimina" onclick="return conferma();"> </i></a>
 				
@@ -140,18 +138,20 @@ int conta = m.contaMonitor();
 		</tbody>
 		</table>
 	</div>
+	
 	<%}//fine if per creare la tabella %>
-
 </div>
 </form>
-
-
-<!-- piccola form per la simulazione dell'aggiunta di un parametro -->
-<form method="post" action="ControllerServlet">
-<div class="grid flex">
-
+	
 	<%if(m.controllaPresenza(p.getIDPaziente(indice)))
 	{%>
+	<!-- piccola form per la simulazione dell'aggiunta di un dato
+	il controllo è sempre
+	if(m.controllaPresenza(p.getIDPaziente(indice)))
+	-->
+	<form method="post" action="ControllerServlet">
+	<div class="grid flex">
+	
 	<h4 style="color: #999; margin-bottom: 10px; margin-top: 80px" class="center">
 			Grafici:
 		</h4>
@@ -171,25 +171,26 @@ int conta = m.contaMonitor();
 		<button class="orange" type="submit" name="val" style="margin-left: 20px" value="addDato">
 		<i class="icon-tag"></i> Aggiungi</button>
 	</div>
-	<%} %>
 	
-</div>
-</form>
+	</div>
+	</form>
 
 
-<!-- da qui c'è la zona dei grafici, da mettere solo se il paziente è presente nella tabella storico-->
-<%if(s.presenzaStorico(ID))
-{%>
-<form method="post" action="ControllerServlet">
-<div class="grid flex">
+<!-- da qui c'è la zona dei grafici, da mettere solo se il paziente è presente nella tabella storico e ci sono dei dati-->
+	<% dim = s.presenzaStorico(ID);
+	if(dim > 0)
+	{ %>
+	<form method="post" action="ControllerServlet">
+	<div class="grid flex">
 
-	<div class="col_2">
+		<div class="col_2">
 			<label for="select1">Visualizza il grafico di:</label></div>
 		<div class="col_10">
 			<select id="visStorico" name="visStorico" required>
-			<%for(int i=0; i<dim; i++)
+			<%//dim = s.monitorEstorico(ID);
+			for(int i=0; i<dim; i++)
 			{%>
-			<option value="<%=s.getMon(i)%>"><%=s.getMon(i)%></option>
+			<option value="<%=s.getMonESto(i)%>"><%=s.getMonESto(i)%></option>
 			<%} %>
 			</select>
 		<!-- l'unico modo per settare in modo giusto il campo del select è usare una script -->
@@ -208,56 +209,53 @@ int conta = m.contaMonitor();
 		<button class="orange" type="submit" name="val" style="margin-left: 20px" value="aggiornaGrafico">
 		<i class="icon-bolt"></i> Aggiorna</button>
 		
-	</div>
+		</div>
 
-	<%if(s.getDimSto() != 0)
-	{%>
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-	<script type="text/javascript">
-    	google.load("visualization", "1", {packages:["corechart"]});
+		<%if(s.getDimSto() != 0)
+		{%>
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+    		google.load("visualization", "1", {packages:["corechart"]});
       	
-    	google.setOnLoadCallback(drawChart);
-		function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-        	['Giorno', 'Valore misurato', 'Massimo', 'Minimo'],
-            <% dim=s.getDimSto(); int i; for(i=0; i<dim-1; i++){ %>
-            ['<%= s.getData(i) %>', <%= s.getStorico(i) %>, <%= s.getMax() %>, <%= s.getMin() %>], <%}%>
-            ['<%= s.getData(i) %>', <%= s.getStorico(i) %>, <%= s.getMax() %>, <%= s.getMin() %>]
+    		google.setOnLoadCallback(drawChart);
+			function drawChart() {
+    		    var data = google.visualization.arrayToDataTable([
+      		  	['Giorno', 'Valore misurato', 'Massimo', 'Minimo'],
+      	        <% dim=s.getDimSto(); int i; for(i=0; i<dim-1; i++){ %>
+            	['<%= s.getData(i) %>', <%= s.getStorico(i) %>, <%= s.getMax() %>, <%= s.getMin() %>], <%}%>
+            	['<%= s.getData(i) %>', <%= s.getStorico(i) %>, <%= s.getMax() %>, <%= s.getMin() %>]
             
-		]);
+			]);
 
-        var options = {
-        	title: 'Andamento <%= s.getValGrafico() %> dal <%= s.getDataInizio(ID) %> al <%= s.getDataFine(ID) %>',
-            series: {0:{pointSize: '3'},
+       		var options = {
+       	 		title: 'Andamento <%= s.getValGrafico() %> dal <%= s.getDataInizio(ID) %> al <%= s.getDataFine(ID) %>',
+            	series: {0:{pointSize: '3'},
             		 1:{color: 'red'},
             		 2:{color: 'green'}
-            }
-		};
+            	}
+			};
               
-		var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-    	chart.draw(data, options);
-     	}
-    	    
-    </script>
-	<div id="chart_div" style="width: 1600px; height: 500px; margin-top: 80px"></div>
-	<%} %>
+			var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+    		chart.draw(data, options);
+     		}
+    	</script>
+		<div id="chart_div" style="width: 1600px; height: 500px; margin-top: 80px"></div>
+	
+		<%}//fine if per i grafici di google %>
 
-
-</div>
-</form>
-<%}//fine if per mettere i grafici %>
+	</div>
+	</form>
+	
+	<%}//fine if(dim > 0) %>
+		
+	<%}//fine if per mettere i grafici %>
 
 <form method="post" action="ControllerServlet">
-<div class="grid flex">	
 	<!-- bottone per chiudere il prfilo del paziente -->
 	<div class="center" style="margin-bottom: 80px; margin-top: 40px">
 		<button class="red" style="margin-left: 20px" type="submit" name="val" value="closeProfiloPaziente" formnovalidate>
 		<i class="icon-ok"></i> Chiudi profilo paziente</button>
 	</div>
-	
-	
-</div><!-- End Grid -->
-
 </form>
 
 </body>

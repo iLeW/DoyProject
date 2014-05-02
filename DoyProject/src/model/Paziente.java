@@ -13,21 +13,21 @@ import java.util.Vector;
  * cose da fare:
  * 1) fare tutti i metodi get e set					[fatto]
  * 2) se possibile trasformare IDPaziente in int,
- * 3) aggiungere la pagina di inserimento effettuato	[fatto, aggiunto il messaggio]
- * 4) nella pagina pazientiLista mettere la tabella		[fatto, guardare bene la questione della data d'uscita]
+ * 3) aggiungere la pagina di inserimento effettuato	[fatto]
+ * 4) nella pagina pazientiLista mettere la tabella		[fatto]
  * 5) dalla tabella si può selezionare un paziente e premere un tasto per modificarlo ->
  * 6) mettere gli if in pazienteMod per precompilare i campi	[fatto]
  * 7) pazientiCategoria											[fatto]
- * 8) controllo per il codice fiscale da gestire le eccezioni
- * 9) controllare che le date in e out vadano bene
- * 10) fare i grafici											[fatto]
- * 11) fare la pagina del profilo del paziente, che è paziente.jsp	[fatto]
- * 12) popup per l'eliminazione del paziente					[fatto]
- * 13) fare la selezione del reparto con il menu a tendina		[fatto]
- * 14) fare la modifica della tabella dei monitoraggi nella pagina profilo del paziente
- * 15) mettere nella tabella pazienti il campo "dottore che lo segue"
- * 16) fare la funzione per il controllo dei valori dei pazienti	[fatto in insDato]
- * 17) mettere il tasto per dimettere i pazienti
+ * 8) fare i grafici											[fatto]
+ * 9) fare la pagina del profilo del paziente, che è paziente.jsp	[fatto]
+ * 10) popup per l'eliminazione del paziente					[fatto]
+ * 11) fare la selezione del reparto con il menu a tendina		[fatto]
+ * 12) fare la modifica della tabella dei monitoraggi nella pagina profilo del paziente
+ * 13) fare la funzione per il controllo dei valori dei pazienti	[fatto in insDato]
+ * 14) mettere il tasto per dimettere i pazienti			[fatto]
+ * 15) controllo per il codice fiscale da gestire le eccezioni
+ * 16) controllare che le date in e out vadano bene
+ * 17) mettere una miriade di controlli !!!!!!!!
  */
 
 public class Paziente {
@@ -232,6 +232,12 @@ public class Paziente {
 		
 		catch (Exception e) {
 			e.printStackTrace();
+			//System.out.println("messaggio" + e.getMessage());
+			if(e.getMessage().contains("Duplicate"))
+			{
+				//settare una variabile di sessione
+				System.out.println("prova di errore :| ");
+			}
 		}
 	}
 	

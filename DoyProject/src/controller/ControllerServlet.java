@@ -556,7 +556,8 @@ public class ControllerServlet extends HttpServlet {
 		// bottoni aggiungi paziente e annulla. Dalla pagina pazienteMod
 		// riportano a pazientiLista
 		if ("insPaziente".equals(val)) {
-			// Paziente p = new Paziente(request.getParameter("IDPaziente"));
+			//guardo se c'è una variabile di sessione che mi da errore, se si ritorno alla pagina precedente
+			//e scrivo qualcosa, alla fine CANCELLO LA VARIABILE DI SESSIONE
 			p.insPaziente(p.getIDDisp(), request.getParameter("nome"),
 					request.getParameter("cognome"),
 					request.getParameter("dataNascita").toString(),
