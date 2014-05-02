@@ -75,7 +75,9 @@ public class Storico {
 	}
 	
 	//funzione per inserire un nuovo dato nello storico
-	public void insDato(String ID, String valoreStorico, String dato){
+	public boolean insDato(String ID, String valoreStorico, String dato){
+		int minimo=0, massimo=0;
+		
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
@@ -95,12 +97,45 @@ public class Storico {
         	ps.close();
         	con.close();
         	
-        	System.out.println("monitoraggio aggiunto!! :)");
+        	System.out.println("dato aggiunto!! :)");
         }
-		
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		//selezione massimo-minimo per controllare che il dato inserito sia nela range
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			String strQuery="select minimo, massimo from monitoraggio where IDPaziente=? and valore=?";
+	        PreparedStatement ps = con.prepareStatement(strQuery);
+	        
+	        ps.setString(1, ID);
+	        ps.setString(2, valoreStorico);	        
+	           
+	       	ResultSet rs = ps.executeQuery();
+	       	while(rs.next()){
+				minimo = rs.getInt("minimo");
+				massimo = rs.getInt("massimo");
+				System.out.println("min: " + minimo + " max: " + massimo);
+			}
+			ps.close();
+			con.close();
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+		
+		int d = Integer.parseInt(dato);
+		if(d >= minimo && d <= massimo)	//tutto ok
+		{
+			return false;
+		}
+		else							//fuori dal range
+		{
+			System.out.println("il paziente non sta bene, dato: " + d + " min: " + minimo + " max: " + massimo);
+			return true;
+		}
+		
 	}
 	
 	//funzione che ritorna le cose già monitorare per un paziente
@@ -272,5 +307,6 @@ public class Storico {
 		else
 			return true;
 	}
+	
 	
 }//fine classe Storico

@@ -51,7 +51,7 @@ int conta = p.contaPazienti();
 			%> </td>
 			<td> <%= p.getDataIn(i)
 			%> </td>
-			<td> <%= p.getDataOut(i)
+			<td> <%= p.showData(p.getDataOut(i))
 			%> </td>
 			<td> <%= p.getReparto(i)
 			%> </td>

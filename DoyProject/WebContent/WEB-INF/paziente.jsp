@@ -67,16 +67,6 @@ int conta = m.contaMonitor();
 	<div class="col_10" style="margin-bottom: 10px">
 		<label for="dataOut"><%= p.getReparto(indice)%></label></div>
 		
-	<!-- <div class="col_2">
-		<label for="select1">Scegli cosa monitorare</label></div>
-	<div class="col_10" style="margin-bottom: 30px">
-		<select id="ValoreMon" name="nomeValore">
-		<option value="Temperatura">Temperatura</option>
-		<option value="Pressione sanguigna">Pressione sanguigna</option>
-		<option value="Battito cardiaco">Battito cardiaco</option>
-		<option value="Globuli bianchi">Globuli bianchi</option>
-		</select>-->
-		
 	<div class="col_2">
 			<label for="select1">Scegli cosa monitorare</label></div>
 		<div class="col_10" style="margin-bottom: 30px">

@@ -583,7 +583,6 @@ public class ControllerServlet extends HttpServlet {
 					request.getParameter("dataNascita").toString(), request
 							.getParameter("codFisc"),
 					request.getParameter("dataIn").toString(), request
-							.getParameter("dataOut").toString(), request
 							.getParameter("reparto"));
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
@@ -596,6 +595,29 @@ public class ControllerServlet extends HttpServlet {
 		}
 
 		if ("annModPaziente".equals(val)) {
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
+			if (session.getAttribute("categoria") != null) {
+				session.removeAttribute("categoria");
+				path = "/WEB-INF/pazientiCategoria";
+			} else {
+				path = "/WEB-INF/pazientiLista";
+			}
+		}
+		//funzioni per dimettere e riammetere il paziente
+		if ("dimettiPaziente".equals(val)) {
+			p.dimettiP(session.getAttribute("IDpaz").toString());
+			p.viewPaziente();
+			session.setAttribute("paziente", p);
+			if (session.getAttribute("categoria") != null) {
+				session.removeAttribute("categoria");
+				path = "/WEB-INF/pazientiCategoria";
+			} else {
+				path = "/WEB-INF/pazientiLista";
+			}
+		}
+		if ("riammettiPaziente".equals(val)) {
+			p.riammettiP(session.getAttribute("IDpaz").toString());
 			p.viewPaziente();
 			session.setAttribute("paziente", p);
 			if (session.getAttribute("categoria") != null) {
@@ -815,9 +837,14 @@ public class ControllerServlet extends HttpServlet {
 		
 		//aggiunge un dato al monitoraggio selezionato
 		if ("addDato".equals(val)) {
-			s.insDato(session.getAttribute("IDpaz").toString(),
+			boolean pericolo = false;
+			pericolo = s.insDato(session.getAttribute("IDpaz").toString(),
 					request.getParameter("valoreStorico"),
 					request.getParameter("dato"));
+			if(pericolo)//entra se il valore è fuori dal range
+			{
+				System.out.println("occhio!!");//manda un messaggio ai dottori!!
+			}
 			session.setAttribute("storico", s);
 			path = "/WEB-INF/paziente";
 		}

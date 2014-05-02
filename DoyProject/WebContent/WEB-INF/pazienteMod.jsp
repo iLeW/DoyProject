@@ -71,7 +71,9 @@ if(p.getInserito() == 2)
 		<div class="col_2">
 			<label for="dataOut">Data di uscita</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
-			<input id="dataOut" name="dataOut" type="date" value="<%= p.getDataOut(indice)%>" /></div>
+			<label for="dataOut"> <%= p.showData(p.getDataOut(indice)) %></label></div>
+			<!-- <input id="dataOut" name="dataOut" type="date" value="<%= p.getDataOut(indice)%>" /> </div> -->
+		
 			
 		<!-- pezzo vecchi con il textfield, da aggiungere p.getReparto(indice) in value
 		<div class="col_2">
@@ -82,17 +84,29 @@ if(p.getInserito() == 2)
 		<div class="col_2">
 			<label for="select1">Reparto</label></div>
 		<div class="col_10" style="margin-bottom: 30px">
-			<select id="ValoreMon" name="reparto" required>
+			<select id="reparto" name="reparto" required>
 			<%for(int i=0; i<dim; i++)
 			{%>
 			<option value="<%=r.getRep(i)%>"><%=r.getRep(i)%></option>
 			<%} %>
 			</select>
+		<script>
+        document.getElementById("reparto").value = '<%= p.getReparto(indice) %>';
+        </script>
 		</div>
 			
 		<div class="center" style="margin-bottom: 80px">
 			<button class="green" type="submit" name="val" value="insModPaziente">Conferma modifiche</button>
 			<button class="red" style="margin-left: 20px" type="submit" name="val" value="annModPaziente" formnovalidate>Annulla modifiche</button>
+			<%if(p.dentro(p.getDataOut(indice)))
+			{%>
+			<button class="orange" style="margin-left: 20px" type="submit" name="val" value="dimettiPaziente">Dimetti paziente</button>
+			<%}
+			else
+			{%>
+			<button class="orange" style="margin-left: 20px" type="submit" name="val" value="riammettiPaziente">Riammetti paziente</button>
+			<%} %>		
+		
 		</div>
 	</div>
 <!-- End Grid -->
@@ -154,10 +168,12 @@ else
 		<div class="col_10" style="margin-bottom: 10px">
 			<input id="dataIn" name="dataIn" type="date" required  /></div>
 		
+		<!-- meglio toglierle la data di uscita
 		<div class="col_2">
 			<label for="dataOut">Data di uscita</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
 			<input id="dataOut" name="dataOut" type="date" disabled /></div>
+		-->
 		
 		<!-- pezzo vecchi con il textfield  
 		<div class="col_2">

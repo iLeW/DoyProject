@@ -26,6 +26,8 @@ import java.util.Vector;
  * 13) fare la selezione del reparto con il menu a tendina		[fatto]
  * 14) fare la modifica della tabella dei monitoraggi nella pagina profilo del paziente
  * 15) mettere nella tabella pazienti il campo "dottore che lo segue"
+ * 16) fare la funzione per il controllo dei valori dei pazienti	[fatto in insDato]
+ * 17) mettere il tasto per dimettere i pazienti
  */
 
 public class Paziente {
@@ -109,6 +111,23 @@ public class Paziente {
 	}
 	public Date getDataOut(int i) {
 		return dataOut.get(i);
+	}
+	public String showData(Date data)
+	{
+		Date d = Date.valueOf(dataDefault);
+		if(data.equals(d))
+			return "non dimesso";
+		else
+			return "dimesso il " + data.toString();
+		
+	}
+	public boolean dentro(Date dataO)
+	{
+		Date d = Date.valueOf(dataDefault);
+		if(dataO.equals(d))		//è ancora dentro
+			return true;
+		else
+			return false;		//è stato dimesso
 	}
 	public void setReparto(String Reparto) {
 		this.Reparto.add(Reparto);
@@ -216,12 +235,12 @@ public class Paziente {
 		}
 	}
 	
-	public void modificaPaziente(String IDPaziente, String nome, String cognome, String dataNascita, String codFisc, String dataIn, String dataOut, String reparto){
+	public void modificaPaziente(String IDPaziente, String nome, String cognome, String dataNascita, String codFisc, String dataIn, String reparto){
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
 			//inserisco i dati
-			String query ="update pazienti set nome=?, cognome=?, dataNascita=?, codFisc=?, dataIn=?, dataOut=?, reparto=? where IDPaziente=?;";
+			String query ="update pazienti set nome=?, cognome=?, dataNascita=?, codFisc=?, dataIn=?, reparto=? where IDPaziente=?;";
 			PreparedStatement ps = con.prepareStatement(query);
 			//int id = Integer.parseInt(IDPaziente); 
 			ps.setString(1, nome);
@@ -235,10 +254,8 @@ public class Paziente {
             Date dataI = Date.valueOf(dataIn);
             ps.setDate(5, dataI);
             //devo settare un valore di default altrimenti è un pacco la visualizzazione nella tabella dopo
-            Date dataO = Date.valueOf(dataOut);
-            ps.setDate(6, dataO);
-            ps.setString(7, reparto);
-            ps.setString(8, IDPaziente);
+            ps.setString(6, reparto);
+            ps.setString(7, IDPaziente);
         	ps.executeUpdate();
         	ps.close();
         	con.close();
@@ -246,6 +263,60 @@ public class Paziente {
         	//System.out.println("IDold: " + IDold + " IDnew: " + IDPaziente);
         	System.out.println("paziente modificato!! :)" + IDPaziente);
         	inserito = 2;
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	//funzione per dimettere il paziente
+	public void dimettiP(String IDPaziente)
+	{
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			//inserisco i dati
+			String query ="update pazienti set dataOut=? where IDPaziente=?;";
+			PreparedStatement ps = con.prepareStatement(query);
+			//int id = Integer.parseInt(IDPaziente); 
+			java.util.Date today = new java.util.Date();
+			Date dataO = new Date(today.getTime());
+            ps.setDate(1, dataO);
+            ps.setString(2, IDPaziente);
+        	ps.executeUpdate();
+        	ps.close();
+        	con.close();
+        	
+        	System.out.println("paziente dimesso!! :)" + IDPaziente);
+        	//inserito = 2;
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	//funzione per riammettere il paziente
+	public void riammettiP(String IDPaziente)
+	{
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			//inserisco i dati
+			String query ="update pazienti set dataIn=?, dataOut=? where IDPaziente=?;";
+			PreparedStatement ps = con.prepareStatement(query);
+			//int id = Integer.parseInt(IDPaziente); 
+			java.util.Date today = new java.util.Date();
+			Date dataI = new Date(today.getTime());
+            ps.setDate(1, dataI);
+            Date dataO = Date.valueOf(dataDefault);
+            ps.setDate(2, dataO);
+            ps.setString(3, IDPaziente);
+        	ps.executeUpdate();
+        	ps.close();
+        	con.close();
+        	
+        	System.out.println("paziente riammesso!! :)" + IDPaziente);
+        	//inserito = 2;
 		}
 		
 		catch (Exception e) {

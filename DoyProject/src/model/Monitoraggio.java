@@ -141,6 +141,8 @@ public class Monitoraggio {
 			e.printStackTrace();
 		}
 		//elimina anche da storico
+		//non serve, lo storico è meglio tenerlo
+		/*
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
@@ -156,7 +158,7 @@ public class Monitoraggio {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	public boolean controllaPresenza(String ID){
