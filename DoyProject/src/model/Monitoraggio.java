@@ -180,7 +180,7 @@ public class Monitoraggio {
 	public String getMon(int i){
 		return monitor.get(i);
 	}
-	//ritorna tutti i valori che si possono monitorare
+	//ritorna tutti i valori che si possono monitorare per il menu a tendina
 	public int viewAllMonitor(){
 		monitor.clear();
 		try {

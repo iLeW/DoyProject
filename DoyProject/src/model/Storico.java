@@ -20,12 +20,13 @@ public class Storico {
 	private static String SQLPW = "root";
 
 	//variabili locali
-	private Vector<Integer> ID = new Vector<Integer>();
+	//private Vector<Integer> ID = new Vector<Integer>();
 	//private Vector<String> valore = new Vector<String>();
 	//private Vector<Integer> dato = new Vector<Integer>();
 	private Vector<Integer> Storico = new Vector<Integer>();
 	private Vector<Date> data = new Vector<Date>();
 	private Vector<String> monitor = new Vector<String>();
+	private Vector<String> monitorEstorico  = new Vector<String>();
 	private Vector<Date> d = new Vector<Date>();
 	private String valGrafico = "";
 	private String dataDefault = "1900-01-01";
@@ -44,8 +45,9 @@ public class Storico {
 		fine = Date.valueOf(dataDefault);
 	}
 	public String getValGrafico() {
+		
 		if(valGrafico.isEmpty())
-		{ return monitor.get(0); }
+		{ return monitorEstorico.get(0); }
 		else
 		{ return this.valGrafico; }
 	}
@@ -175,11 +177,45 @@ public class Storico {
 		int dim=monitor.size();
 		return dim;
 	}
+	//funzione per trovare i valori monitorati che hanno anche lo storico
+	public int presenzaStorico(int ID)
+	{
+		monitorEstorico.clear();
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			//String strQuery="select * from storico where IDPaziente=? and valore=?";
+			String strQuery="select * from storico where IDPaziente=?";
+	        PreparedStatement ps = con.prepareStatement(strQuery);
+	        
+	        Integer id = ID;
+	        ps.setString(1, id.toString());
+	        //ps.setString(2, getValGrafico());
+	           
+	       	ResultSet rs = ps.executeQuery();
+	       	while(rs.next()){
+	       		String m = rs.getString("valore");
+	       		if(!monitorEstorico.contains(m))
+	       			monitorEstorico.add(m);
+			}
+			ps.close();
+			con.close();
+		}
+				
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+		
+		return monitorEstorico.size();
+	}
+	public String getMonESto(int i){
+		return monitorEstorico.get(i);
+	}
+	
 	
 	//funzione che ritorna la prima o l'ultima data
 	public Date returnData(int ID, String valore, String quale){		
 		d.clear();
-		
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
@@ -278,34 +314,6 @@ public class Storico {
 	}
 	public int getStorico(int i) {
 		return Storico.get(i);
-	}
-	
-	public boolean presenzaStorico(int IDp){
-		ID.clear();
-		try {
-			Class.forName(DRIVER).newInstance();
-			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
-			String strQuery="select * from storico where IDPaziente=?";
-	        PreparedStatement ps = con.prepareStatement(strQuery);
-	        
-	        ps.setInt(1, IDp);
-	        
-	       	ResultSet rs = ps.executeQuery();
-	       	while(rs.next()){
-	       		ID.add(rs.getInt("IDPaziente"));
-			}
-			ps.close();
-			con.close();
-		}
-				
-		catch (Exception e) {
-		e.printStackTrace();
-		}
-		
-		if(ID.size()==0)
-			return false;
-		else
-			return true;
 	}
 	
 	
