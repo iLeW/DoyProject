@@ -613,4 +613,54 @@ public class User {
 		return result;
 	}
 
+	/**
+	 * Funzione che torna la lista dei dottori che seguono un certo reparto
+	 * @param 	reparto Il reparto scelto
+	 * @return 	La lista dei dottori
+	 */
+	public ArrayList<String> getDocsByRep(String reparto) {
+		return this.getDocsByRepDB(reparto);
+	}
+
+	/**
+	 * Funzione privata che torna la lista dei dottori dato un determinato reparto, 
+	 * è la funzione che va effettivamente a lavorare sul database
+	 * @param reparto	Il reparto scelto
+	 * @return	Ritorna la lista dei dottori
+	 */
+	private ArrayList<String> getDocsByRepDB(String reparto) {
+		ArrayList<String> docs = new ArrayList<String>();
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME,
+					SQLUSERNAME, SQLPW);
+			// il punto di domanda richiama il ps.setString da cui poi vai a
+			// prendere i dati
+			String query = "SELECT username FROM users WHERE dep1=? OR dep2=? OR dep3=?";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, reparto);
+			ps.setString(2, reparto);
+			ps.setString(3, reparto);
+			ResultSet rs = ps.executeQuery(); // Esegue la query preparata nel
+												// PreparedStatement
+
+			if (rs.next()) {
+				do{
+					docs.add(rs.getString("username"));
+				}while(rs.next());
+			}
+			
+			else 
+				docs.add("NULL");
+
+			ps.close();
+			con.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		
+		return docs;
+	}
 } // fine classe User

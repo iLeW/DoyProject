@@ -41,7 +41,7 @@
 		</div>
 
 		<div class="col_12">
-			<textarea id="MessageReceived" placeholder="" style="width: inherit"
+			<textarea <%if(mx.getSender().contains("ALERT")) { %> style="border:1px solid #FF0000" <%} %>id="MessageReceived" placeholder="" style="width: inherit"
 				readonly="readonly">${messaggio.message}</textarea>
 		</div>
 
@@ -63,9 +63,16 @@
 				<i class="icon-chevron-left"></i> Indietro
 			</button>
 		</div>
+		<% if(mx.getSender().contains("ALERT")) { 
+		%>
 		<div class="col_2">
-			<button type="submit" class="medium" name="val" value="rispMex">Rispondi</button>
+			<button type="submit" class="medium" name="val" value="rispMex" disabled>Rispondi</button>
 		</div>
+		<%} else  {%>
+		<div class="col_2">
+			<button type="submit" class="medium" name="val" value="rispMex" >Rispondi</button>
+		</div> 
+		<%} %>
 
 		<div class="col_8">
 			<button type="submit" class="medium" name="val" value="delMex">Elimina</button>

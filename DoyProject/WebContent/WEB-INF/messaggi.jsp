@@ -69,7 +69,19 @@
 											System.out.println("i :" + i);
 							%>
 						
-						<tr>
+						<%
+							if (mx.getSenderU(i).contains("ALERT")) {
+						%>
+					
+					<tr class="" bgcolor="#FF7D7D" >
+						<%
+							} else {
+						%>
+					
+					<tr>
+						<%
+							}
+						%>
 							<td><%=mx.getSenderU(i)%></td>
 							<td><%=mx.getMexPreviewU(i)%></td>
 							<td><%=mx.getDateU(i)%></td>
@@ -79,10 +91,11 @@
 							<td><a
 								href="ControllerServlet?val=readMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>">
 									<i class="icon-book tooltip-top" title="Leggi"> </i>
-							</a> <a
+							</a> 
+							<%if(!mx.getSenderU(i).contains("ALERT")){ %><a
 								href="ControllerServlet?val=rispMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>">
 									<i class="icon-share-alt tooltip-top" title="Rispondi"> </i>
-							</a> <a
+							</a> <%} %> <a
 								href="ControllerServlet?val=delMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>#tabr1">
 									<i class="icon-trash tooltip-top" title="Elimina"> </i>
 							</a><a
@@ -125,7 +138,20 @@
 								for (int i = 0; i < mx.getNumMexR(u.getUsername()); ++i) {
 							%>
 						
-						<tr>
+						<%
+							if (mx.getSenderR(i).contains("ALERT")) {
+								System.out.println("ESISTE");
+						%>
+					
+					<tr class="" bgcolor="#FF7D7D">
+						<%
+							} else {
+						%>
+					
+					<tr>
+						<%
+							}
+						%>
 							<td><%=mx.getSenderR(i)%></td>
 							<td><%=mx.getMexPreviewR(i)%></td>
 							<td><%=mx.getDateR(i).toString()%></td>
@@ -134,10 +160,12 @@
 							<td><a
 								href="ControllerServlet?val=readMex&sender=<%=mx.getSenderR(i)%>&date=<%=mx.getDateR(i)%>&r=true">
 									<i class="icon-book tooltip-top" title="Leggi"> </i>
-							</a> <a
+							</a> <%if(!mx.getSenderR(i).contains("ALERT")){ %><a
 								href="ControllerServlet?val=rispMex&sender=<%=mx.getSenderR(i)%>&date=<%=mx.getDateR(i)%>&r=true">
 									<i class="icon-share-alt tooltip-top" title="Rispondi"> </i>
-							</a> <a
+							</a> 
+							<%} %>
+							<a
 								href="ControllerServlet?val=delMex&sender=<%=mx.getSenderR(i)%>&date=<%=mx.getDateR(i)%>#tabr2">
 									<i class="icon-trash tooltip-top" title="Elimina"> </i>
 							</a></td>

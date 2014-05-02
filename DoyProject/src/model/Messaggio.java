@@ -1,11 +1,13 @@
 package model;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Classe utilizzata per la gestione dei messaggi. E' il model che va a gestire
@@ -164,6 +166,27 @@ public class Messaggio {
 
 		return this.sendMexDB(receiver, sender, mex, date);
 
+	}
+	
+	/**
+	 * Metodo che permette di mandare i messaggi di allerta a tutti i dottori appartenenti a un dato reparto
+	 * @param mex	Il messaggio da mandare
+	 * @param paziente Il nome del paziente
+	 * @param reparto	Il reparto di cui devo trovare tutti i pazienti
+	 */
+	public void sendAlerts(String mex, String paziente, String reparto){
+		User us = new User();
+		String sender = "ALERT -> " + paziente;;
+		ArrayList<String> docs = us.getDocsByRep(reparto);
+		for(int i=0; i<docs.size(); ++i){
+			Date datenow = new Date();
+			//Date date = new Date();
+			String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(datenow);
+			
+			System.out.println("DATAA:::: " + date + " --- DOC::: " + docs.get(i));
+			
+			this.sendMexDB(docs.get(i), sender, mex, date.toString());
+		}
 	}
 
 	/*

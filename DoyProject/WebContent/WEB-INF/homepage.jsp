@@ -12,10 +12,10 @@
 
 		<!-- Se ci sono dei messaggi allora dico che ce ne sono altrimenti no -->
 		<%
-		
-		if(session.getAttribute("fromMessaggi") == null && session.getAttribute("fromHome") != null)
-			System.out.println("OK CORRETTO DA homepage");
-		
+			if (session.getAttribute("fromMessaggi") == null
+					&& session.getAttribute("fromHome") != null)
+				System.out.println("OK CORRETTO DA homepage");
+
 			Messaggio mx = (Messaggio) session.getAttribute("messaggio"); //Di sicuro settato dalla servlet
 			User u = (User) session.getAttribute("user");
 			if (mx.getNumNewMex(u.getUsername()) == 0) {
@@ -24,58 +24,75 @@
 			ci sono nuovi messaggi, Buon Lavoro!</h4>
 		<%
 			} else {
-				
+
 				out.print("<h4 style=\"color: #999; margin-bottom: 40px;\" class=\"center\">");
 				out.print("Ci sono " + mx.getNumNewMex(u.getUsername())
 						+ " messaggi non letti: </h4>");
-				%>
-				<div class="center">
-				<table class="sortable striped">
-					<thead>
-						<tr>
-							<!-- Intestazione -->
-							<th>Da</th>
-							<th>Antemprima Messaggio</th>
-							<th>Data</th>
-							<th>Azioni</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<!-- Dove vanno inseriti i dati -->
-							<%
-								for (int i = 0; i < mx.getNumMexU(u.getUsername()); ++i) {
-							%>
-						
-						<tr>
-							<td><%=mx.getSenderU(i)%></td>
-							<td><%=mx.getMexPreviewU(i)%></td>
-							<td><%=mx.getDateU(i)%></td>
-							
+		%>
+		<div class="center">
+			<table class="sortable striped">
+				<thead>
+					<tr>
+						<!-- Intestazione -->
+						<th>Da</th>
+						<th>Antemprima Messaggio</th>
+						<th>Data</th>
+						<th>Azioni</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<!-- Dove vanno inseriti i dati -->
+						<%
+							for (int i = 0; i < mx.getNumMexU(u.getUsername()); ++i) {
+						%>
 
-							<!-- Bottoni -->
-							<td><a
-								href="ControllerServlet?val=readMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>">
-									<i class="icon-book tooltip-top" title="Leggi"> </i>
-							</a> <a
-								href="ControllerServlet?val=rispMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>">
-									<i class="icon-share-alt tooltip-top" title="Rispondi"> </i>
-							</a> <a
-								href="ControllerServlet?val=delMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>">
-									<i class="icon-trash tooltip-top" title="Elimina"> </i>
-							</a> <a
-								href="ControllerServlet?val=okReadMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>">
-									<i class="icon-check tooltip-top" title="Letto"> </i>
-							</a>
-							</td>
-						</tr>
+						<!-- Se è un messaggio di allerta coloro la riga di rosso -->
+						<%
+							if (mx.getSenderU(i).contains("ALERT")) {
+						%>
+					
+					<tr bgcolor="#FF7D7D">
+						<%
+							} else {
+						%>
+					
+					<tr>
 						<%
 							}
 						%>
-					</tbody>
-				</table>
-			</div>
-			<%}
+						<td><%=mx.getSenderU(i)%></td>
+						<td><%=mx.getMexPreviewU(i)%></td>
+						<td><%=mx.getDateU(i)%></td>
+
+
+						<!-- Bottoni -->
+						<td><a
+							href="ControllerServlet?val=readMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>">
+								<i class="icon-book tooltip-top" title="Leggi"> </i>
+						</a> <%
+ 	if (!mx.getSenderU(i).contains("ALERT")) {
+ %><a
+							href="ControllerServlet?val=rispMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>">
+								<i class="icon-share-alt tooltip-top" title="Rispondi"> </i>
+						</a> <%
+ 	}
+ %><a
+							href="ControllerServlet?val=delMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>">
+								<i class="icon-trash tooltip-top" title="Elimina"> </i>
+						</a> <a
+							href="ControllerServlet?val=okReadMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>">
+								<i class="icon-check tooltip-top" title="Letto"> </i>
+						</a></td>
+					</tr>
+					<%
+						}
+					%>
+				</tbody>
+			</table>
+		</div>
+		<%
+			}
 		%>
 	</div>
 

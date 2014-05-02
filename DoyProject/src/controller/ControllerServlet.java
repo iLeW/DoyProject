@@ -837,6 +837,7 @@ public class ControllerServlet extends HttpServlet {
 		
 		//aggiunge un dato al monitoraggio selezionato
 		if ("addDato".equals(val)) {
+			mx = new Messaggio();
 			boolean pericolo = false;
 			pericolo = s.insDato(session.getAttribute("IDpaz").toString(),
 					request.getParameter("valoreStorico"),
@@ -844,6 +845,20 @@ public class ControllerServlet extends HttpServlet {
 			if(pericolo)//entra se il valore è fuori dal range
 			{
 				System.out.println("occhio!!");//manda un messaggio ai dottori!!
+				//Ricavo il reparto e mando il messaggio e tutti i pazienti di quel reparto
+				
+				p.viewPaziente();	//Ricarica i pazienti
+				int id = Integer.parseInt(session.getAttribute("IDpaz").toString());
+				int idx = p.getIndice(id);
+				String reparto = p.getReparto(idx);
+				String nome = p.getNome(idx);
+				String cognome = p.getCognome(idx);
+				String paziente = nome + " " + cognome;
+				String mex = "ATTENZIONE! Il valore: \"" + request.getParameter("valoreStorico") + "\" del paziente: \"" + paziente + "\", ha superato i limiti stabiliti.";
+				mx.sendAlerts(mex, paziente, reparto);
+				
+				//Faccio una funzione in user che mi manda i messaggi di allerta a tutti
+				
 			}
 			session.setAttribute("storico", s);
 			path = "/WEB-INF/paziente";
