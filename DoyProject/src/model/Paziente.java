@@ -6,7 +6,6 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Hashtable;
 import java.util.Vector;
 
 /*
@@ -44,10 +43,10 @@ public class Paziente {
 	
 	//Variabili private della classe
 	private Vector<String> errors = new Vector<String>();	//Per definire la lista degli errori
+	private Vector<String> provvisorio = new Vector<String>();
 	private String dataDefault = "1900-01-01";
 	// 1) cambiare le variabili da String a Vector<String>
 	private Vector<String> IDPaziente = new Vector<String>();
-	//private Vector<Integer> IDPaziente = new Vector<Integer>();
 	private Vector<String> nome = new Vector<String>();
 	private Vector<String> cognome = new Vector<String>();
 	private Vector<String> codFisc = new Vector<String>();
@@ -161,7 +160,19 @@ public class Paziente {
 		
 		return i;
 	}
-	
+	//funzioni per la gestione degli errori
+	public String getErrors(int i) {
+		return errors.get(i);
+	}
+	public void clearErrors(){
+		this.errors.clear();
+	}
+	public int dimErrors(){
+		return errors.size();
+	}
+	public String getProvv(int i) {
+		return provvisorio.get(i);
+	}
 	//metodo che ritorna il primo ID disponibile
 	public String getIDDisp()
 	{
@@ -239,7 +250,15 @@ public class Paziente {
 			if(e.getMessage().contains("Duplicate"))
 			{
 				//settare una variabile di sessione
-				System.out.println("prova di errore :| ");
+				errors.add("ERRORE: il codice fiscale " + codFisc + " è già presente nel database, inserirne uno diverso");
+				provvisorio.add(IDPaziente);
+				provvisorio.add(nome);
+				provvisorio.add(cognome);
+				provvisorio.add(dataNascita);
+				provvisorio.add(codFisc);
+				provvisorio.add(dataIn);
+				provvisorio.add(reparto);
+				System.out.println("prova di errore :| "+ errors.size());
 			}
 		}
 	}
@@ -276,6 +295,19 @@ public class Paziente {
 		
 		catch (Exception e) {
 			e.printStackTrace();
+			if(e.getMessage().contains("Duplicate"))
+			{
+				//settare una variabile di sessione
+				errors.add("ERRORE: il codice fiscale " + codFisc + " è già presente nel database, inserirne uno diverso");
+				provvisorio.add(IDPaziente);
+				provvisorio.add(nome);
+				provvisorio.add(cognome);
+				provvisorio.add(dataNascita);
+				provvisorio.add(codFisc);
+				provvisorio.add(dataIn);
+				provvisorio.add(reparto);
+				System.out.println("prova di errore :| "+ errors.size());
+			}
 		}
 	}
 	//funzione per dimettere il paziente
@@ -388,6 +420,7 @@ public class Paziente {
 	//visualizza un paziente per la tabella
 	// 3)fare questo metodo per andare a leggere riga per riga il database, passare alla ControllerServlet
 	public void viewPaziente(){
+		clearAll();
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
@@ -426,6 +459,19 @@ public class Paziente {
 		catch (Exception e) {
 		e.printStackTrace();
 		}
+	}
+	
+	public void clearAll(){
+		//errors.clear();
+		provvisorio.clear();
+		IDPaziente.clear();
+		nome.clear();
+		cognome.clear();
+		codFisc.clear();
+		dataNascita.clear();
+		dataIn.clear();
+		dataOut.clear();
+		Reparto.clear();
 	}
 	
 	public void viewReparto(String rep1, String rep2, String rep3){

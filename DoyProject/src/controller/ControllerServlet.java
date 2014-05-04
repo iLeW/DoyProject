@@ -484,7 +484,8 @@ public class ControllerServlet extends HttpServlet {
 		// prendo
 		// Paziente p = (Paziente) session.getAttribute("paziente"); //Se c'è
 		// già un paziente lo prendo
-		Paziente p = new Paziente();
+		//Paziente p = new Paziente();
+		Paziente p = (Paziente) session.getAttribute("paziente"); // Se c'è già un elemento paziente lo prendo
 		Monitoraggio m = new Monitoraggio();
 		Storico s = new Storico();
 		// Storico s = (Storico) session.getAttribute("storico");
@@ -556,17 +557,22 @@ public class ControllerServlet extends HttpServlet {
 		// bottoni aggiungi paziente e annulla. Dalla pagina pazienteMod
 		// riportano a pazientiLista
 		if ("insPaziente".equals(val)) {
-			//guardo se c'è una variabile di sessione che mi da errore, se si ritorno alla pagina precedente
-			//e scrivo qualcosa, alla fine CANCELLO LA VARIABILE DI SESSIONE
 			p.insPaziente(p.getIDDisp(), request.getParameter("nome"),
 					request.getParameter("cognome"),
 					request.getParameter("dataNascita").toString(),
 					request.getParameter("codFisc"),
 					request.getParameter("dataIn").toString(),
 					request.getParameter("reparto"));
-			p.viewPaziente();
-			session.setAttribute("paziente", p);
-			path = "/WEB-INF/pazientiLista";
+			//devo mettere quì il controllo perchè prima aggiunge e poi controlla se c'è l'errore
+			if(p.dimErrors()!=0){
+				System.out.println("errore ins paziente");
+				path = "/WEB-INF/pazienteModErr";
+			}
+			else{
+				p.viewPaziente();
+				session.setAttribute("paziente", p);
+				path = "/WEB-INF/pazientiLista";
+			}
 		}
 
 		if ("annPaziente".equals(val)) {
@@ -585,13 +591,19 @@ public class ControllerServlet extends HttpServlet {
 							.getParameter("codFisc"),
 					request.getParameter("dataIn").toString(), request
 							.getParameter("reparto"));
-			p.viewPaziente();
-			session.setAttribute("paziente", p);
-			if (session.getAttribute("categoria") != null) {
-				session.removeAttribute("categoria");
-				path = "/WEB-INF/pazientiCategoria";
-			} else {
-				path = "/WEB-INF/pazientiLista";
+			if(p.dimErrors()!=0){
+				System.out.println("errore mod paziente");
+				path = "/WEB-INF/pazienteMod";
+			}
+			else{
+				p.viewPaziente();
+				session.setAttribute("paziente", p);
+				if (session.getAttribute("categoria") != null) {
+					session.removeAttribute("categoria");
+					path = "/WEB-INF/pazientiCategoria";
+				} else {
+					path = "/WEB-INF/pazientiLista";
+				}
 			}
 		}
 

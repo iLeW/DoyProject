@@ -14,7 +14,8 @@ int dim = r.getDim();
 //inserito è a 2 quando sto modificando un paziente
 if(p.getInserito() == 2)
 {
-	int ID = Integer.parseInt(request.getParameter("ID"));
+	//int ID = Integer.parseInt(request.getParameter("ID"));
+	int ID = Integer.parseInt(session.getAttribute("IDpaz").toString());
 	//p.setIDold(request.getParameter("ID"));
 	int indice = p.getIndice(ID);
 	//System.out.println("pazienteMod, ID: " + request.getParameter("ID") + " indice: " + indice + " IDold: " + p.getIDold()); 
@@ -30,6 +31,11 @@ if(p.getInserito() == 2)
 				Modificare i dati
 			</h4>
 			<hr class="alt1" />
+			<% for(int i=0; i<p.dimErrors(); i++){%>
+			<i class="icon-warning-sign"></i><label for="nome"><%= p.getErrors(i) %></label>
+			<%}
+			p.clearErrors();
+			%>
 		</div>
 	
 		<!-- 	
@@ -74,13 +80,6 @@ if(p.getInserito() == 2)
 			<label for="dataOut"> <%= p.showData(p.getDataOut(indice)) %></label></div>
 			<!-- <input id="dataOut" name="dataOut" type="date" value="<%= p.getDataOut(indice)%>" /> </div> -->
 		
-			
-		<!-- pezzo vecchi con il textfield, da aggiungere p.getReparto(indice) in value
-		<div class="col_2">
-			<label for="dataOut">Reparto</label></div>
-		<div class="col_10" style="margin-bottom: 10px">
-			<input id="reparto" name="reparto" type="text" value="" /></div>-->
-			
 		<div class="col_2">
 			<label for="select1">Reparto</label></div>
 		<div class="col_10" style="margin-bottom: 30px">
