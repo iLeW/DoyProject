@@ -287,6 +287,11 @@ table {
 	border-collapse: collapse;
 }
 
+/* AGGIUNTO IO */
+#table_mex1 tr.tr_alert, #table_mex2 tr.tr_alert, #table_mex3 tr.tr_alert {
+	background-color:#FF7D7D;
+}
+
 thead,tbody {
 	margin: 0;
 	padding: 0;

@@ -30,7 +30,7 @@
 						+ " messaggi non letti: </h4>");
 		%>
 		<div class="center">
-			<table class="sortable striped">
+			<table id="table_mex1" class="sortable striped">
 				<thead>
 					<tr>
 						<!-- Intestazione -->
@@ -52,7 +52,7 @@
 							if (mx.getSenderU(i).contains("ALERT")) {
 						%>
 					
-					<tr bgcolor="#FF7D7D">
+					<tr class="tr_alert">
 						<%
 							} else {
 						%>

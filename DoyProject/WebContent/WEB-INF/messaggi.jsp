@@ -46,7 +46,7 @@
 		%>
 		<div id="tabr1" class="tab-content">
 			<div class="center">
-				<table class="sortable striped">
+				<table id="table_mex2" class="sortable striped">
 					<thead>
 						<tr>
 							<!-- Intestazione -->
@@ -73,7 +73,7 @@
 							if (mx.getSenderU(i).contains("ALERT")) {
 						%>
 					
-					<tr class="" bgcolor="#FF7D7D" >
+					<tr class="tr_alert">
 						<%
 							} else {
 						%>
@@ -90,17 +90,17 @@
 							<!-- Azioni icone -->
 							<td><a
 								href="ControllerServlet?val=readMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>">
-									<i class="icon-book tooltip-top" title="Leggi"> </i>
+									<i class="icon-book tooltip-top" title="Leggi"></i>
 							</a> 
 							<%if(!mx.getSenderU(i).contains("ALERT")){ %><a
 								href="ControllerServlet?val=rispMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>">
-									<i class="icon-share-alt tooltip-top" title="Rispondi"> </i>
+									<i class="icon-share-alt tooltip-top" title="Rispondi"></i>
 							</a> <%} %> <a
 								href="ControllerServlet?val=delMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>#tabr1">
-									<i class="icon-trash tooltip-top" title="Elimina"> </i>
+									<i class="icon-trash tooltip-top" title="Elimina"></i>
 							</a><a
 								href="ControllerServlet?val=okReadMex&sender=<%=mx.getSenderU(i)%>&date=<%=mx.getDateU(i)%>#tabr1">
-									<i class="icon-check tooltip-top" title="Letto"> </i>
+									<i class="icon-check tooltip-top" title="Letto"></i>
 							</a></td>
 						</tr>
 						<%
@@ -121,7 +121,7 @@
 		<!-- tabr2 dei messaggi LETTI-->
 		<div id="tabr2" class="tab-content">
 			<div class="center">
-				<table class="sortable striped">
+				<table id="table_mex3" class="sortable striped">
 					<thead>
 						<tr>
 							<!-- Intestazione -->
@@ -143,7 +143,7 @@
 								System.out.println("ESISTE");
 						%>
 					
-					<tr class="" bgcolor="#FF7D7D">
+					<tr class="tr_alert" >
 						<%
 							} else {
 						%>
