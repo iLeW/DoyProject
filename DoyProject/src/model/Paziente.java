@@ -28,6 +28,9 @@ import java.util.Vector;
  * 15) controllo per il codice fiscale da gestire le eccezioni
  * 16) controllare che le date in e out vadano bene
  * 17) mettere una miriade di controlli !!!!!!!!
+ * 18) funzione per i colori
+ * 19) ricerca dei pazienti
+ * 20) se non ci sono pazienti non metto la tabella
  */
 
 public class Paziente {
@@ -40,7 +43,7 @@ public class Paziente {
 	private static String SQLPW = "root";
 	
 	//Variabili private della classe
-	private Hashtable <String, String> errors;	//Per definire la lista degli errori
+	private Vector<String> errors = new Vector<String>();	//Per definire la lista degli errori
 	private String dataDefault = "1900-01-01";
 	// 1) cambiare le variabili da String a Vector<String>
 	private Vector<String> IDPaziente = new Vector<String>();
