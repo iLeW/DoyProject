@@ -640,6 +640,25 @@ public class ControllerServlet extends HttpServlet {
 				path = "/WEB-INF/pazientiLista";
 			}
 		}
+		//per entrare e uscire dalla pagina di Pearson
+		if ("vaiPearson".equals(val)) {
+			m.setVar1("");
+			m.setVar2("");
+			m.viewAllMonitoraggi();
+			session.setAttribute("monitoraggio", m);
+			path = "/WEB-INF/pearson";
+		}
+		if ("closePearson".equals(val)) {
+			path = "/WEB-INF/paziente";
+		}
+		if ("calcolaPearson".equals(val)) {
+			m.setVar1(request.getParameter("variabile1").toString());
+			m.setVar2(request.getParameter("variabile2").toString());
+			m.viewAllMonitoraggi();
+			session.setAttribute("monitoraggio", m);
+			path = "/WEB-INF/pearson";
+		}
+		
 
 		/* MF */
 		if ("confermaSignup".equals(val)) {

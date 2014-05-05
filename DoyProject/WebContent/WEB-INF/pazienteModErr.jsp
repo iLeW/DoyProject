@@ -8,6 +8,7 @@ Paziente p = (Paziente) session.getAttribute("paziente");
 Reparto r = new Reparto();
 r.viewAllReparti();
 int dim = r.getDim();
+int indice = p.contaPazienti() - 1;
 %>
 
 <form method="post" action="ControllerServlet">
@@ -30,27 +31,27 @@ int dim = r.getDim();
 		<div class="col_2">
 			<label for="nome">Nome</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
-			<input id="nome" name="nome" type="text" value="<%= p.getProvv(1)%>" placeholder="Nome" required /></div>
+			<input id="nome" name="nome" type="text" value="<%= p.getNome(indice)%>" placeholder="Nome" required /></div>
 		
 		<div class="col_2">
 			<label for="cognome">Cognome</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
-			<input id="cognome" name="cognome" type="text" value="<%= p.getProvv(2)%>" placeholder="Cognome" required /></div>
+			<input id="cognome" name="cognome" type="text" value="<%= p.getCognome(indice)%>" placeholder="Cognome" required /></div>
 		
 		<div class="col_2">
 			<label for="data">Data di nascita</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
-			<input id="data" name="dataNascita" type="date" value="<%= p.getProvv(3)%>" required /></div>
+			<input id="data" name="dataNascita" type="date" value="<%= p.getDataNascita(indice)%>" required /></div>
 		
 		<div class="col_2">
 			<label for="cod">Codice fiscale</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
-			<input id="cod" name="codFisc" type="text" value="<%= p.getProvv(4)%>" placeholder="Codice fiscale" required /></div>
+			<input id="cod" name="codFisc" type="text" value="<%= p.getCodFisc(indice)%>" placeholder="Codice fiscale" required /></div>
 		
 		<div class="col_2">
 			<label for="dataIn">Data di ingresso</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
-			<input id="dataIn" name="dataIn" type="date" value="<%= p.getProvv(5)%>" required  /></div>
+			<input id="dataIn" name="dataIn" type="date" value="<%= p.getDataIn(indice)%>" required  /></div>
 		
 		<div class="col_2">
 			<label for="select1">Reparto</label></div>
@@ -62,7 +63,7 @@ int dim = r.getDim();
 			<%} %>
 			</select>
 		<script>
-        document.getElementById("reparto").value = '<%= p.getProvv(6) %>';
+        document.getElementById("reparto").value = '<%= p.getReparto(indice) %>';
         </script>
 		</div>
 					

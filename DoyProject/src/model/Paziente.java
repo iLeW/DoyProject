@@ -43,7 +43,6 @@ public class Paziente {
 	
 	//Variabili private della classe
 	private Vector<String> errors = new Vector<String>();	//Per definire la lista degli errori
-	private Vector<String> provvisorio = new Vector<String>();
 	private String dataDefault = "1900-01-01";
 	// 1) cambiare le variabili da String a Vector<String>
 	private Vector<String> IDPaziente = new Vector<String>();
@@ -170,9 +169,6 @@ public class Paziente {
 	public int dimErrors(){
 		return errors.size();
 	}
-	public String getProvv(int i) {
-		return provvisorio.get(i);
-	}
 	//metodo che ritorna il primo ID disponibile
 	public String getIDDisp()
 	{
@@ -249,15 +245,15 @@ public class Paziente {
 			//System.out.println("messaggio" + e.getMessage());
 			if(e.getMessage().contains("Duplicate"))
 			{
-				//settare una variabile di sessione
 				errors.add("ERRORE: il codice fiscale " + codFisc + " è già presente nel database, inserirne uno diverso");
-				provvisorio.add(IDPaziente);
-				provvisorio.add(nome);
-				provvisorio.add(cognome);
-				provvisorio.add(dataNascita);
-				provvisorio.add(codFisc);
-				provvisorio.add(dataIn);
-				provvisorio.add(reparto);
+				setIDPaziente(IDPaziente);
+				setNome(nome);
+				setCognome(cognome);
+				setDataNascita(Date.valueOf(dataNascita));
+				setCodFisc(codFisc);
+				setDataIn(Date.valueOf(dataIn));
+				setDataOut(Date.valueOf(dataDefault));
+				setReparto(reparto);
 				System.out.println("prova di errore :| "+ errors.size());
 			}
 		}
@@ -297,15 +293,15 @@ public class Paziente {
 			e.printStackTrace();
 			if(e.getMessage().contains("Duplicate"))
 			{
-				//settare una variabile di sessione
 				errors.add("ERRORE: il codice fiscale " + codFisc + " è già presente nel database, inserirne uno diverso");
-				provvisorio.add(IDPaziente);
-				provvisorio.add(nome);
-				provvisorio.add(cognome);
-				provvisorio.add(dataNascita);
-				provvisorio.add(codFisc);
-				provvisorio.add(dataIn);
-				provvisorio.add(reparto);
+				setIDPaziente(IDPaziente);
+				setNome(nome);
+				setCognome(cognome);
+				setDataNascita(Date.valueOf(dataNascita));
+				setCodFisc(codFisc);
+				setDataIn(Date.valueOf(dataIn));
+				setDataOut(Date.valueOf(dataDefault));
+				setReparto(reparto);
 				System.out.println("prova di errore :| "+ errors.size());
 			}
 		}
@@ -463,7 +459,6 @@ public class Paziente {
 	
 	public void clearAll(){
 		//errors.clear();
-		provvisorio.clear();
 		IDPaziente.clear();
 		nome.clear();
 		cognome.clear();

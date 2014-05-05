@@ -25,6 +25,9 @@ public class Monitoraggio {
 	//vector per i valori monitorati da mettere nel menu a tendina
 	private Vector<String> monitor = new Vector<String>();
 	
+	private String var1="", var2="";
+	private Vector<Integer> limiti = new Vector<Integer>();
+	
 	
 	//metodo vuoto che rispecchi i Bean
 	public Monitoraggio(){
@@ -208,6 +211,64 @@ public class Monitoraggio {
 		return dim;
 	}
 	
+	//-------------------------------------- parte relativa a Pearson
+	public void setVar1(String v){
+		this.var1=v;
+	}
+	public String getVar1(){
+		if(var1.isEmpty()){
+			System.out.println("ritorno1: " + monitor.get(0));
+			return monitor.get(0);
+		}
+		else{
+			System.out.println("ritorno2: " + var1);
+			return this.var1;
+		}
+	}
+	public void setVar2(String v){
+		this.var2=v;
+	}
+	public String getVar2(){
+		if(var2.isEmpty()){
+			System.out.println("ritorno1: " + monitor.get(0));
+			return monitor.get(0);
+		}
+		else{
+			System.out.println("ritorno2: " + var2);
+			return this.var2;
+		}
+	}
+	public void resetVar(){
+		var1="";
+		var2="";
+	}
+	public int viewMonitorPaziente(int ID){
+		monitor.clear();
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			String strQuery="select * from monitoraggio where IDPaziente=?";
+	        PreparedStatement ps = con.prepareStatement(strQuery);
+	        
+	        Integer id = ID;
+	        ps.setString(1, id.toString());
+	           
+	       	ResultSet rs = ps.executeQuery();
+	       	while(rs.next()){
+				String mon = rs.getString("valore");
+				monitor.add(mon);
+			}
+			ps.close();
+			con.close();
+		}	
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+				
+		int dim=monitor.size();
+		return dim;
+	}
+		
 	
 	
 }//fine classi Monitoraggio

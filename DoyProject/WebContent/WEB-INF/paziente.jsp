@@ -115,7 +115,7 @@ int conta = m.contaMonitor();
 			%> </td>
 			<td> <%= m.getMassimo(i).toString()
 			%> </td>
-			<!-- non riesco a modificare il colore delle icone -->
+			
 			<td>
 			<a href="ControllerServlet?val=delMonitor&ID=<%=m.getIDPaziente(i)%>&VAL=<%=m.getValore(i)%>">
 			<i class="icon-trash tooltip-top" title="Elimina" onclick="return conferma();"> </i></a>
@@ -140,8 +140,15 @@ int conta = m.contaMonitor();
 	</div>
 	
 	<%}//fine if per creare la tabella %>
+	
 </div>
 </form>
+
+	<form method="post" action="ControllerServlet">
+	<!-- bottone per andare a calcolare Pearson -->
+	<div class="center"> <button class="blue" type="submit" name="val" value="vaiPearson">
+	<i class="icon-lemon"></i> Calcola indice di Pearson</button> </div>
+	</form>
 	
 	<%if(m.controllaPresenza(p.getIDPaziente(indice)))
 	{%>
