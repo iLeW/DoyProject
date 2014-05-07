@@ -84,11 +84,17 @@ int conta = m.contaMonitor();
 		<button class="blue" type="submit" name="val" style="margin-left: 20px" value="addValore">
 		<i class="icon-tag"></i> Aggiungi</button>
 	</div>
+
+</div>
+</form>
 	
-	<!-- vedo se mettere la tabella e il campo di inserimento dei dati di simulazione -->
-	<%if(m.controllaPresenza(p.getIDPaziente(indice)))
-	{%>
-	<!-- Tabella con i monitoraggi del paziente -->
+<!-- vedo se mettere la tabella e il campo di inserimento dei dati di simulazione -->
+<%if(m.controllaPresenza(p.getIDPaziente(indice)))
+{%>
+<!-- Tabella con i monitoraggi del paziente -->
+<form method="post" action="ControllerServlet">
+<div class="grid flex">
+
 	<div class="center">
 		<table class="sortable">
 		<thead><tr> <!-- Intestazione -->
@@ -139,17 +145,18 @@ int conta = m.contaMonitor();
 		</table>
 	</div>
 	
-	<%}//fine if per creare la tabella %>
+
+	<!-- <form method="post" action="ControllerServlet"> -->
+	<!-- bottone per andare a calcolare Pearson -->
+	<div class="center"> <button Style="margin-top: 20px" class="blue" type="submit" name="val" value="vaiPearson">
+	<i class="icon-lemon"></i> Calcola indice di Pearson</button> </div>
+	<!-- </form> -->
 	
 </div>
 </form>
-
-	<form method="post" action="ControllerServlet">
-	<!-- bottone per andare a calcolare Pearson -->
-	<div class="center"> <button class="blue" type="submit" name="val" value="vaiPearson">
-	<i class="icon-lemon"></i> Calcola indice di Pearson</button> </div>
-	</form>
 	
+<%}//fine if per creare la tabella e il tasto per l'indice di Pearson%>
+
 	<%if(m.controllaPresenza(p.getIDPaziente(indice)))
 	{%>
 	<!-- piccola form per la simulazione dell'aggiunta di un dato
@@ -159,7 +166,7 @@ int conta = m.contaMonitor();
 	<form method="post" action="ControllerServlet">
 	<div class="grid flex">
 	
-	<h4 style="color: #999; margin-bottom: 10px; margin-top: 80px" class="center">
+	<h4 style="color: #999; margin-bottom: 10px; margin-top: 40px" class="center">
 			Grafici:
 		</h4>
 	<hr class="alt1" />
@@ -259,7 +266,7 @@ int conta = m.contaMonitor();
 
 <form method="post" action="ControllerServlet">
 	<!-- bottone per chiudere il prfilo del paziente -->
-	<div class="center" style="margin-bottom: 80px; margin-top: 40px">
+	<div class="center" style="margin-bottom: 40px; margin-top: 40px">
 		<button class="red" style="margin-left: 20px" type="submit" name="val" value="closeProfiloPaziente" formnovalidate>
 		<i class="icon-ok"></i> Chiudi profilo paziente</button>
 	</div>

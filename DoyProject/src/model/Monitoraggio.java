@@ -26,7 +26,10 @@ public class Monitoraggio {
 	private Vector<String> monitor = new Vector<String>();
 	
 	private String var1="", var2="";
-	private Vector<Integer> limiti = new Vector<Integer>();
+	private int min1=1, min2=1, max1=10, max2=10, num=10;
+	private Vector<Integer> dati1 = new Vector<Integer>();
+	private Vector<Integer> dati2 = new Vector<Integer>();
+	double pearson=0;
 	
 	
 	//metodo vuoto che rispecchi i Bean
@@ -211,17 +214,17 @@ public class Monitoraggio {
 		return dim;
 	}
 	
-	//-------------------------------------- parte relativa a Pearson
+	//-------------------------------------- parte relativa a Pearson ---------------------------------------------
 	public void setVar1(String v){
 		this.var1=v;
 	}
 	public String getVar1(){
-		if(var1.isEmpty()){
-			System.out.println("ritorno1: " + monitor.get(0));
+		if(var1.isEmpty())
+		{
 			return monitor.get(0);
 		}
-		else{
-			System.out.println("ritorno2: " + var1);
+		else
+		{
 			return this.var1;
 		}
 	}
@@ -229,12 +232,15 @@ public class Monitoraggio {
 		this.var2=v;
 	}
 	public String getVar2(){
-		if(var2.isEmpty()){
-			System.out.println("ritorno1: " + monitor.get(0));
-			return monitor.get(0);
+		if(var2.isEmpty())
+		{
+			if(monitor.size() > 1)
+				return monitor.get(1);
+			else
+				return monitor.get(0);
 		}
-		else{
-			System.out.println("ritorno2: " + var2);
+		else
+		{
 			return this.var2;
 		}
 	}
@@ -268,7 +274,100 @@ public class Monitoraggio {
 		int dim=monitor.size();
 		return dim;
 	}
+	//funzioni per calcolare l'indice di Pearson
+	public void CalcolaPearson(){
+		generaDati();
+		//la deviazione standard è il quadrato della varianza
+		double devStd1 = deviazioneStandard(dati1);
+		double devStd2 = deviazioneStandard(dati2);
+		double cov = covarianza(dati1, dati2);
 		
+		pearson = cov/(devStd1*devStd2);
+	}
+	public double getPearson(){
+		return this.pearson;
+	}
+	public void resetPearson(){
+		this.pearson = 0;
+		this.min1=1;
+		this.min2=1;
+		this.max1=10;
+		this.max2=10;
+		this.num=10;
+	}
+	//genera random
+	public void generaDati(){
+		dati1.clear();
+		dati2.clear();
+		for(int i=0; i<num; i++)
+		{
+			dati1.add(min1+(int)(Math.random()*(max1-min1)));
+			dati2.add(min2+(int)(Math.random()*(max2-min2)));
+			//System.out.println("dati1: " + dati1.get(i) + " dati2: " + dati2.get(i));
+		}
+	}
+	//media
+	public double media(Vector<Integer> dati){
+		double somma=0;
+		for(int i=0; i< dati.size(); i++)
+			somma += dati.get(i);
+		return somma/dati.size();
+	}
+	//varianza
+	public double varianza(double media, Vector<Integer> dati){
+		double var=0;
+		for(int i=0; i< dati.size(); i++)
+			var += (dati.get(i) - media) * (dati.get(i)-media);
+		return var/dati.size();
+	}
+	//deviazione standard
+	public double deviazioneStandard(Vector<Integer> dati){
+		double media = media(dati);
+		double var = varianza(media, dati);
+		return Math.sqrt(var);
+	}
+	//covarianza
+	public double covarianza(Vector<Integer>dati1,Vector<Integer> dati2){
+		double cov=0;
+		double m1 = media(dati1);
+		double m2 = media(dati2);
+		for(int i=0; i< dati1.size(); i++)
+			cov += (dati1.get(i)-m1) * (dati2.get(i)-m2);
+		return cov/dati1.size();
+	}
+	//per settare i valori min, max, num
+	public void setMin1(String m){
+		this.min1 = Integer.parseInt(m);
+	}
+	public int getMin1(){
+		return this.min1;
+	}
+	public void setMin2(String m){
+		this.min2 = Integer.parseInt(m);
+	}
+	public int getMin2(){
+		return this.min2;
+	}
+	public void setMax1(String m){
+		this.max1 = Integer.parseInt(m);
+	}
+	public int getMax1(){
+		return this.max1;
+	}
+	public void setMax2(String m){
+		this.max2 = Integer.parseInt(m);
+	}
+	public int getMax2(){
+		return this.max2;
+	}
+	public void setNum(String n){
+		this.num = Integer.parseInt(n);
+	}
+	public int getNum(){
+		return this.num;
+	}
+	
+	
 	
 	
 }//fine classi Monitoraggio

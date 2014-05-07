@@ -649,11 +649,28 @@ public class ControllerServlet extends HttpServlet {
 			path = "/WEB-INF/pearson";
 		}
 		if ("closePearson".equals(val)) {
+			m.resetPearson();
+			m.viewAllMonitoraggi();
+			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/paziente";
 		}
 		if ("calcolaPearson".equals(val)) {
 			m.setVar1(request.getParameter("variabile1").toString());
 			m.setVar2(request.getParameter("variabile2").toString());
+			m.setMin1(request.getParameter("min1"));
+			m.setMin2(request.getParameter("min2"));
+			m.setMax1(request.getParameter("max1"));
+			m.setMax2(request.getParameter("max2"));
+			m.setNum(request.getParameter("num"));
+			
+			/*m.CalcolaPearson(Integer.parseInt(request.getParameter("num")),
+					Integer.parseInt(request.getParameter("min1")),
+					Integer.parseInt(request.getParameter("min2")),
+					Integer.parseInt(request.getParameter("max1")),
+					Integer.parseInt(request.getParameter("max2")));
+			*/
+			m.CalcolaPearson();
+			//mettere i controlli sui valori minimo e massimo
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/pearson";

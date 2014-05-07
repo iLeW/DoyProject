@@ -67,7 +67,7 @@ int indice = p.contaPazienti() - 1;
         </script>
 		</div>
 					
-		<div class="center" style="margin-bottom: 80px">
+		<div class="center" style="margin-bottom: 40px; margin-top: 40px">
 			<button class="green" type="submit" name="val" value="insPaziente">Conferma</button>
 			<button class="red" style="margin-left: 20px" type="submit" name="val" value="annPaziente" formnovalidate>Annulla</button>
 		</div>

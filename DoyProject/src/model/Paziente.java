@@ -30,6 +30,8 @@ import java.util.Vector;
  * 18) funzione per i colori
  * 19) ricerca dei pazienti
  * 20) se non ci sono pazienti non metto la tabella
+ * 21) fare pearson												[fatto]
+ * 22) mettere un po' a posto gli if per la pagina paziente
  */
 
 public class Paziente {
