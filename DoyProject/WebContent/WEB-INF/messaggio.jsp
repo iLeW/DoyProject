@@ -66,7 +66,7 @@
 		<% if(mx.getSender().contains("ALERT")) { 
 		%>
 		<div class="col_2">
-			<button type="submit" class="medium" name="val" value="rispMex" disabled>Rispondi</button>
+			<button type="submit" class="medium" name="val" value="gestAlert" >Gestito</button>
 		</div>
 		<%} else  {%>
 		<div class="col_2">

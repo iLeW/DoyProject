@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -188,6 +187,20 @@ public class Messaggio {
 			this.sendMexDB(docs.get(i), sender, mex, date.toString());
 		}
 	}
+	
+	/**
+	 * Funzione pubblica per "cancellare" i messaggi di alerts (che corrisponde alla gestione)
+	 * E' diversa dalla normale cancellazione perché questa elimina l'allerta a tutti i dottori a cui è arrivata
+	 * proprio per indicare che è stato tutto gestito
+	 * @param sender	In questo caso è la stringa di alert del tipo "ALERT -> Pippo"
+	 * @param date	Data dell'allerta
+	 * @return	vero se è andato a buon fine la cancellazione
+	 */
+	public boolean deleteAlerts(String sender, String date){
+		return this.deleteAlertsDB(sender, date);
+	}
+
+	
 
 	/*
 	 * *********** PER MESSAGGI LETTI*************
@@ -691,6 +704,46 @@ public class Messaggio {
 					.println("Errore query in Messaggio.java, funzione sendMexDB(): "
 							+ e.getMessage());
 			e.printStackTrace();
+		}
+
+		return result;
+	}
+	
+	/**
+	 * Funzione privata per "cancellare" -> cioè allerta gestita da un dottore!
+	 * @param sender	Il codice di allerta
+	 * @param date	La data dell'allerta
+	 * @return	Vero se la cancellazione è andata a buon fine
+	 */
+	private boolean deleteAlertsDB(String sender, String date) {
+		boolean result = false;
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME,
+					SQLUSERNAME, SQLPW);
+			String query = "DELETE FROM messages WHERE sender = ? and date = ?";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, sender);
+			ps.setString(2, date);
+			int num = ps.executeUpdate(); // torna o il numero di righe affette
+											// (cancellate nel nostro caso)
+											// oppure 0 se non c'è stato nessun
+											// effetto.
+			ps.executeUpdate();
+
+			if (num != 0){
+				result = true;
+				System.out.println("Eliminazione allerta effettuta con successo!");
+			}
+
+			ps.close();
+			con.close();
+		} catch (Exception e) {
+			System.out
+					.println("Errore query in Messaggio.java, funzione deleteMexDB(): "
+							+ e.getMessage());
+			e.printStackTrace();
+			result = false;
 		}
 
 		return result;

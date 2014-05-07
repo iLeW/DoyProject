@@ -28,7 +28,6 @@ import model.User;
 @WebServlet("/ControllerServlet")
 public class ControllerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -308,11 +307,11 @@ public class ControllerServlet extends HttpServlet {
 
 		// Se premo l'azione di delete
 		if ("delMex".equals(val)) {
-			
-			//Elimino l'attributo newMex se era presente
-			if(session.getAttribute("newMex") != null)
+
+			// Elimino l'attributo newMex se era presente
+			if (session.getAttribute("newMex") != null)
 				session.removeAttribute("newMex");
-			
+
 			mx = (Messaggio) session.getAttribute("messaggio");
 
 			String stringDate = request.getParameter("date");
@@ -356,6 +355,35 @@ public class ControllerServlet extends HttpServlet {
 			}
 		}
 
+		// Se premo l'azione di messaggio gestito
+		if ("gestAlert".equals(val)) {
+
+			// Elimino l'attributo newMex se era presente
+			if (session.getAttribute("newMex") != null)
+				session.removeAttribute("newMex");
+
+			mx = (Messaggio) session.getAttribute("messaggio");
+
+			String stringDate = request.getParameter("date");
+
+			// Solo se non sono nella pagina messaggio
+			if (session.getAttribute("rispMex") == null
+					&& session.getAttribute("readMex") == null) {
+				stringDate = this.stringdateToMYSQLFormattedStringdate(request
+						.getParameter("date"));
+			}
+
+			boolean result = mx.deleteAlerts(request.getParameter("sender"), stringDate);
+			
+			if(result){
+				mx.readAndSetMex(u.getUsername());	//Ricarico i messaggi
+				path = "/WEB-INF/messaggi";
+			} else {
+				path = "/WEB-INF/messaggio";
+			}
+			
+		}
+
 		// se premo l'azione di segnalazione come letto
 		if ("okReadMex".equals(val)) {
 			mx = (Messaggio) session.getAttribute("messaggio");
@@ -382,8 +410,6 @@ public class ControllerServlet extends HttpServlet {
 
 			}
 		}
-		
-
 
 		// //////////////////////////////
 		// DENTRO LA PAGINA messaggio.jsp
@@ -395,7 +421,7 @@ public class ControllerServlet extends HttpServlet {
 				session.removeAttribute("readMex");
 			if (session.getAttribute("rispMex") != null)
 				session.removeAttribute("rispMex");
-			if(session.getAttribute("newMex") != null)
+			if (session.getAttribute("newMex") != null)
 				session.removeAttribute("newMex");
 
 			if (session.getAttribute("fromHome") != null)
@@ -403,30 +429,33 @@ public class ControllerServlet extends HttpServlet {
 			else
 				path = "/WEB-INF/messaggi";
 		}
-		
 
 		// Se premo il bottone per inviare un messaggio
 		if ("sendRisp".equals(val)) {
-			
-			mx = (Messaggio) session.getAttribute("messaggio");
-			String receiver = u.getUsername();	//La dichiaro qua e di base ci metto l'user stesso (ma giusto per non creare errori nel database)
 
-			if(session.getAttribute("newMex") == null) {
-			// Prendo i dati e invio un messaggio, cioè lo aggiungo al database
-			// dei messaggi, del sender (che diventa il destinatario)
-			 receiver = request.getParameter("sender");
+			mx = (Messaggio) session.getAttribute("messaggio");
+			String receiver = u.getUsername(); // La dichiaro qua e di base ci
+												// metto l'user stesso (ma
+												// giusto per non creare errori
+												// nel database)
+
+			if (session.getAttribute("newMex") == null) {
+				// Prendo i dati e invio un messaggio, cioè lo aggiungo al
+				// database
+				// dei messaggi, del sender (che diventa il destinatario)
+				receiver = request.getParameter("sender");
 			}
-			
-			else
-			{
-				
-				//Elimino l'attributo newMex se era presente
-				if(session.getAttribute("newMex") != null)
+
+			else {
+
+				// Elimino l'attributo newMex se era presente
+				if (session.getAttribute("newMex") != null)
 					session.removeAttribute("newMex");
-				
-				 receiver = request.getParameter("option");
-				 System.out.println("ECCO IL VALORE:::::: " + request.getParameter("option"));
-				
+
+				receiver = request.getParameter("option");
+				System.out.println("ECCO IL VALORE:::::: "
+						+ request.getParameter("option"));
+
 			}
 			String sender = u.getUsername();
 			String mex = request.getParameter("mex");
@@ -449,12 +478,12 @@ public class ControllerServlet extends HttpServlet {
 			else
 				path = "/WEB-INF/messaggi";
 		}
-		
-		////////////////////////////////////
+
+		// //////////////////////////////////
 		// DAL MENU IN BASSO in messaggi.jsp
-		////////////////////////////////////
-		
-		if("newMex".equals(val)){
+		// //////////////////////////////////
+
+		if ("newMex".equals(val)) {
 			session.setAttribute("newMex", "1");
 			path = "/WEB-INF/messaggio";
 		}
@@ -484,8 +513,12 @@ public class ControllerServlet extends HttpServlet {
 		// prendo
 		// Paziente p = (Paziente) session.getAttribute("paziente"); //Se c'è
 		// già un paziente lo prendo
-		//Paziente p = new Paziente();
-		Paziente p = (Paziente) session.getAttribute("paziente"); // Se c'è già un elemento paziente lo prendo
+		// Paziente p = new Paziente();
+		Paziente p = (Paziente) session.getAttribute("paziente"); // Se c'è già
+																	// un
+																	// elemento
+																	// paziente
+																	// lo prendo
 		Monitoraggio m = new Monitoraggio();
 		Storico s = new Storico();
 		// Storico s = (Storico) session.getAttribute("storico");
@@ -563,12 +596,12 @@ public class ControllerServlet extends HttpServlet {
 					request.getParameter("codFisc"),
 					request.getParameter("dataIn").toString(),
 					request.getParameter("reparto"));
-			//devo mettere quì il controllo perchè prima aggiunge e poi controlla se c'è l'errore
-			if(p.dimErrors()!=0){
+			// devo mettere quì il controllo perchè prima aggiunge e poi
+			// controlla se c'è l'errore
+			if (p.dimErrors() != 0) {
 				System.out.println("errore ins paziente");
 				path = "/WEB-INF/pazienteModErr";
-			}
-			else{
+			} else {
 				p.viewPaziente();
 				session.setAttribute("paziente", p);
 				path = "/WEB-INF/pazientiLista";
@@ -585,17 +618,16 @@ public class ControllerServlet extends HttpServlet {
 		if ("insModPaziente".equals(val)) {
 			// Paziente p = new Paziente(request.getParameter("IDPaziente"));
 			p.modificaPaziente(session.getAttribute("IDpaz").toString(),
-					request.getParameter("nome"), request
-							.getParameter("cognome"),
-					request.getParameter("dataNascita").toString(), request
-							.getParameter("codFisc"),
-					request.getParameter("dataIn").toString(), request
-							.getParameter("reparto"));
-			if(p.dimErrors()!=0){
+					request.getParameter("nome"),
+					request.getParameter("cognome"),
+					request.getParameter("dataNascita").toString(),
+					request.getParameter("codFisc"),
+					request.getParameter("dataIn").toString(),
+					request.getParameter("reparto"));
+			if (p.dimErrors() != 0) {
 				System.out.println("errore mod paziente");
 				path = "/WEB-INF/pazienteMod";
-			}
-			else{
+			} else {
 				p.viewPaziente();
 				session.setAttribute("paziente", p);
 				if (session.getAttribute("categoria") != null) {
@@ -617,7 +649,7 @@ public class ControllerServlet extends HttpServlet {
 				path = "/WEB-INF/pazientiLista";
 			}
 		}
-		//funzioni per dimettere e riammetere il paziente
+		// funzioni per dimettere e riammetere il paziente
 		if ("dimettiPaziente".equals(val)) {
 			p.dimettiP(session.getAttribute("IDpaz").toString());
 			p.viewPaziente();
@@ -640,7 +672,7 @@ public class ControllerServlet extends HttpServlet {
 				path = "/WEB-INF/pazientiLista";
 			}
 		}
-		//per entrare e uscire dalla pagina di Pearson
+		// per entrare e uscire dalla pagina di Pearson
 		if ("vaiPearson".equals(val)) {
 			m.setVar1("");
 			m.setVar2("");
@@ -662,20 +694,20 @@ public class ControllerServlet extends HttpServlet {
 			m.setMax1(request.getParameter("max1"));
 			m.setMax2(request.getParameter("max2"));
 			m.setNum(request.getParameter("num"));
-			
-			/*m.CalcolaPearson(Integer.parseInt(request.getParameter("num")),
-					Integer.parseInt(request.getParameter("min1")),
-					Integer.parseInt(request.getParameter("min2")),
-					Integer.parseInt(request.getParameter("max1")),
-					Integer.parseInt(request.getParameter("max2")));
-			*/
+
+			/*
+			 * m.CalcolaPearson(Integer.parseInt(request.getParameter("num")),
+			 * Integer.parseInt(request.getParameter("min1")),
+			 * Integer.parseInt(request.getParameter("min2")),
+			 * Integer.parseInt(request.getParameter("max1")),
+			 * Integer.parseInt(request.getParameter("max2")));
+			 */
 			m.CalcolaPearson();
-			//mettere i controlli sui valori minimo e massimo
+			// mettere i controlli sui valori minimo e massimo
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/pearson";
 		}
-		
 
 		/* MF */
 		if ("confermaSignup".equals(val)) {
@@ -883,31 +915,38 @@ public class ControllerServlet extends HttpServlet {
 			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/paziente";
 		}
-		
-		//aggiunge un dato al monitoraggio selezionato
+
+		// aggiunge un dato al monitoraggio selezionato
 		if ("addDato".equals(val)) {
 			mx = new Messaggio();
 			boolean pericolo = false;
 			pericolo = s.insDato(session.getAttribute("IDpaz").toString(),
 					request.getParameter("valoreStorico"),
 					request.getParameter("dato"));
-			if(pericolo)//entra se il valore è fuori dal range
+			if (pericolo)// entra se il valore è fuori dal range
 			{
-				System.out.println("occhio!!");//manda un messaggio ai dottori!!
-				//Ricavo il reparto e mando il messaggio e tutti i pazienti di quel reparto
-				
-				p.viewPaziente();	//Ricarica i pazienti
-				int id = Integer.parseInt(session.getAttribute("IDpaz").toString());
+				System.out.println("occhio!!");// manda un messaggio ai
+												// dottori!!
+				// Ricavo il reparto e mando il messaggio e tutti i pazienti di
+				// quel reparto
+
+				p.viewPaziente(); // Ricarica i pazienti
+				int id = Integer.parseInt(session.getAttribute("IDpaz")
+						.toString());
 				int idx = p.getIndice(id);
 				String reparto = p.getReparto(idx);
 				String nome = p.getNome(idx);
 				String cognome = p.getCognome(idx);
 				String paziente = nome + " " + cognome;
-				String mex = "ATTENZIONE! Il valore: \"" + request.getParameter("valoreStorico") + "\" del paziente: \"" + paziente + "\", ha superato i limiti stabiliti.";
+				String mex = "ATTENZIONE! Il valore: \""
+						+ request.getParameter("valoreStorico")
+						+ "\" del paziente: \"" + paziente
+						+ "\", ha superato i limiti stabiliti.";
 				mx.sendAlerts(mex, paziente, reparto);
-				
-				//Faccio una funzione in user che mi manda i messaggi di allerta a tutti
-				
+
+				// Faccio una funzione in user che mi manda i messaggi di
+				// allerta a tutti
+
 			}
 			session.setAttribute("storico", s);
 			path = "/WEB-INF/paziente";
@@ -932,7 +971,10 @@ public class ControllerServlet extends HttpServlet {
 			s.setValGrafico(request.getParameter("visStorico").toString());
 			s.setDataInizio(Date.valueOf(request.getParameter("dataInizio")));
 			s.setDataFine(Date.valueOf(request.getParameter("dataFine")));
-			s.selezionaStorico(session.getAttribute("IDpaz").toString(), request.getParameter("visStorico").toString(), request.getParameter("dataInizio"), request.getParameter("dataFine"));
+			s.selezionaStorico(session.getAttribute("IDpaz").toString(),
+					request.getParameter("visStorico").toString(),
+					request.getParameter("dataInizio"),
+					request.getParameter("dataFine"));
 			session.setAttribute("storico", s);
 			path = "/WEB-INF/paziente";
 		}
@@ -966,20 +1008,21 @@ public class ControllerServlet extends HttpServlet {
 		// accettata
 		// da
 		// mysql
-	
+
 		String outputStringdate = "";
 		Exception ee = null;
-		
+
 		java.util.Date date = null;
 		try {
 			date = inputFormat.parse(inputStringdate);
 			outputStringdate = outputFormat.format(date);
 		} catch (Exception e) {
-			System.out.println("**Errore nel parsing nella Servlet, della funzione stringdateToMYSQLFormattedStringdate. L'errore è stato gestito correttamente.**");
+			System.out
+					.println("**Errore nel parsing nella Servlet, della funzione stringdateToMYSQLFormattedStringdate. L'errore è stato gestito correttamente.**");
 			ee = e;
 		}
-		
-		if(ee != null)
+
+		if (ee != null)
 			outputStringdate = inputStringdate;
 
 		System.out.println("OutputText: " + outputStringdate);
