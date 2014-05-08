@@ -89,10 +89,10 @@ int conta = m.contaMonitor();
 	<br><br>
 	<label for="select1">variabile 1:</label>
 		<select style="margin-left: 20px;" id="variabile1" name="variabile1" required>
-		<%int dim = m.viewMonitorPaziente(ID);
+		<%int dim = m.viewMonitoraggioPaziente(ID);
 		for(int i=0; i<dim; i++)
 		{%>
-		<option value="<%=m.getMon(i)%>"><%=m.getMon(i)%></option>
+		<option value="<%=m.getValore(i)%>"><%=m.getValore(i)%></option>
 		<%} %>
 		</select>
 		<!-- l'unico modo per settare in modo giusto il campo del select è usare una script -->
@@ -112,7 +112,7 @@ int conta = m.contaMonitor();
 		<%
 		for(int i=0; i<dim; i++)
 		{%>
-		<option value="<%=m.getMon(i)%>"><%=m.getMon(i)%></option>
+		<option value="<%=m.getValore(i)%>"><%=m.getValore(i)%></option>
 		<%} %>
 		</select>
 		<!-- l'unico modo per settare in modo giusto il campo del select è usare una script -->
@@ -133,7 +133,7 @@ int conta = m.contaMonitor();
 	<label style="margin-left: 10px;"> valori random </label>
 	
     <br><br>
-    <button class="green" style="margin-left: 20px" type="submit" name="val" value="calcolaPearson">
+    <button class="green" type="submit" name="val" value="calcolaPearson">
 	<i class="icon-bar-chart"></i> Calcola </button>
 		
 	<% if(m.getPearson() != 0)
@@ -146,6 +146,43 @@ int conta = m.contaMonitor();
 	</div>
 	
 </div> <!-- fine grid flex -->
+</form>
+
+<form method="post" action="ControllerServlet">
+	<div class="grid flex; center" style="margin-top: 20px; margin-bottom: 20px">
+		<label>Crea una tabella di </label>
+		<input id="numTab" name="numTab" type="text" placeholder="numero"
+		style="margin-left: 10px" value="<%= m.getNum() %>" size="6" required />
+		<label style="margin-left: 10px;"> valori random </label>
+		<button style="margin-left: 10px;" class="green" type="submit" name="val" value="calcolaTabPearson">
+		<i class="icon-bar-chart"></i> Calcola Tabella </button>
+		
+		<%dim=m.getDimPearsonTab();
+		if(dim>0){
+		int j=m.getDimValore();%>
+		
+		<table style="margin-top: 20px;" border="1">
+		<thead><tr>
+		<th></th>
+		<%for(int i=0; i<j; i++){%>
+			<th bgcolor="#C2BFFF"><%= m.getValore(i) %></th>
+		<%} %>
+		</tr></thead>
+		<tbody>
+		<%int c=0;
+		for(int a=0; a<j; a++){%>
+		<tr>
+		<th bgcolor="#C2BFFF"><%= m.getValore(a) %></th>
+			<%for(int b=0; b<j; b++, c++){ %>
+			<td bgcolor="white"><%= m.getPearsonTab(c) %></td>
+			<%} %>
+		</tr>
+		<%} %>
+		</tbody>
+		</table>
+		<%} %>
+		
+	</div>
 </form>
 
 <form method="post" action="ControllerServlet">

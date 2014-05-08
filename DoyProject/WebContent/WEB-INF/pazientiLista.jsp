@@ -34,7 +34,7 @@ int conta = p.contaPazienti();
 			<th>Reparto</th>
 			<th>Azioni</th>
 		</tr></thead>
-		<tbody><tr> <!-- Dove vanno inseriti i dati -->
+		<tbody> <!-- Dove vanno inseriti i dati -->
 		<% // 7)fare il for per la visualizzazione nella tabella
 		for(int i=0; i<conta; i++)
 		{%>

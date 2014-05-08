@@ -40,7 +40,7 @@ User u = (User) session.getAttribute("user");
 			<th>Reparto</th>
 			<th>Azioni</th>
 		</tr></thead>
-		<tbody><tr> <!-- Dove vanno inseriti i dati -->
+		<tbody> <!-- Dove vanno inseriti i dati -->
 		<% for(int i=0; i<conta; i++)
 		{
 		if((p.getReparto(i)).equals(u.getDep1()))

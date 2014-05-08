@@ -30,6 +30,9 @@ public class Monitoraggio {
 	private Vector<Integer> dati1 = new Vector<Integer>();
 	private Vector<Integer> dati2 = new Vector<Integer>();
 	double pearson=0;
+	private Vector<Double> pearsonTab = new Vector<Double>();
+	//private Vector<Vector<Integer>> datiTab = new Vector<Vector<Integer>>();
+	private int[][] datiTab;
 	
 	
 	//metodo vuoto che rispecchi i Bean
@@ -52,6 +55,7 @@ public class Monitoraggio {
 		this.valore.add(valore);
 	}
 	public String getValore(int i) {
+		//System.out.println("valore.size: " + valore.size());
 		return valore.get(i);
 	}
 	public void setMinimo(Integer minimo) {
@@ -99,6 +103,10 @@ public class Monitoraggio {
 	
 	//per vedere tutti i monitoraggi inseriti
 	public void viewAllMonitoraggi(){
+		IDPaziente.clear();
+		valore.clear();
+		minimo.clear();
+		massimo.clear();
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
@@ -121,7 +129,6 @@ public class Monitoraggio {
 			ps.close();
 			con.close();
 		}
-		
 		catch (Exception e) {
 		e.printStackTrace();
 		}
@@ -205,7 +212,6 @@ public class Monitoraggio {
 			ps.close();
 			con.close();
 		}
-		
 		catch (Exception e) {
 		e.printStackTrace();
 		}
@@ -221,7 +227,7 @@ public class Monitoraggio {
 	public String getVar1(){
 		if(var1.isEmpty())
 		{
-			return monitor.get(0);
+			return valore.get(0);
 		}
 		else
 		{
@@ -234,10 +240,10 @@ public class Monitoraggio {
 	public String getVar2(){
 		if(var2.isEmpty())
 		{
-			if(monitor.size() > 1)
-				return monitor.get(1);
+			if(valore.size() > 1)
+				return valore.get(1);
 			else
-				return monitor.get(0);
+				return valore.get(0);
 		}
 		else
 		{
@@ -248,8 +254,11 @@ public class Monitoraggio {
 		var1="";
 		var2="";
 	}
-	public int viewMonitorPaziente(int ID){
-		monitor.clear();
+	public int viewMonitoraggioPaziente(int ID){
+		//monitor.clear();
+		valore.clear();
+		minimo.clear();
+		massimo.clear();
 		try {
 			Class.forName(DRIVER).newInstance();
 			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
@@ -261,8 +270,9 @@ public class Monitoraggio {
 	           
 	       	ResultSet rs = ps.executeQuery();
 	       	while(rs.next()){
-				String mon = rs.getString("valore");
-				monitor.add(mon);
+				valore.add(rs.getString("valore"));
+				minimo.add(rs.getInt("minimo"));
+				massimo.add(rs.getInt("massimo"));
 			}
 			ps.close();
 			con.close();
@@ -270,9 +280,8 @@ public class Monitoraggio {
 		catch (Exception e) {
 		e.printStackTrace();
 		}
-				
-		int dim=monitor.size();
-		return dim;
+			
+		return valore.size();
 	}
 	//funzioni per calcolare l'indice di Pearson
 	public void CalcolaPearson(){
@@ -367,7 +376,73 @@ public class Monitoraggio {
 		return this.num;
 	}
 	
+	public void calcolaTabellaPearson(int n){
+		int size = valore.size();
+		datiTab = new int[size][n];
+		//genero i dati e li metto nella matrice
+		generaDatiTab(n);
+		/*for(int j=0; j<size; j++)
+		for(int i=0; i<n; i++)
+		{
+			System.out.println("dati["+j+"]["+i+"]: " + datiTab[j][i]);
+		}*/
+		//calcolo Pearson
+		for(int r=0; r<size; r++){
+			for(int c=0; c<size; c++){
+				if(c<r){		//se non si vuole la diagonale di 1.0 basta mettere <=
+					this.pearsonTab.add(2.0);
+				}
+				else{
+					this.pearsonTab.add(calcolaPearsonDaIndici(c, r, n));
+				}
+			}
+		}
+		
+		System.out.println("pearsonTab:" + pearsonTab);
+		
+	}
+	public void generaDatiTab(int n){
+		int temp=0;
+		for(int j=0; j<valore.size(); j++)
+			for(int i=0; i<n; i++)
+			{
+				temp = (minimo.get(j)+(int)(Math.random()*(massimo.get(j)-minimo.get(j))));
+				//System.out.println("dati: " + temp + " i: " + i);
+				datiTab[j][i] = temp;
+			}
 	
+	}
+	//calcolo pearson sapendo gli indici
+	public double calcolaPearsonDaIndici(int c, int r, int n){
+		//calcolo la media delle due righe
+		Vector<Integer> x = new Vector<Integer>();
+		Vector<Integer> y = new Vector<Integer>();
+		
+		for(int i=0; i<n; i++)
+		{
+			x.add(datiTab[r][i]);
+			y.add(datiTab[c][i]);
+		}
+		
+		double devStd1 = deviazioneStandard(x);
+		double devStd2 = deviazioneStandard(y);
+		double cov = covarianza(x, y);
+		
+		return cov/(devStd1*devStd2);
+	}
 	
+	public String getPearsonTab(int i){
+		if(pearsonTab.get(i) == 2.)
+			return "---";
+		else
+			return pearsonTab.get(i).toString();
+	}
+	
+	public int getDimPearsonTab(){
+		return pearsonTab.size(); 
+	}
+	public int getDimValore(){
+		return valore.size();
+	}
 	
 }//fine classi Monitoraggio

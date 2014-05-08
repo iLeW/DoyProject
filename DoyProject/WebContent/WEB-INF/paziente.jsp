@@ -105,7 +105,7 @@ int conta = m.contaMonitor();
 			<th>Azioni</th>
 		</tr></thead>
 		
-	<tbody><tr> <!-- Dove vanno inseriti i dati -->
+	<tbody> <!-- Dove vanno inseriti i dati -->
 		<%
 		for(int i=0; i<conta; i++)
 		{

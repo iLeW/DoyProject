@@ -674,8 +674,10 @@ public class ControllerServlet extends HttpServlet {
 		}
 		// per entrare e uscire dalla pagina di Pearson
 		if ("vaiPearson".equals(val)) {
-			m.setVar1("");
-			m.setVar2("");
+			//m.setVar1("");
+			//m.setVar2("");
+			m.resetPearson();
+			//m.viewMonitoraggioPaziente(Integer.parseInt(session.getAttribute("IDpaz").toString()));
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/pearson";
@@ -695,14 +697,15 @@ public class ControllerServlet extends HttpServlet {
 			m.setMax2(request.getParameter("max2"));
 			m.setNum(request.getParameter("num"));
 
-			/*
-			 * m.CalcolaPearson(Integer.parseInt(request.getParameter("num")),
-			 * Integer.parseInt(request.getParameter("min1")),
-			 * Integer.parseInt(request.getParameter("min2")),
-			 * Integer.parseInt(request.getParameter("max1")),
-			 * Integer.parseInt(request.getParameter("max2")));
-			 */
 			m.CalcolaPearson();
+			// mettere i controlli sui valori minimo e massimo
+			m.viewAllMonitoraggi();
+			session.setAttribute("monitoraggio", m);
+			path = "/WEB-INF/pearson";
+		}
+		if ("calcolaTabPearson".equals(val)) {
+			m.viewMonitoraggioPaziente(Integer.parseInt(session.getAttribute("IDpaz").toString()));
+			m.calcolaTabellaPearson(Integer.parseInt(request.getParameter("numTab").toString()));
 			// mettere i controlli sui valori minimo e massimo
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
