@@ -708,9 +708,9 @@ public class ControllerServlet extends HttpServlet {
 		if ("calcolaTabPearson".equals(val)) {
 			m.viewMonitoraggioPaziente(Integer.parseInt(session.getAttribute(
 					"IDpaz").toString()));
-			m.calcolaTabellaPearson(Integer.parseInt(request.getParameter(
-					"numTab").toString()));
-			// mettere i controlli sui valori minimo e massimo
+			m.calcolaTabellaPearson(Integer.parseInt(session.getAttribute(
+						"IDpaz").toString()));
+			
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/pearson";

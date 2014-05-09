@@ -25,6 +25,7 @@ public class Storico {
 	//private Vector<Integer> dato = new Vector<Integer>();
 	private Vector<Integer> Storico = new Vector<Integer>();
 	private Vector<Date> data = new Vector<Date>();
+	private Vector<String> valore = new Vector<String>();
 	private Vector<String> monitor = new Vector<String>();
 	private Vector<String> monitorEstorico  = new Vector<String>();
 	private Vector<Date> d = new Vector<Date>();
@@ -33,6 +34,7 @@ public class Storico {
 	private Date inizio = Date.valueOf(dataDefault);
 	private Date fine = Date.valueOf(dataDefault);	
 	private int max, min;
+	private Vector<Integer> p = new Vector<Integer>();
 	
 	public Storico() {
 
@@ -246,7 +248,7 @@ public class Storico {
 		{ return d.lastElement(); }
 	}
 	
-	//funzione per selezionare i dati dell storico nel tempo giusto
+	//funzione per selezionare i dati dello storico nel tempo giusto
 	public void selezionaStorico(String IDp, String valore, String dataInizio, String dataFine){
 		Storico.clear();
 		data.clear();

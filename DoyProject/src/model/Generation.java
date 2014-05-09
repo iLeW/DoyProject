@@ -145,7 +145,7 @@ public class Generation extends Thread {
 			}// fine for
 			
 			cont++;
-			if(cont > 100)
+			if(cont >= 10)
 				go = false;
 		} // fine while(stop)
 		

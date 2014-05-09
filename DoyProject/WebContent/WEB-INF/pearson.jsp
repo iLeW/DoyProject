@@ -150,11 +150,13 @@ int conta = m.contaMonitor();
 
 <form method="post" action="ControllerServlet">
 	<div class="grid flex; center" style="margin-top: 20px; margin-bottom: 20px">
+		<!-- pezzo vecchio per generare a caso i dati della tabella
 		<label>Crea una tabella di </label>
 		<input id="numTab" name="numTab" type="text" placeholder="numero"
 		style="margin-left: 10px" value="<%= m.getNum() %>" size="6" required />
 		<label style="margin-left: 10px;"> valori random </label>
-		<button style="margin-left: 10px;" class="green" type="submit" name="val" value="calcolaTabPearson">
+		 -->
+		<button class="green" type="submit" name="val" value="calcolaTabPearson">
 		<i class="icon-bar-chart"></i> Calcola Tabella </button>
 		
 		<%dim=m.getDimPearsonTab();
@@ -188,7 +190,7 @@ int conta = m.contaMonitor();
 <form method="post" action="ControllerServlet">
 	<!-- bottone per chiudere Pearson -->
 	<div class="grid flex; center" style="margin-top: 20px; margin-bottom: 40px">
-		<button class="red" style="margin-left: 20px" type="submit" name="val" value="closePearson" formnovalidate>
+		<button class="red" type="submit" name="val" value="closePearson" formnovalidate>
 		<i class="icon-fighter-jet"></i> Torna al profilo</button>
 	</div>
 </form>

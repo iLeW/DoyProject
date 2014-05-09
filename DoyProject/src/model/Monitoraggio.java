@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Hashtable;
 import java.util.Vector;
+
 
 public class Monitoraggio {
 
@@ -20,10 +22,14 @@ public class Monitoraggio {
 	private Hashtable <String, String> errors;	//Per definire la lista degli errori
 	private Vector<String> IDPaziente = new Vector<String>();
 	private Vector<String> valore = new Vector<String>();
+	private Vector<String> parametri = new Vector<String>();
 	private Vector<Integer> minimo = new Vector<Integer>();
 	private Vector<Integer> massimo = new Vector<Integer>();
 	//vector per i valori monitorati da mettere nel menu a tendina
 	private Vector<String> monitor = new Vector<String>();
+	private Vector<Integer> storico = new Vector<Integer>();
+	private Vector<Integer> d = new Vector<Integer>();
+	private Vector<Timestamp> data = new Vector<Timestamp>();
 	
 	private String var1="", var2="";
 	private int min1=1, min2=1, max1=10, max2=10, num=10;
@@ -385,16 +391,12 @@ public class Monitoraggio {
 		return this.num;
 	}
 	
+	/* funzione vecchia per usare i dati random
 	public void calcolaTabellaPearson(int n){
 		int size = valore.size();
 		datiTab = new int[size][n];
 		//genero i dati e li metto nella matrice
 		generaDatiTab(n);
-		/*for(int j=0; j<size; j++)
-		for(int i=0; i<n; i++)
-		{
-			System.out.println("dati["+j+"]["+i+"]: " + datiTab[j][i]);
-		}*/
 		//calcolo Pearson
 		for(int r=0; r<size; r++){
 			for(int c=0; c<size; c++){
@@ -409,7 +411,8 @@ public class Monitoraggio {
 		
 		System.out.println("pearsonTab:" + pearsonTab);
 		
-	}
+	}*/
+	/* funzione vecchia per generare i dati random
 	public void generaDatiTab(int n){
 		int temp=0;
 		for(int j=0; j<valore.size(); j++)
@@ -420,7 +423,37 @@ public class Monitoraggio {
 				datiTab[j][i] = temp;
 			}
 	
+	}*/
+	
+	public void calcolaTabellaPearson(int ID){
+		
+		Vector<Integer> s = getStoricoPearson(ID, valore.get(0), valore.size());
+		int n= s.size();
+		datiTab = new int[valore.size()][n];
+		
+		
+		for(int i=0; i<valore.size(); i++)
+		{
+			s = getStoricoPearson(ID, valore.get(i), valore.size());
+			for(int j=0; j<s.size(); j++)
+				datiTab[i][j] = s.get(j);
+		}
+		
+		//calcolo Pearson
+		for(int r=0; r<valore.size(); r++){
+			for(int c=0; c<valore.size(); c++){
+				if(c<r){		//se non si vuole la diagonale di 1.0 basta mettere <=
+					this.pearsonTab.add(2.0);
+				}
+				else{
+					this.pearsonTab.add(calcolaPearsonDaIndici(c, r, n));
+				}
+			}
+		}
+		
+		System.out.println("pearsonTab:" + pearsonTab);
 	}
+	
 	//calcolo pearson sapendo gli indici
 	public double calcolaPearsonDaIndici(int c, int r, int n){
 		//calcolo la media delle due righe
@@ -452,6 +485,50 @@ public class Monitoraggio {
 	}
 	public int getDimValore(){
 		return valore.size();
+	}
+	
+	public Vector<Integer> getStoricoPearson(int ID, String parametro, int size){
+		storico.clear();
+		data.clear();
+		parametri.clear();
+		d.clear();
+		try {
+			Class.forName(DRIVER).newInstance();
+			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
+			String strQuery="select * from storico where IDPaziente=?";
+	        PreparedStatement ps = con.prepareStatement(strQuery);
+	        
+	        ps.setInt(1, ID);
+	        
+	       	ResultSet rs = ps.executeQuery();
+	       	while(rs.next()){
+	       		parametri.add(rs.getString("valore"));
+	       		data.add(rs.getTimestamp("data"));
+				d.add(rs.getInt("dato"));
+			}
+			ps.close();
+			con.close();
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+		
+		for(int i=0; i<parametri.size(); i++){
+			int conta=0;
+			if((parametri.get(i)).equals(parametro)){
+				for(int j=0; j<parametri.size(); j++){
+					if(!(parametri.get(j)).equals(parametro) && (data.get(i)).equals(data.get(j))){
+						conta++;
+					}		
+					if(conta == size-1){
+						conta=0;
+						storico.add(d.get(i));
+					}
+				}
+			}
+		}
+			
+		return storico;
 	}
 	
 }//fine classi Monitoraggio
