@@ -78,6 +78,7 @@ public class Generation extends Thread {
 		boolean go = true;
 		while (go) {
 			
+			//Sleep
 			try {
 				sleep(1000);
 			} catch (InterruptedException e1) {
@@ -86,7 +87,19 @@ public class Generation extends Thread {
 						+ e1.getMessage());
 				e1.printStackTrace();
 			}
+			
+			
+			//Genero data casuale, la faccio fuori così ho la data uguale per ogni valore che monitoro del paziente
+			//in modo da poter calcolare correttamente l'indice di Pearson
+			long offset = Timestamp.valueOf(this.datainString)
+					.getTime();
+			long datafine = Calendar.getInstance().getTimeInMillis();
+			long diff = datafine - offset + 1;
+			Timestamp dataRand = new Timestamp(offset
+					+ (long) (Math.random() * diff));
 
+			
+			//For che inserisce un dato in ogni valore monitorato
 			for (byte i = 0; i < this.valori.size(); ++i) {
 				try {
 					Class.forName(DRIVER).newInstance();
@@ -97,14 +110,15 @@ public class Generation extends Thread {
 					PreparedStatement ps = con.prepareStatement(query);
 					ps.setInt(1, this.id);
 
-					// Genero data casuale
+					/*// Genero data casuale
 					long offset = Timestamp.valueOf(this.datainString)
 							.getTime();
 					long datafine = Calendar.getInstance().getTimeInMillis();
 					long diff = datafine - offset + 1;
 					Timestamp dataRand = new Timestamp(offset
-							+ (long) (Math.random() * diff));
-					ps.setTimestamp(2, dataRand);
+							+ (long) (Math.random() * diff));*/
+					
+					ps.setTimestamp(2, dataRand);	//La data casuale è creata prima del for
 
 					// Setto il valore
 					ps.setString(3, this.valori.get(i));
