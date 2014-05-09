@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.Generation;
 import model.Messaggio;
 import model.Monitoraggio;
 import model.Paziente;
@@ -991,9 +992,26 @@ public class ControllerServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
+		//Se clicco su avviaThread da paziente.jsp
+		if("avviaThread".equals(val)){
+			if(m == null)
+				m = new Monitoraggio();
+			int id = Integer.parseInt(session.getAttribute("IDpaz").toString());
+			m.viewMonitoraggioPaziente(id);
+			
+			p.viewPaziente();
+			p.getDataIn(p.getIndice(id)).toString();
+			//Thread t = new Thread (new Generation(id, m.getV));
+			
+			
+		}
+
 
 	}
-
+	
+	
 	/**
 	 * Funzione per tornare una stringa correttamente formattata per coincidere
 	 * con il formato Date di MYSQL. Trasforma il formato yyyy-MM-dd
