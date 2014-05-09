@@ -58,17 +58,26 @@ public class Monitoraggio {
 		//System.out.println("valore.size: " + valore.size());
 		return valore.get(i);
 	}
+	public Vector<String> getVecValore(){
+		return this.valore;
+	}
 	public void setMinimo(Integer minimo) {
 		this.minimo.add(minimo);
 	}
 	public Integer getMinimo(int i) {
 		return minimo.get(i);
 	}
+	public Vector<Integer> getVecMinimo(){
+		return this.minimo;
+	}
 	public void setMassimo(Integer massimo) {
 		this.massimo.add(massimo);
 	}
 	public Integer getMassimo(int i) {
 		return massimo.get(i);
+	}
+	public Vector<Integer> getVecMassimo(){
+		return this.massimo;
 	}
 	//ritorna la grandezza della tabella
 	public int contaMonitor(){
