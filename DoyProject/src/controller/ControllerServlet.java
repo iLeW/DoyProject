@@ -374,15 +374,16 @@ public class ControllerServlet extends HttpServlet {
 						.getParameter("date"));
 			}
 
-			boolean result = mx.deleteAlerts(request.getParameter("sender"), stringDate);
-			
-			if(result){
-				mx.readAndSetMex(u.getUsername());	//Ricarico i messaggi
+			boolean result = mx.deleteAlerts(request.getParameter("sender"),
+					stringDate);
+
+			if (result) {
+				mx.readAndSetMex(u.getUsername()); // Ricarico i messaggi
 				path = "/WEB-INF/messaggi";
 			} else {
 				path = "/WEB-INF/messaggio";
 			}
-			
+
 		}
 
 		// se premo l'azione di segnalazione come letto
@@ -675,10 +676,10 @@ public class ControllerServlet extends HttpServlet {
 		}
 		// per entrare e uscire dalla pagina di Pearson
 		if ("vaiPearson".equals(val)) {
-			//m.setVar1("");
-			//m.setVar2("");
+			// m.setVar1("");
+			// m.setVar2("");
 			m.resetPearson();
-			//m.viewMonitoraggioPaziente(Integer.parseInt(session.getAttribute("IDpaz").toString()));
+			// m.viewMonitoraggioPaziente(Integer.parseInt(session.getAttribute("IDpaz").toString()));
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/pearson";
@@ -705,8 +706,10 @@ public class ControllerServlet extends HttpServlet {
 			path = "/WEB-INF/pearson";
 		}
 		if ("calcolaTabPearson".equals(val)) {
-			m.viewMonitoraggioPaziente(Integer.parseInt(session.getAttribute("IDpaz").toString()));
-			m.calcolaTabellaPearson(Integer.parseInt(request.getParameter("numTab").toString()));
+			m.viewMonitoraggioPaziente(Integer.parseInt(session.getAttribute(
+					"IDpaz").toString()));
+			m.calcolaTabellaPearson(Integer.parseInt(request.getParameter(
+					"numTab").toString()));
 			// mettere i controlli sui valori minimo e massimo
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
@@ -983,6 +986,25 @@ public class ControllerServlet extends HttpServlet {
 			path = "/WEB-INF/paziente";
 		}
 
+		// Se clicco su avviaThread da paziente.jsp
+		if ("avviaThread".equals(val)) {
+
+			if (m == null)
+				m = new Monitoraggio();
+			int id = Integer.parseInt(session.getAttribute("IDpaz").toString());
+			m.viewMonitoraggioPaziente(id);
+
+			p.viewPaziente();
+
+			Thread t = new Thread(new Generation(id, m.getVecValore(),
+					m.getVecMinimo(), m.getVecMassimo(), p.getDataIn(
+							p.getIndice(id)).toString()));
+			t.start();
+
+			path = "/WEB-INF/paziente";
+
+		}
+
 		// Prima di uscire dal post, raccolgo quello che ho seminato, e vado
 		// dove devo andare.
 		String url = path + ".jsp";
@@ -992,26 +1014,9 @@ public class ControllerServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		//Se clicco su avviaThread da paziente.jsp
-		if("avviaThread".equals(val)){
-			if(m == null)
-				m = new Monitoraggio();
-			int id = Integer.parseInt(session.getAttribute("IDpaz").toString());
-			m.viewMonitoraggioPaziente(id);
-			
-			p.viewPaziente();
-			p.getDataIn(p.getIndice(id)).toString();
-			//Thread t = new Thread (new Generation(id, m.getV));
-			
-			
-		}
-
 
 	}
-	
-	
+
 	/**
 	 * Funzione per tornare una stringa correttamente formattata per coincidere
 	 * con il formato Date di MYSQL. Trasforma il formato yyyy-MM-dd

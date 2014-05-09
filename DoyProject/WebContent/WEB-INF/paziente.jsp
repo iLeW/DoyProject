@@ -153,8 +153,6 @@ int conta = m.contaMonitor();
 	<i class="icon-lemon"></i> Calcola indice di Pearson</button>
 	<button Style="margin-top: 20px" class="blue" type="submit" name="val" value="avviaThread">
 	<i class="icon-refresh"></i> Avvia thread</button>
-	<button Style="margin-top: 20px" class="blue" type="submit" name="val" value="stopThread">
-	<i class="icon-remove"></i> Stop thread</button>
 	</div>
 	<!-- </form> -->
 	

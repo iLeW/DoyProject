@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
@@ -48,35 +46,7 @@ public class Generation extends Thread {
 	private Timestamp dataout;
 	private String datainString;
 
-	/*	*//**
-	 * Metodo costruttore con cui decido anche il paziente e il valore da
-	 * aggiornare
-	 * 
-	 * @param dottore
-	 *            Il dottore a cui inviare il messaggio se un valore supera il
-	 *            valore di monitoraggio massimo
-	 * @param paziente
-	 *            Il paziente di cui voglio aggiornare il valore
-	 * @param valore
-	 *            Il valore che voglio aggiornare
-	 * @param valore_max
-	 *            Il valore massimo che se superato manda un messaggio al
-	 *            dottore
-	 * @param data_fine
-	 *            La data in cui voglio stoppare l'aggiornamento
-	 */
-	/*
-	 * public Generation(String dottore, String paziente, String valore, int
-	 * valore_max, String data_fine) { this.dottore = dottore; this.paziente =
-	 * paziente; this.valore = valore; this.valore_max = valore_max;
-	 * this.data_fine = new Date();
-	 * 
-	 * // data_fine formattata in modo corretto per trasformarla in data try {
-	 * this.data_fine = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-	 * .parse(data_fine); } catch (ParseException e) { e.printStackTrace(); }
-	 * 
-	 * }
-	 */
+
 
 	public Generation(int id, Vector<String> valori, Vector<Integer> minimi,
 			Vector<Integer> massimi, String datain) {
@@ -84,7 +54,7 @@ public class Generation extends Thread {
 		this.valori = new Vector<String>(valori);
 		this.minimi = new Vector<Integer>(minimi);
 		this.massimi = new Vector<Integer>(massimi);
-		this.datainString = datain + "00:00:00";
+		this.datainString = datain + " 00:00:00.000000";
 
 		Timestamp datainizio = Timestamp.valueOf(datain + " 00:00:00.000000");
 		this.datain = datainizio;
@@ -96,16 +66,20 @@ public class Generation extends Thread {
 	 * SimpleDateFormat("yyyy-MM-dd HH:mm:ss") .parse(data_curr.toString()); }
 	 * catch (ParseException e) { e.printStackTrace(); }
 	 */
+	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+		System.out.println("AVVIATO");
 
-		boolean stop = false;
+		int cont = 0;	//cONTATORE DEI DATI INSERITI.
+		
 		// Se la data corrente è prima della data di fine
-		while (stop) {
+		boolean go = true;
+		while (go) {
 			
 			try {
-				sleep(5000);
+				sleep(1000);
 			} catch (InterruptedException e1) {
 				System.out
 				.println("Errore query in generation.java, funzione sleep(): "
@@ -140,9 +114,12 @@ public class Generation extends Thread {
 							.get(i) - this.minimi.get(i))));
 					ps.setInt(4, dato);
 
-					ps.executeUpdate();
+					int ret = ps.executeUpdate();
 					ps.close();
 					con.close();
+					
+					//if(ret>0)
+						//System.out.println("Dato inserito");
 
 				} catch (Exception e) {
 					System.out
@@ -152,7 +129,13 @@ public class Generation extends Thread {
 
 				}
 			}// fine for
+			
+			cont++;
+			if(cont > 100)
+				go = false;
 		} // fine while(stop)
+		
+		System.out.println("Thread Fermato");
 
 	}
 
