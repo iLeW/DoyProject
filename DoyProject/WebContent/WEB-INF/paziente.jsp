@@ -147,9 +147,15 @@ int conta = m.contaMonitor();
 	
 
 	<!-- <form method="post" action="ControllerServlet"> -->
-	<!-- bottone per andare a calcolare Pearson -->
-	<div class="center"> <button Style="margin-top: 20px" class="blue" type="submit" name="val" value="vaiPearson">
-	<i class="icon-lemon"></i> Calcola indice di Pearson</button> </div>
+	<!-- bottoni per andare a calcolare Pearson e per far partire i thread -->
+	<div class="center">
+	<button Style="margin-top: 20px" class="blue" type="submit" name="val" value="vaiPearson">
+	<i class="icon-lemon"></i> Calcola indice di Pearson</button>
+	<button Style="margin-top: 20px" class="blue" type="submit" name="val" value="avviaThread">
+	<i class="icon-refresh"></i> Avvia thread</button>
+	<button Style="margin-top: 20px" class="blue" type="submit" name="val" value="stopThread">
+	<i class="icon-remove"></i> Stop thread</button>
+	</div>
 	<!-- </form> -->
 	
 </div>
