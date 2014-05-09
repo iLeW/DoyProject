@@ -3,10 +3,12 @@ package model;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.text.DateFormat;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Vector;
 
 /**
  * Tale classe è utilizzata per creare nel database delle entry di valori da
@@ -38,7 +40,15 @@ public class Generation extends Thread {
 	private Date data_curr; // Data corrente che deve essere sempre minore alla
 							// data_fine
 
-	/**
+	private int id;
+	private Vector<String> valori;
+	private Vector<Integer> minimi;
+	private Vector<Integer> massimi;
+	private Timestamp datain;
+	private Timestamp dataout;
+	private String datainString;
+
+	/*	*//**
 	 * Metodo costruttore con cui decido anche il paziente e il valore da
 	 * aggiornare
 	 * 
@@ -55,24 +65,37 @@ public class Generation extends Thread {
 	 * @param data_fine
 	 *            La data in cui voglio stoppare l'aggiornamento
 	 */
-	public Generation(String dottore, String paziente, String valore,
-			int valore_max, String data_fine) {
-		this.dottore = dottore;
-		this.paziente = paziente;
-		this.valore = valore;
-		this.valore_max = valore_max;
-		this.data_fine = new Date();
+	/*
+	 * public Generation(String dottore, String paziente, String valore, int
+	 * valore_max, String data_fine) { this.dottore = dottore; this.paziente =
+	 * paziente; this.valore = valore; this.valore_max = valore_max;
+	 * this.data_fine = new Date();
+	 * 
+	 * // data_fine formattata in modo corretto per trasformarla in data try {
+	 * this.data_fine = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+	 * .parse(data_fine); } catch (ParseException e) { e.printStackTrace(); }
+	 * 
+	 * }
+	 */
 
-		// data_fine formattata in modo corretto per trasformarla in data
-		try {
-			this.data_fine = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-					.parse(data_fine);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+	public Generation(int id, Vector<String> valori, Vector<Integer> minimi,
+			Vector<Integer> massimi, String datain) {
+		this.id = id;
+		this.valori = new Vector<String>(valori);
+		this.minimi = new Vector<Integer>(minimi);
+		this.massimi = new Vector<Integer>(massimi);
+		this.datainString = datain + "00:00:00";
+
+		Timestamp datainizio = Timestamp.valueOf(datain + " 00:00:00.000000");
+		this.datain = datainizio;
 
 	}
 
+	/*
+	 * this.data_curr = new Date(); try { //this.data_curr = new
+	 * SimpleDateFormat("yyyy-MM-dd HH:mm:ss") .parse(data_curr.toString()); }
+	 * catch (ParseException e) { e.printStackTrace(); }
+	 */
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -80,58 +103,59 @@ public class Generation extends Thread {
 		boolean stop = false;
 		// Se la data corrente è prima della data di fine
 		while (stop) {
-			// data_curr formattata in modo corretto
-			this.data_curr = new Date();
+			
 			try {
-				this.data_curr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-						.parse(data_curr.toString());
-			} catch (ParseException e) {
-				e.printStackTrace();
+				sleep(5000);
+			} catch (InterruptedException e1) {
+				System.out
+				.println("Errore query in generation.java, funzione sleep(): "
+						+ e1.getMessage());
+				e1.printStackTrace();
 			}
-			if (data_curr.before(data_fine)) {
-				
-				/*////////////////////////////// FARE QUESTO INSERIMENTO DI VALORE///////////////////////////////////////////////////////////////////////////
+
+			for (byte i = 0; i < this.valori.size(); ++i) {
 				try {
 					Class.forName(DRIVER).newInstance();
 					Connection con = DriverManager.getConnection(URL + DBNAME,
 							SQLUSERNAME, SQLPW);
-
-					
-					String query = "INSERT INTO messages (receiver, sender, message, date, readbool) VALUES (?, ?, ?, ?, ?)";
+					// inserisco i dati
+					String query = "INSERT INTO storico (IDPaziente, data, valore, dato) values (?, ?, ?, ?)";
 					PreparedStatement ps = con.prepareStatement(query);
-					ps.setString(1, receiver);
-					ps.setString(2, sender);
-					ps.setString(3, mex);
-					ps.setString(4, date);
-					ps.setBoolean(5, false);
-					int num = ps.executeUpdate();
-					
-					//SE IL DATO CREATO SUPERA IL val_max ALLORA MANDO UN MESSAGGIO AL DOTTORE (quindi altra chiamata al database dei messaggi, il campo sender lo metto come speciale "ALERT")
+					ps.setInt(1, this.id);
 
-					if (num > 0)
-						result = true;
-					else
-						result = false;
+					// Genero data casuale
+					long offset = Timestamp.valueOf(this.datainString)
+							.getTime();
+					long datafine = Calendar.getInstance().getTimeInMillis();
+					long diff = datafine - offset + 1;
+					Timestamp dataRand = new Timestamp(offset
+							+ (long) (Math.random() * diff));
+					ps.setTimestamp(2, dataRand);
 
+					// Setto il valore
+					ps.setString(3, this.valori.get(i));
+
+					// Setto il dato casuale
+					int dato = (this.minimi.get(i) + (int) (Math.random() * (this.massimi
+							.get(i) - this.minimi.get(i))));
+					ps.setInt(4, dato);
+
+					ps.executeUpdate();
 					ps.close();
 					con.close();
 
-				}
-
-				catch (Exception e) {
+				} catch (Exception e) {
 					System.out
-							.println("Errore query in Messaggio.java, funzione sendMexDB(): "
+							.println("Errore query in generation.java, funzione run(): "
 									+ e.getMessage());
 					e.printStackTrace();
+
 				}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
-			}
-			else
-				stop = true;
-		}	//fine while(stop)
+			}// fine for
+		} // fine while(stop)
 
 	}
-	
-	//Fine del Thread -> Dovrebbe chiudersi da solo quando finisce il run
+
+	// Fine del Thread -> Dovrebbe chiudersi da solo quando finisce il run
 
 }
