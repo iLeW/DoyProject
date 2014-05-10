@@ -18,6 +18,13 @@
 		<location>/WEB-INF/Err404.jsp</location>
 	</error-page>
 
+	<servlet>
+		<description></description>
+		<display-name>ControllerServlet</display-name>
+		<servlet-name>ControllerServlet</servlet-name>
+		<servlet-class>controller.ControllerServlet</servlet-class>
+	</servlet>
+
 	<jsp-config>
 		<jsp-property-group>
 			<url-pattern>*.jsp</url-pattern>

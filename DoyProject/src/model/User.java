@@ -280,12 +280,12 @@ public class User {
 			if (!dep2.isEmpty())
 				ps.setString(7, dep2);
 			else
-				ps.setString(7, "NULL");
+				ps.setString(7, null);
 
 			if (!dep3.isEmpty())
 				ps.setString(8, dep3);
 			else
-				ps.setString(8, "NULL");
+				ps.setString(8, null);
 
 			ps.executeUpdate();
 			ps.close();
