@@ -252,7 +252,7 @@ public class Paziente {
 				setDataIn(Date.valueOf(dataIn));
 				setDataOut(Date.valueOf(dataDefault));
 				setReparto(reparto);*/
-				salvaProvvisorio(IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, reparto);
+				//salvaProvvisorio(IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, reparto);
 				System.out.println("prova di errore :| "+ errors.size());
 			}
 		}
@@ -301,7 +301,7 @@ public class Paziente {
 				setDataIn(Date.valueOf(dataIn));
 				setDataOut(Date.valueOf(dataDefault));
 				setReparto(reparto);*/
-				salvaProvvisorio(IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, reparto);
+				//salvaProvvisorio(IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, reparto);
 				System.out.println("prova di errore :| "+ errors.size());
 			}
 		}
@@ -544,7 +544,7 @@ public class Paziente {
 		Date data1 = Date.valueOf(d1);
 		Date data2 = Date.valueOf(d2);
 		if(data1.after(data2)){
-			errors.add("ERRORE: la data " + data1 + " non può essere inferiore a " + data2);
+			errors.add("ERRORE: la data " + data1 + " non può essere superiore a " + data2);
 		}
 	}
 	

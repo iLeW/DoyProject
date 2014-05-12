@@ -15,14 +15,21 @@ int indice = p.contaPazienti() - 1;
 	<div class="grid flex">
 		<div class="col_12" style="margin-top: 0px;">
 			<h2 class="center">
+			<%if(p.getInserito() == 2){ %>
 				<i class="icon-beaker"></i> Aggiunta di un paziente
+			<%}
+			else{%>
+				<i class="icon-beaker"></i> Modifica di un paziente
+			<%} %>
 			</h2>
 			<h4 style="color: #999; margin-bottom: 10px;" class="center">
 				Inserire i dati
 			</h4>
 			<hr class="alt1" />
 			<%for(int i=0; i<p.dimErrors(); i++){%>
-			<i class="icon-warning-sign"></i><label for="nome"> <%= p.getErrors(i) %></label>
+			<i class="icon-warning-sign"></i>
+			<label for="nome" style="margin-left: 10px"> <%= p.getErrors(i) %></label>
+			<br>
 			<%}
 			p.clearErrors();
 			%>
@@ -68,7 +75,12 @@ int indice = p.contaPazienti() - 1;
 		</div>
 					
 		<div class="center" style="margin-bottom: 40px; margin-top: 40px">
+			<%if(p.getInserito() == 2){ %>
+			<button class="green" type="submit" name="val" value="insModPaziente">Conferma modifiche</button>
+			<%}
+			else{%>
 			<button class="green" type="submit" name="val" value="insPaziente">Conferma</button>
+			<%} %>
 			<button class="red" style="margin-left: 20px" type="submit" name="val" value="annPaziente" formnovalidate>Annulla</button>
 		</div>
 	

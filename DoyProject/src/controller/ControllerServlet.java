@@ -591,15 +591,27 @@ public class ControllerServlet extends HttpServlet {
 		// bottoni aggiungi paziente e annulla. Dalla pagina pazienteMod
 		// riportano a pazientiLista
 		if ("insPaziente".equals(val)) {
+			p.controllaDataOdierna(request.getParameter("dataNascita").toString());
+			p.controllaDataOdierna(request.getParameter("dataIn").toString());
+			p.controllaDataOrdine(request.getParameter("dataNascita").toString(), request.getParameter("dataIn").toString());
+			//se non da nesun errore con le date provo a inserire il paziente
+			if (p.dimErrors() == 0) {
 			p.insPaziente(p.getIDDisp(), request.getParameter("nome"),
 					request.getParameter("cognome"),
 					request.getParameter("dataNascita").toString(),
 					request.getParameter("codFisc"),
 					request.getParameter("dataIn").toString(),
 					request.getParameter("reparto"));
-			// devo mettere quì il controllo perchè prima aggiunge e poi
+			}
+			
 			// controlla se c'è l'errore
 			if (p.dimErrors() != 0) {
+				p.salvaProvvisorio(p.getIDDisp(), request.getParameter("nome"), 
+						request.getParameter("cognome"), 
+						request.getParameter("dataNascita").toString(), 
+						request.getParameter("codFisc"), 
+						request.getParameter("dataIn").toString(), 
+						request.getParameter("reparto"));
 				System.out.println("errore ins paziente");
 				path = "/WEB-INF/pazienteModErr";
 			} else {
@@ -618,6 +630,11 @@ public class ControllerServlet extends HttpServlet {
 		// due funzioni per modificare il paziente
 		if ("insModPaziente".equals(val)) {
 			// Paziente p = new Paziente(request.getParameter("IDPaziente"));
+			p.controllaDataOdierna(request.getParameter("dataNascita").toString());
+			p.controllaDataOdierna(request.getParameter("dataIn").toString());
+			p.controllaDataOrdine(request.getParameter("dataNascita").toString(), request.getParameter("dataIn").toString());
+			//se non da nesun errore con le date provo a inserire il paziente
+			if (p.dimErrors() == 0) {
 			p.modificaPaziente(session.getAttribute("IDpaz").toString(),
 					request.getParameter("nome"),
 					request.getParameter("cognome"),
@@ -625,9 +642,16 @@ public class ControllerServlet extends HttpServlet {
 					request.getParameter("codFisc"),
 					request.getParameter("dataIn").toString(),
 					request.getParameter("reparto"));
+			}
 			if (p.dimErrors() != 0) {
+				p.salvaProvvisorio(p.getIDDisp(), request.getParameter("nome"), 
+						request.getParameter("cognome"), 
+						request.getParameter("dataNascita").toString(), 
+						request.getParameter("codFisc"), 
+						request.getParameter("dataIn").toString(), 
+						request.getParameter("reparto"));
 				System.out.println("errore mod paziente");
-				path = "/WEB-INF/pazienteMod";
+				path = "/WEB-INF/pazienteModErr";
 			} else {
 				p.viewPaziente();
 				session.setAttribute("paziente", p);

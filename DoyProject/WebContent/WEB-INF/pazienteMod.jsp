@@ -4,12 +4,10 @@
 <%@ page import="model.Reparto" %>
 
 <%
-// 6)creare un nuovo oggetto, il metodo conta serve per il for sotto
 Paziente p = (Paziente) session.getAttribute("paziente");
 Reparto r = new Reparto();
 r.viewAllReparti();
 int dim = r.getDim();
-//String disponibile = p.getIDDisp();
 
 //inserito è a 2 quando sto modificando un paziente
 if(p.getInserito() == 2)
@@ -32,22 +30,13 @@ if(p.getInserito() == 2)
 			</h4>
 			<hr class="alt1" />
 			<% for(int i=0; i<p.dimErrors(); i++){%>
-			<i class="icon-warning-sign"></i><label for="nome"><%= p.getErrors(i) %></label>
+			<i class="icon-warning-sign"></i>
+			<label for="nome" style="margin-left: 10px"> <%= p.getErrors(i) %></label>
+			<br>
 			<%}
 			p.clearErrors();
 			%>
 		</div>
-	
-		<!-- 	
-		<div class="col_2">
-			<label for="IDPaziente">IDPaziente</label></div>
-		<div class="col_10" style="margin-bottom: 10px">
-			<input id="IDPaziente" name="IDPaziente" type="text" value="" placeholder="IDPaziente"/>
-			<span class="tooltip-top"
-						title="Primo ID disponibile:"><i
-						class="icon-info-sign"></i></span>
-		</div> -->
-		
 				
 		<div class="col_2">
 			<label for="nome">Nome</label></div>
@@ -128,19 +117,6 @@ else
 			</h4>
 			<hr class="alt1" />
 		</div>
-	
-		<!-- 
-		<div class="col_2">
-			<label for="IDPaziente">IDPaziente</label></div>
-		<div class="col_10" style="margin-bottom: 10px">
-			<input id="IDPaziente" name="IDPaziente" type="text" placeholder="IDPaziente" 
-			class="tooltip-top" title="Primo ID disponibile: "/>
-			<label for="IDPaziente" style="color: green; margin-left: 20px;">Primo ID disponibile: </label>
-			<span class="tooltip-top"
-						title="Primo ID disponibile: "><i
-						class="icon-info-sign"></i></span>
-		</div>
-		 -->
 		 	
 		<div class="col_2">
 			<label for="nome">Nome</label></div>
@@ -166,19 +142,6 @@ else
 			<label for="dataIn">Data di ingresso</label></div>
 		<div class="col_10" style="margin-bottom: 10px">
 			<input id="dataIn" name="dataIn" type="date" required  /></div>
-		
-		<!-- meglio toglierle la data di uscita
-		<div class="col_2">
-			<label for="dataOut">Data di uscita</label></div>
-		<div class="col_10" style="margin-bottom: 10px">
-			<input id="dataOut" name="dataOut" type="date" disabled /></div>
-		-->
-		
-		<!-- pezzo vecchi con il textfield  
-		<div class="col_2">
-			<label for="dataOut">Reparto</label></div>
-		<div class="col_10" style="margin-bottom: 10px">
-			<input id="reparto" name="reparto" type="text" placeholder="Reparto" required /></div>-->
 		
 		<div class="col_2">
 			<label for="select1">Reparto</label></div>
