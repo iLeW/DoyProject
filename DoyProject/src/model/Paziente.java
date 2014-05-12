@@ -6,6 +6,8 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Vector;
 
 /*
@@ -24,14 +26,13 @@ import java.util.Vector;
  * 12) fare la modifica della tabella dei monitoraggi nella pagina profilo del paziente
  * 13) fare la funzione per il controllo dei valori dei pazienti	[fatto in insDato]
  * 14) mettere il tasto per dimettere i pazienti			[fatto]
- * 15) controllo per il codice fiscale da gestire le eccezioni
- * 16) controllare che le date in e out vadano bene
- * 17) mettere una miriade di controlli !!!!!!!!
- * 18) funzione per i colori
- * 19) ricerca dei pazienti
- * 20) se non ci sono pazienti non metto la tabella
- * 21) fare pearson												[fatto]
- * 22) mettere un po' a posto gli if per la pagina paziente
+ * 15) controllo per il codice fiscale da gestire le eccezioni		[fatto]
+ * 16) fare pearson												[fatto] 
+ * 
+ * 17) controllo dataIn e dataNascita in paziente e mod paziente
+ * 18) controllo massimo e minimo in profilo paziente
+ * 19) controllo delle due date per il grafico in profilo paziente
+ * 20) controllo massimo e minimo nella pagina dell'indice di pearson
  */
 
 public class Paziente {
@@ -46,7 +47,6 @@ public class Paziente {
 	//Variabili private della classe
 	private Vector<String> errors = new Vector<String>();	//Per definire la lista degli errori
 	private String dataDefault = "1900-01-01";
-	// 1) cambiare le variabili da String a Vector<String>
 	private Vector<String> IDPaziente = new Vector<String>();
 	private Vector<String> nome = new Vector<String>();
 	private Vector<String> cognome = new Vector<String>();
@@ -63,7 +63,6 @@ public class Paziente {
 		
 	}
 	
-	// 2)cambiare i metodi per far ritornare il valore desiderato
 	public Paziente(String IDPaziente){
 		setIDPaziente(IDPaziente);
 	}
@@ -73,12 +72,6 @@ public class Paziente {
 	public String getIDPaziente(int i) {
 		return IDPaziente.get(i);
 	}
-	/*public void setIDold(String IDold) {
-		this.IDold = IDold;
-	}
-	public String getIDold() {
-		return this.IDold;
-	}*/
 	public void setNome(String nome) {
 		this.nome.add(nome);
 	}
@@ -162,6 +155,9 @@ public class Paziente {
 		return i;
 	}
 	//funzioni per la gestione degli errori
+	public void setErrors(String s){
+		this.errors.add(s);
+	}
 	public String getErrors(int i) {
 		return errors.get(i);
 	}
@@ -248,14 +244,15 @@ public class Paziente {
 			if(e.getMessage().contains("Duplicate"))
 			{
 				errors.add("ERRORE: il codice fiscale " + codFisc + " è già presente nel database, inserirne uno diverso");
-				setIDPaziente(IDPaziente);
+				/*setIDPaziente(IDPaziente);
 				setNome(nome);
 				setCognome(cognome);
 				setDataNascita(Date.valueOf(dataNascita));
 				setCodFisc(codFisc);
 				setDataIn(Date.valueOf(dataIn));
 				setDataOut(Date.valueOf(dataDefault));
-				setReparto(reparto);
+				setReparto(reparto);*/
+				salvaProvvisorio(IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, reparto);
 				System.out.println("prova di errore :| "+ errors.size());
 			}
 		}
@@ -296,14 +293,15 @@ public class Paziente {
 			if(e.getMessage().contains("Duplicate"))
 			{
 				errors.add("ERRORE: il codice fiscale " + codFisc + " è già presente nel database, inserirne uno diverso");
-				setIDPaziente(IDPaziente);
+				/*setIDPaziente(IDPaziente);
 				setNome(nome);
 				setCognome(cognome);
 				setDataNascita(Date.valueOf(dataNascita));
 				setCodFisc(codFisc);
 				setDataIn(Date.valueOf(dataIn));
 				setDataOut(Date.valueOf(dataDefault));
-				setReparto(reparto);
+				setReparto(reparto);*/
+				salvaProvvisorio(IDPaziente, nome, cognome, dataNascita, codFisc, dataIn, reparto);
 				System.out.println("prova di errore :| "+ errors.size());
 			}
 		}
@@ -416,7 +414,6 @@ public class Paziente {
 	}
 	
 	//visualizza un paziente per la tabella
-	// 3)fare questo metodo per andare a leggere riga per riga il database, passare alla ControllerServlet
 	public void viewPaziente(){
 		clearAll();
 		try {
@@ -521,6 +518,34 @@ public class Paziente {
 				e.printStackTrace();
 			}
 		}//fine for che esplora il vector rep
+	}
+	
+	//funzione per salvare tutti i campi se c'è un errore
+	public void salvaProvvisorio(String IDPaziente, String nome, String cognome, String dataNascita, String codFisc, String dataIn, String reparto){
+		setIDPaziente(IDPaziente);
+		setNome(nome);
+		setCognome(cognome);
+		setDataNascita(Date.valueOf(dataNascita));
+		setCodFisc(codFisc);
+		setDataIn(Date.valueOf(dataIn));
+		setDataOut(Date.valueOf(dataDefault));
+		setReparto(reparto);
+	}
+	//funzioni per fare i controlli sulla data
+	public void controllaDataOdierna (String d){
+		Date data = Date.valueOf(d);
+		long now = Calendar.getInstance().getTimeInMillis();
+		Timestamp corrente = new Timestamp(now);
+		if(data.after(corrente)){
+			errors.add("ERRORE: la data " + d + " non deve superare quella odierna!!");
+		}
+	}
+	public void controllaDataOrdine (String d1, String d2){
+		Date data1 = Date.valueOf(d1);
+		Date data2 = Date.valueOf(d2);
+		if(data1.after(data2)){
+			errors.add("ERRORE: la data " + data1 + " non può essere inferiore a " + data2);
+		}
 	}
 	
 	//i colori sono da #000000 a #FFFFFF dove ogni due cifre è un canale RGB
