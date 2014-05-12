@@ -596,7 +596,7 @@ public class ControllerServlet extends HttpServlet {
 			p.controllaDataOrdine(request.getParameter("dataNascita").toString(), request.getParameter("dataIn").toString());
 			//se non da nesun errore con le date provo a inserire il paziente
 			if (p.dimErrors() == 0) {
-			p.insPaziente(p.getIDDisp(), request.getParameter("nome"),
+				p.insPaziente(p.getIDDisp(), request.getParameter("nome"),
 					request.getParameter("cognome"),
 					request.getParameter("dataNascita").toString(),
 					request.getParameter("codFisc"),
@@ -606,7 +606,7 @@ public class ControllerServlet extends HttpServlet {
 			
 			// controlla se c'è l'errore
 			if (p.dimErrors() != 0) {
-				p.salvaProvvisorio(p.getIDDisp(), request.getParameter("nome"), 
+					p.salvaProvvisorio(p.getIDDisp(), request.getParameter("nome"), 
 						request.getParameter("cognome"), 
 						request.getParameter("dataNascita").toString(), 
 						request.getParameter("codFisc"), 
@@ -635,7 +635,7 @@ public class ControllerServlet extends HttpServlet {
 			p.controllaDataOrdine(request.getParameter("dataNascita").toString(), request.getParameter("dataIn").toString());
 			//se non da nesun errore con le date provo a inserire il paziente
 			if (p.dimErrors() == 0) {
-			p.modificaPaziente(session.getAttribute("IDpaz").toString(),
+				p.modificaPaziente(session.getAttribute("IDpaz").toString(),
 					request.getParameter("nome"),
 					request.getParameter("cognome"),
 					request.getParameter("dataNascita").toString(),
@@ -644,7 +644,7 @@ public class ControllerServlet extends HttpServlet {
 					request.getParameter("reparto"));
 			}
 			if (p.dimErrors() != 0) {
-				p.salvaProvvisorio(p.getIDDisp(), request.getParameter("nome"), 
+					p.salvaProvvisorio(p.getIDDisp(), request.getParameter("nome"), 
 						request.getParameter("cognome"), 
 						request.getParameter("dataNascita").toString(), 
 						request.getParameter("codFisc"), 
@@ -716,13 +716,21 @@ public class ControllerServlet extends HttpServlet {
 		if ("calcolaPearson".equals(val)) {
 			m.setVar1(request.getParameter("variabile1").toString());
 			m.setVar2(request.getParameter("variabile2").toString());
-			m.setMin1(request.getParameter("min1"));
-			m.setMin2(request.getParameter("min2"));
-			m.setMax1(request.getParameter("max1"));
-			m.setMax2(request.getParameter("max2"));
-			m.setNum(request.getParameter("num"));
-
-			m.CalcolaPearson();
+			//controllo minimi e massimi
+			m.controllaMinMax(Integer.parseInt(request.getParameter("min1")),
+					Integer.parseInt(request.getParameter("max1")));
+			m.controllaMinMax(Integer.parseInt(request.getParameter("min2")),
+					Integer.parseInt(request.getParameter("max2")));
+			
+			if(m.dimErrors() == 0){
+				m.setMin1(request.getParameter("min1"));
+				m.setMin2(request.getParameter("min2"));
+				m.setMax1(request.getParameter("max1"));
+				m.setMax2(request.getParameter("max2"));
+				m.setNum(request.getParameter("num"));
+			
+				m.CalcolaPearson();
+			}
 			// mettere i controlli sui valori minimo e massimo
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
@@ -940,10 +948,14 @@ public class ControllerServlet extends HttpServlet {
 		// quì ci arriva quando si schiaccia il bottone per aggiungere un valore
 		// da monitorare
 		if ("addValore".equals(val)) {
-			m.insMonitoraggio(session.getAttribute("IDpaz").toString(), request
+			m.controllaMinMax(Integer.parseInt(request.getParameter("valMin")),
+					Integer.parseInt(request.getParameter("valMax")));
+			//se il massimo e minimo vanno bene provo a inserire il monitoraggio
+			if(m.dimErrors() == 0){
+				m.insMonitoraggio(session.getAttribute("IDpaz").toString(), request
 					.getParameter("nomeValore"), request.getParameter("valMin")
 					.toString(), request.getParameter("valMax").toString());
-			// System.out.println("prova IDPAZ: "+session.getAttribute("IDpaz"));
+			}
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/paziente";
@@ -999,15 +1011,21 @@ public class ControllerServlet extends HttpServlet {
 		}
 
 		if ("aggiornaGrafico".equals(val)) {
-			// session.setAttribute("valStorico",
-			// request.getParameter("visStorico"));
-			s.setValGrafico(request.getParameter("visStorico").toString());
-			s.setDataInizio(Date.valueOf(request.getParameter("dataInizio")));
-			s.setDataFine(Date.valueOf(request.getParameter("dataFine")));
-			s.selezionaStorico(session.getAttribute("IDpaz").toString(),
+			m.controllaDataOdierna(request.getParameter("dataInizio").toString());
+			m.controllaDataOdierna(request.getParameter("dataFine").toString());
+			m.controllaDataOrdine(request.getParameter("dataInizio").toString(),
+					request.getParameter("dataFine").toString());
+			if(m.dimErrors() == 0){
+				s.setValGrafico(request.getParameter("visStorico").toString());
+				s.setDataInizio(Date.valueOf(request.getParameter("dataInizio")));
+				s.setDataFine(Date.valueOf(request.getParameter("dataFine")));
+				s.selezionaStorico(session.getAttribute("IDpaz").toString(),
 					request.getParameter("visStorico").toString(),
 					request.getParameter("dataInizio"),
 					request.getParameter("dataFine"));
+			}
+			m.viewAllMonitoraggi();
+			session.setAttribute("monitoraggio", m);
 			session.setAttribute("storico", s);
 			path = "/WEB-INF/paziente";
 		}

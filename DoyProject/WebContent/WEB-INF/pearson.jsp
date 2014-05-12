@@ -24,9 +24,16 @@ int conta = m.contaMonitor();
 			Monitoraggi attivi:
 		</h4>
 		<hr class="alt1" />
+		<%for(int i=0; i<m.dimErrors(); i++){%>
+			<i class="icon-warning-sign icon-2x"></i>
+			<label for="nome" style="margin-left: 10px; color: red; font-size:20px"> <%= m.getErrors(i) %></label>
+			<br>
+		<%}
+		m.clearErrors();
+		%>
 	</div>
 	
-	<div class="left">
+	<div class="col_12" style="margin-top: 20px">
 	<i class="icon-globe icon-2x"></i><label style="margin-left: 10px"> L'indice di Pearson esprime un'eventuale relazione di linearità tra due variabili e
 	assume sempre valori compresi tra -1 e +1. </label>
 	<br><br>

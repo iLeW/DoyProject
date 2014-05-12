@@ -1,10 +1,12 @@
 package model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Vector;
 
 
@@ -18,7 +20,7 @@ public class Monitoraggio {
 	private static String SQLPW = "root";
 	
 	//Variabili private della classe
-	private Vector<String> errors;	//Per definire la lista degli errori
+	private Vector<String> errors = new Vector<String>();;	//Per definire la lista degli errori
 	private Vector<String> IDPaziente = new Vector<String>();
 	private Vector<String> valore = new Vector<String>();
 	private Vector<String> parametri = new Vector<String>();
@@ -89,9 +91,6 @@ public class Monitoraggio {
 		return IDPaziente.size();
 	}
 	//funzioni per la gestione degli errori
-	public void setErrors(String s){
-		this.errors.add(s);
-	}
 	public String getErrors(int i) {
 		return errors.get(i);
 	}
@@ -544,6 +543,28 @@ public class Monitoraggio {
 		}
 			
 		return storico;
+	}
+	
+	//funzioni per controllare gli errori
+	public void controllaDataOdierna (String d){
+		Date data = Date.valueOf(d);
+		long now = Calendar.getInstance().getTimeInMillis();
+		Timestamp corrente = new Timestamp(now);
+		if(data.after(corrente)){
+			errors.add("ERRORE: la data " + d + " non deve superare quella odierna!!");
+		}
+	}
+	public void controllaDataOrdine (String d1, String d2){
+		Date data1 = Date.valueOf(d1);
+		Date data2 = Date.valueOf(d2);
+		if(data1.after(data2)){
+			errors.add("ERRORE: la data " + data1 + " non può essere superiore a " + data2);
+		}
+	}
+	public void controllaMinMax (int min, int max){
+		if(min >= max){
+			errors.add("ERRORE: il valore minimo " + min + " non può essere maggiore o uguale al massimo " + max);
+		}
 	}
 	
 }//fine classi Monitoraggio

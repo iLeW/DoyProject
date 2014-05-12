@@ -25,6 +25,13 @@ int conta = m.contaMonitor();
 			Dati:
 		</h4>
 		<hr class="alt1" />
+		<%for(int i=0; i<m.dimErrors(); i++){%>
+			<i class="icon-warning-sign icon-2x"></i>
+			<label for="nome" style="margin-left: 10px; color: red; font-size:20px"> <%= m.getErrors(i) %></label>
+			<br>
+		<%}
+		m.clearErrors();
+		%>
 	</div>
 	
 	<div class="col_2">

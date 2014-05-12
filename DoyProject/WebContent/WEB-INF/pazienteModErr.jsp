@@ -27,8 +27,8 @@ int indice = p.contaPazienti() - 1;
 			</h4>
 			<hr class="alt1" />
 			<%for(int i=0; i<p.dimErrors(); i++){%>
-			<i class="icon-warning-sign"></i>
-			<label for="nome" style="margin-left: 10px"> <%= p.getErrors(i) %></label>
+			<i class="icon-warning-sign icon-2x"></i>
+			<label for="nome" style="margin-left: 10px; color: red; font-size:20px"> <%= p.getErrors(i) %></label>
 			<br>
 			<%}
 			p.clearErrors();
