@@ -28,16 +28,6 @@ public class Generation extends Thread {
 	private static String SQLUSERNAME = "root";
 	private static String SQLPW = "root";
 
-	// NOTA BENE: TALI VARIABLI LE HO MESSE COSì MA DOVREBBERO ESSERE LE CHIAVI
-	// PER LA TABELLA CON I VALORI DA AGGIORNARE
-	private String dottore;
-	private String paziente; // Il paziente da aggiornare
-	private String valore; // Il nome del valore da aggiornare
-	private int valore_max;
-	private Date data_fine;
-	private Date data_curr; // Data corrente che deve essere sempre minore alla
-							// data_fine
-
 	private int id;
 	private Vector<String> valori;
 	private Vector<Integer> minimi;

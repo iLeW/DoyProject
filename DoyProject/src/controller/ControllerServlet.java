@@ -989,8 +989,8 @@ public class ControllerServlet extends HttpServlet {
 		// Se clicco su avviaThread da paziente.jsp
 		if ("avviaThread".equals(val)) {
 
-			if (m == null)
-				m = new Monitoraggio();
+//			if (m == null)
+//				m = new Monitoraggio();
 			int id = Integer.parseInt(session.getAttribute("IDpaz").toString());
 			m.viewMonitoraggioPaziente(id);
 

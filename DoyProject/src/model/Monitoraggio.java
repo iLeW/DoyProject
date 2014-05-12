@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.util.Hashtable;
 import java.util.Vector;
 
 
@@ -19,7 +18,7 @@ public class Monitoraggio {
 	private static String SQLPW = "root";
 	
 	//Variabili private della classe
-	private Hashtable <String, String> errors;	//Per definire la lista degli errori
+	//private Hashtable <String, String> errors;	//Per definire la lista degli errori
 	private Vector<String> IDPaziente = new Vector<String>();
 	private Vector<String> valore = new Vector<String>();
 	private Vector<String> parametri = new Vector<String>();

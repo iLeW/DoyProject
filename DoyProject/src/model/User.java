@@ -26,7 +26,7 @@ public class User {
 
 	// Variabili private della classe
 	private String username;
-	private String password;
+	//private String password;
 	private String name;
 	private String surname;
 	private Date birthdate;

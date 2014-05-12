@@ -25,6 +25,11 @@
 		<servlet-class>controller.ControllerServlet</servlet-class>
 	</servlet>
 
+<!-- In questo modo la sessione lato server non cade nel timeout dei 30 minuti -->
+	<session-config>
+		<session-timeout>-1</session-timeout>
+	</session-config>
+
 	<jsp-config>
 		<jsp-property-group>
 			<url-pattern>*.jsp</url-pattern>
