@@ -34,7 +34,9 @@ birthdate
 		<div class="grid flex">
 			<div class="col_12" style="margin-top: 20px;">
 				<%
-					if (session.getAttribute("err_mod") != null || !session.getAttribute("err_mod").toString().trim().isEmpty()) {
+					if (session.getAttribute("err_mod") != null)
+						if (!session.getAttribute("err_mod").toString().trim()
+								.isEmpty()) {
 				%>
 				<h1 class="center">
 					<i class="icon-edit"></i>MODIFICA PROFILO
@@ -42,7 +44,7 @@ birthdate
 				<%
 					}
 
-					else {
+						else {
 				%><h1 class="center">SIGN UP</h1>
 				<%
 					}
@@ -50,7 +52,9 @@ birthdate
 
 				<!-- Error -->
 				<%
-					if (session.getAttribute("err_mod") != null || !session.getAttribute("err_mod").toString().trim().isEmpty()) {
+					if (session.getAttribute("err_mod") != null)
+						if (!session.getAttribute("err_mod").toString().trim()
+								.isEmpty()){
 				%>
 
 				<div class="notice error">
@@ -61,7 +65,20 @@ birthdate
 				<%
 					}
 
-					else {
+						else if (session.getAttribute("err_username")!= null ||
+						session.getAttribute("err_password") != null||
+						session.getAttribute("err_name")!= null||
+						session.getAttribute("err_surname")!= null||
+						session.getAttribute("err_birthdate")!= null||
+						session.getAttribute("err_deps0")!= null||
+						session.getAttribute("err_deps")!= null)
+						if(!session.getAttribute("err_username").toString().trim().isEmpty() ||
+								!session.getAttribute("err_password").toString().trim().isEmpty()||
+								!session.getAttribute("err_name").toString().trim().isEmpty()||
+								!session.getAttribute("err_surname").toString().trim().isEmpty()||
+								!session.getAttribute("err_birthdate").toString().trim().isEmpty()||
+								!session.getAttribute("err_deps0").toString().trim().isEmpty()||
+								!session.getAttribute("err_deps").toString().trim().isEmpty()){
 				%>
 				<div class="notice error">
 					<i class="icon-remove-sign icon-large"></i> Errore inserimento
@@ -70,7 +87,15 @@ birthdate
 				</div>
 				<%
 					}
-				%>
+				
+						else {
+							
+				%> <div class="notice error">
+					<i class="icon-remove-sign icon-large"></i> Errore inserimento
+					dati. Controllare i campi evidenziati in rosso. <a href="#close"
+						class="icon-remove"></a>
+				</div>
+				<%} %>
 
 
 
@@ -126,7 +151,9 @@ birthdate
 				</div>
 				<div class="col_9">
 					<%
-						if (session.getAttribute("err_password").toString().trim().isEmpty() || session.getAttribute("err_password") == null ) {
+						if (session.getAttribute("err_password").toString().trim()
+								.isEmpty()
+								|| session.getAttribute("err_password") == null) {
 					%>
 					<input id="Password" type="password" name="password"
 						placeholder="Password"
@@ -179,7 +206,8 @@ birthdate
 
 				<div class="col_9">
 					<%
-						if (session.getAttribute("err_name").toString().trim().isEmpty() || session.getAttribute("err_name") == null) {
+						if (session.getAttribute("err_name").toString().trim().isEmpty()
+								|| session.getAttribute("err_name") == null) {
 					%>
 					<input id="Nome" type="text" name="nome" placeholder="Nome"
 						value="<%=session.getAttribute("name")%>" required />
@@ -200,14 +228,16 @@ birthdate
 
 				<div class="col_9">
 					<%
-						if (session.getAttribute("err_surname").toString().trim().isEmpty() || session.getAttribute("err_surname") == null) {
+						if (session.getAttribute("err_surname").toString().trim().isEmpty()
+								|| session.getAttribute("err_surname") == null) {
 					%>
 					<input id="Cognome" type="text" name="cognome"
 						placeholder="Cognome" value="<%=session.getAttribute("surname")%>"
 						required />
 					<%
 						} else {
-							System.out.println("Errore nel surname: " + session.getAttribute("err_surname").toString());
+							System.out.println("Errore nel surname: "
+									+ session.getAttribute("err_surname").toString());
 					%>
 					<input id="Cognome" class="error" type="text" name="cognome"
 						value="<%=session.getAttribute("surname")%>" required />
@@ -223,7 +253,9 @@ birthdate
 
 				<div class="col_9">
 					<%
-						if (session.getAttribute("err_birthdate").toString().trim().isEmpty() || session.getAttribute("err_birthdate") == null ) {
+						if (session.getAttribute("err_birthdate").toString().trim()
+								.isEmpty()
+								|| session.getAttribute("err_birthdate") == null) {
 					%>
 					<input id="Birthdate" type="date" name="birthdate" placeholder=""
 						value="<%=session.getAttribute("birthdate")%>" />
@@ -241,10 +273,16 @@ birthdate
 				<!-- Checkbox che creo dinamicamente-->
 				<div class="col_3">
 					<%
-						if (session.getAttribute("err_deps").toString().trim().isEmpty()
-								|| session.getAttribute("err_deps0").toString().trim().isEmpty() || session.getAttribute("err_deps") == null || session.getAttribute("err_deps0") == null) {
+						//if (!session.getAttribute("err_deps").toString().trim().isEmpty()
+						//|| !session.getAttribute("err_deps0").toString().trim().isEmpty() || session.getAttribute("err_deps") == null || session.getAttribute("err_deps0") == null) {
+
+						//Le stringhe di errori ci sono sempre perché le ho settate sempre con la stringa vuota. Quindi se non c'è errore sono stringhe vuote.
+						if (!session.getAttribute("err_deps").toString().trim().isEmpty()
+								|| !session.getAttribute("err_deps0").toString().trim()
+										.isEmpty()) {
 					%>
 					<fieldset class="error">
+						<!-- Qui il warning va bene, perché a seconda di if o else stampa un fieldset diverso che poi chiudo solo una volta -->
 						<legend class="error">Reparti</legend>
 						<%
 							} else {
@@ -277,23 +315,25 @@ birthdate
 					<br> <br>
 
 
-					<!-- Se è presente l'attributo errore per la modifica allora mostro il tasto modifica, altrimenti quello normale -->
+					<%-- <!-- Se è presente l'attributo errore per la modifica allora mostro il tasto modifica, altrimenti quello normale -->
 					<%
-						if (session.getAttribute("err_mod") != null || !session.getAttribute("err_mod").toString().trim().isEmpty() ) {
+						if (session.getAttribute("err_mod") != null)
+							if (!session.getAttribute("err_mod").toString().trim()
+									.isEmpty()) {
 					%>
 
 					<button class="green" type="submit" name="val" value="acceptMod">Modifica</button>
 					<%
 						}
 
-						else {
-					%>
+							else {
+					%> --%>
 					<button class="green" type="submit" name="val"
 						value="confermaSignup">Conferma</button>
-					<%
+					<%-- 	<%
 						}
 					%>
-
+ --%>
 					<!-- In questo caso formnovalidate evita di cercare i campi obbligatori anche quando faccio "annulla", non funziona in Safari -->
 					<button class="blue" type="submit" name="val" value="annullaSignup"
 						formnovalidate>Annulla</button>

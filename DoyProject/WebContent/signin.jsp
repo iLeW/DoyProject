@@ -33,6 +33,18 @@
 
 
 				</h4>
+
+				<%
+					if (session.getAttribute("signupOK") != null) {
+				%>
+				<!-- Success -->
+				<div class="notice success">
+					<i class="icon-ok icon-large"></i> Iscrizione avvenuta con successo. Effettua il login. <a
+						href="#close" class="icon-remove"></a>
+				</div>
+				<%
+					}
+				%>
 			</div>
 		</div>
 		<!-- End Grid -->

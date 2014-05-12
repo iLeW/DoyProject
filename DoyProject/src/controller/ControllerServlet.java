@@ -329,20 +329,14 @@ public class ControllerServlet extends HttpServlet {
 			System.out.println("************: RESULT : " + result);
 			if (result) {
 				if (session.getAttribute("fromHome") != null) {
-					mx.readAndSetMex(u.getUsername()); /*
-														 * Invece di fare questo
-														 * sarebbe stato meglio
-														 * gestire gli array
-														 * direttamente, dalla
-														 * classe messaggio, per
-														 * evitare questa
-														 * chiamata in più al
-														 * database. Oppure
-														 * comunque questa
-														 * chiamata lasciarla
-														 * dentro alla classe
-														 * Messaggio.
-														 */
+					mx.readAndSetMex(u.getUsername());
+					/*
+					 * Questo sopra Invece di fare questo sarebbe stato meglio
+					 * gestire gli array direttamente, dalla classe messaggio,
+					 * per evitare questa chiamata in più al database. Oppure
+					 * comunque questa chiamata lasciarla dentro alla classe
+					 * Messaggio.
+					 */
 
 					// session.setAttribute("messaggio", mx); //NON SERVE
 					// RISETTARE L'ATTRIBUTO !!!
@@ -536,6 +530,11 @@ public class ControllerServlet extends HttpServlet {
 			System.out.println("username che setto: "
 					+ request.getParameter("username"));
 
+			// Se c'è l'attributo che proviene dal fatto di essermi registrato
+			// allora lo elimino
+			if (session.getAttribute("signupOK") != null)
+				session.removeAttribute("signupOK");
+
 			String username = request.getParameter("username");
 			u = new User(username); // creo un oggetto utente con l'username
 			// passato
@@ -709,8 +708,8 @@ public class ControllerServlet extends HttpServlet {
 			m.viewMonitoraggioPaziente(Integer.parseInt(session.getAttribute(
 					"IDpaz").toString()));
 			m.calcolaTabellaPearson(Integer.parseInt(session.getAttribute(
-						"IDpaz").toString()));
-			
+					"IDpaz").toString()));
+
 			m.viewAllMonitoraggi();
 			session.setAttribute("monitoraggio", m);
 			path = "/WEB-INF/pearson";
@@ -797,7 +796,17 @@ public class ControllerServlet extends HttpServlet {
 				// faccio il signup e ritorno al login
 				u.signupU(username, cpassword, name, surname, birthdate,
 						deps.get(0), deps.get(1), deps.get(2));
-				session.invalidate();
+				// session.invalidate(); Non invalido la sessione altrimenti non
+				// riesco a fare il signupOK
+
+				// Setto l'attributo per decidere se nella pagina signin.jsp
+				// mostrare la finestra di iscrizione avvenuta con successo
+				session.setAttribute("signupOK", "1"); // Il valore 1 non è
+														// indispensabile, basta
+														// che ci sia
+														// l'attributo.
+														// Lo cancello quando
+														// faccio il signin
 				response.sendRedirect("signin.jsp");
 				return;
 			}
@@ -851,20 +860,13 @@ public class ControllerServlet extends HttpServlet {
 				// Setto gli errori da riprendere nella signupErr.jsp
 				session.setAttribute(
 						"err_mod",
-						"Errore inserimento dati nella modifica del profilo. Controllare i campi evidenziati in rosso"); // Errore
-				// per
-				// capire
-				// che
-				// veniamo
-				// dalla
-				// modifica
-				// (per
-				// cambiare
-				// il
-				// tasto)
-				// session.setAttribute("err_username",u.getError("username"));
-				// In questo caso non serve perché questo non può dare errore,
-				// esiste già
+						"Errore inserimento dati nella modifica del profilo. Controllare i campi evidenziati in rosso");
+				/*
+				 * Questo sopra Errore per capire che veniamo dalla modifica (
+				 * per cambiare il tasto ) session . setAttribute (
+				 * "err_username" , u . getError ( "username" ) ) ; In questo
+				 * caso non serve perché questo non può dare errore , esiste già
+				 */
 				session.setAttribute("err_password", u.getError("password"));
 				session.setAttribute("err_name", u.getError("nome"));
 				session.setAttribute("err_surname", u.getError("cognome"));
@@ -989,8 +991,8 @@ public class ControllerServlet extends HttpServlet {
 		// Se clicco su avviaThread da paziente.jsp
 		if ("avviaThread".equals(val)) {
 
-//			if (m == null)
-//				m = new Monitoraggio();
+			// if (m == null)
+			// m = new Monitoraggio();
 			int id = Integer.parseInt(session.getAttribute("IDpaz").toString());
 			m.viewMonitoraggioPaziente(id);
 

@@ -499,6 +499,14 @@ public class User {
 		boolean bad_signup = false;
 
 		this.errors = new Hashtable<String, String>();
+		
+		//Controllo nel database se c'è già quell'username
+		this.getDocsDB();
+		if(this.docs.contains(username)){
+			System.out.println("err_username");
+			errors.put("username", "Valore duplicato di username");
+			bad_signup = true;
+		}
 
 		// Controllo dei campi di inserimento
 		if (username.length() <= 4 || this.checkBasic(username)
@@ -508,22 +516,22 @@ public class User {
 			bad_signup = true;
 		}
 
-		if (!password.equals(cpassword) || password.length() < 4) { // nota:
-																	// basta
-																	// solo
-																	// la
-																	// lenght
-																	// su
-																	// una
-																	// perché
-																	// altrimenti
-																	// basta
-																	// il
-																	// caso
-																	// che
-																	// sono
-																	// diverse
-			errors.put("password", "Inserire una password valida");
+		if (!password.equals(cpassword) || password.length() < 4) {  /*nota:
+																	 basta
+																	 solo
+																	 la
+																	 lenght
+																	 su
+																	 una
+																	 perché
+																	 altrimenti
+																	 basta
+																	 il
+																	 caso
+																	 che
+																	 sono
+																	 diverse
+*/			errors.put("password", "Inserire una password valida");
 			System.out.println("err_password");
 			bad_signup = true;
 		}
