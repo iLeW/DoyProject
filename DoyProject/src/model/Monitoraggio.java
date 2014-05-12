@@ -18,7 +18,7 @@ public class Monitoraggio {
 	private static String SQLPW = "root";
 	
 	//Variabili private della classe
-	//private Hashtable <String, String> errors;	//Per definire la lista degli errori
+	private Vector<String> errors;	//Per definire la lista degli errori
 	private Vector<String> IDPaziente = new Vector<String>();
 	private Vector<String> valore = new Vector<String>();
 	private Vector<String> parametri = new Vector<String>();
@@ -88,7 +88,19 @@ public class Monitoraggio {
 	public int contaMonitor(){
 		return IDPaziente.size();
 	}
-	
+	//funzioni per la gestione degli errori
+	public void setErrors(String s){
+		this.errors.add(s);
+	}
+	public String getErrors(int i) {
+		return errors.get(i);
+	}
+	public void clearErrors(){
+		this.errors.clear();
+	}
+	public int dimErrors(){
+		return errors.size();
+	}
 	
 	//inserire un nuovo monitoraggio nella tabella del database
 	public void insMonitoraggio(String IDPaziente, String nomeVal, String valMin, String valMax){
@@ -112,6 +124,10 @@ public class Monitoraggio {
 		
 		catch (Exception e) {
 			e.printStackTrace();
+			if(e.getMessage().contains("Duplicate"))
+			{
+				errors.add("ERRORE: il monitoraggio " + nomeVal + " è già attivo per il paziente selezionato");
+			}
 		}
 	}
 	
