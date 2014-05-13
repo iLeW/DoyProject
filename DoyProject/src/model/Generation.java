@@ -122,8 +122,8 @@ public class Generation extends Thread {
 					ps.close();
 					con.close();
 					
-					//if(ret>0)
-						//System.out.println("Dato inserito");
+					if(ret>0)
+						System.out.println(".");
 
 				} catch (Exception e) {
 					System.out
