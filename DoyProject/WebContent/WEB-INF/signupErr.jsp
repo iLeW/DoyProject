@@ -133,21 +133,23 @@ birthdate
 					<label for="Username">Username</label>
 				</div>
 				<div class="col_9">
-					<%
-						if (session.getAttribute("err_username") == null) {
-					%>
-
+				
+				<% if(session.getAttribute("err_username") == null) { %>
+				
 					<input id="Username" type="text" name="username"
-						placeholder="Username"
-						value="<%=session.getAttribute("username")%>" required />
-					<%
-						} else {
-					%>
-					<input id="Username" class="error" type="text" name="username"
 						value="<%=session.getAttribute("username")%>" readonly="readonly" />
 					<%
-						}
-					%>
+				} else if (session.getAttribute("err_username") != null)
+							if (!session.getAttribute("err_username").toString().trim()
+							.isEmpty()){ System.out.println("Errore **********************");%>
+				
+
+					<input id="Username" class="error" type="text" name="username"
+						placeholder="Username"
+						value="<%=session.getAttribute("username")%>" required />
+						
+						<%} %>
+					
 					<span class="tooltip-right"
 						title="Username: Lettere e numeri sono consigliati"><i
 						class="icon-info-sign"></i></span>
@@ -325,8 +327,16 @@ birthdate
 					<br> <br>
 
 
-					<%-- <!-- Se è presente l'attributo errore per la modifica allora mostro il tasto modifica, altrimenti quello normale -->
+					<!-- Se è presente l'attributo errore per la modifica allora mostro il tasto modifica, altrimenti quello normale -->
+					
+					<%if (session.getAttribute("err_mod") == null) { %>
+					
+					<button class="green" type="submit" name="val"
+						value="confermaSignup">Conferma</button>
+						
 					<%
+					
+					}else
 						if (session.getAttribute("err_mod") != null)
 							if (!session.getAttribute("err_mod").toString().trim()
 									.isEmpty()) {
@@ -334,16 +344,8 @@ birthdate
 
 					<button class="green" type="submit" name="val" value="acceptMod">Modifica</button>
 					<%
-						}
+						} %>
 
-							else {
-					%> --%>
-					<button class="green" type="submit" name="val"
-						value="confermaSignup">Conferma</button>
-					<%-- 	<%
-						}
-					%>
- --%>
 					<!-- In questo caso formnovalidate evita di cercare i campi obbligatori anche quando faccio "annulla", non funziona in Safari -->
 					<button class="blue" type="submit" name="val" value="annullaSignup"
 						formnovalidate>Annulla</button>

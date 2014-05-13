@@ -502,6 +502,7 @@ public class User {
 		
 		//Controllo nel database se c'è già quell'username
 		this.getDocsDB();
+		
 		if(this.docs.contains(username)){
 			System.out.println("err_username");
 			errors.put("username", "Valore duplicato di username");
@@ -511,7 +512,7 @@ public class User {
 		// Controllo dei campi di inserimento
 		if (username.length() <= 4 || this.checkBasic(username)
 				|| this.checkXSS(username)) {
-			System.out.println("err_username");
+			System.out.println("err_username: " + username);
 			errors.put("username", "Inserire un username valido");
 			bad_signup = true;
 		}
@@ -671,4 +672,58 @@ public class User {
 		
 		return docs;
 	}
+
+	public boolean checkSignupMod(String password,
+			String cpassword, String nome, String cognome, Date birthdate,
+			ArrayList<String> deps) {
+	boolean bad_signup = false;
+	
+		this.errors = new Hashtable<String, String>();
+	
+	//Controllo nel database se c'è già quell'username
+	this.getDocsDB();
+	
+
+	if (!password.equals(cpassword) || password.length() < 4) {
+		errors.put("password", "Inserire una password valida");
+		System.out.println("err_password");
+		bad_signup = true;
+	}
+
+	if (this.checkBasic(nome) || this.checkXSS(nome)) {
+		errors.put("nome", "Inserire un nome valido");
+		System.out.println("err_name");
+		bad_signup = true;
+	}
+
+	if (this.checkBasic(cognome) || this.checkXSS(cognome)) {
+		errors.put("cognome", "Inserire un cognome valido");
+		System.out.println("err_surname");
+		bad_signup = true;
+	}
+
+	// Se la data inserita è successiva alla data corrente non va bene
+	if (birthdate.compareTo(Calendar.getInstance().getTime()) > 0) {
+		errors.put("birthdate", "Inserire una data valida");
+		System.out.println("err_birthdate");
+		bad_signup = true;
+	}
+
+	// Se non è stato selezionato nessun reparto
+	if (deps.size() == 0) {
+		errors.put("deps0", "Selezionare almeno un reparto");
+		System.out.println("err_deps0");
+		bad_signup = true;
+	}
+
+	// Se sono stati selezionati più di 3 reparti
+	if (deps.size() > 3) {
+		errors.put("deps",
+				"Ai dottori non è consentito seguire più di 3 reparti");
+		System.out.println("err_deps");
+		bad_signup = true;
+	}
+
+	return bad_signup;
+}
 } // fine classe User

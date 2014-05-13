@@ -1,7 +1,6 @@
-<!-- NOTA: TALE PAGINA è DA METTERE A POSTO CON UNA GRAFICA MIGLIORE. -->
-
 <%@ page import="model.Reparto"%>
 <%@ include file="/WEB-INF/header.jsp"%>
+<%@ page import="java.util.ArrayList"%>
 <!-- Inclusione dell'header per la formattazione della pagina -->
 
 <!-- Con questa Scriptlet vado a prendere i valori di username e password che l'utente potrebbe aver inserito nel campo nome e password -->
@@ -150,7 +149,7 @@ birthdate
 					%>
 					<fieldset>
 						<legend>Reparti</legend>
-						<%
+						<%-- <%
 							byte i = 0;
 							String rep = "1";
 							while (!rep.equals("")) {
@@ -164,7 +163,21 @@ birthdate
 								}
 							}
 
-							session.setAttribute("reparto", r);		//****NON SO SE E' CORRETTO SETTARE QUA NEL MVC. A parte che non so nemmeno se serve settare il reparto.						%>
+							session.setAttribute("reparto", r);		//****NON SO SE E' CORRETTO SETTARE QUA NEL MVC. A parte che non so nemmeno se serve settare il reparto.						%> --%>
+					
+					<%
+								ArrayList<String> deps = new ArrayList<String>(r.getAllReparti());
+								for (byte i = 0; i < deps.size(); i++) {
+									out.println("<input type=\"checkbox\" id=\"check" + i
+											+ "\" class=\"checkbox\" name=\"check" + i
+											+ "\" value=\"" + deps.get(i)
+											+ "\"/> <label for=\"check" + i
+											+ "\" class=\"inline\">" + deps.get(i)
+											+ "</label> <br>");
+								}
+
+								session.setAttribute("reparto", r); //****NON SO SE E' CORRETTO SETTARE QUA NEL MVC. A parte che non so nemmeno se serve settare il reparto.
+							%>
 					</fieldset>
 				</div>
 				<div class="col_12">

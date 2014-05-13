@@ -41,7 +41,8 @@ public class Reparto {
 	 */
 	public Reparto(boolean bool){
 		if(bool)
-			this.repartiR();
+			if(this.reparti.size()==0)			//****************************************************//
+				this.repartiR();
 	}
 	
 	/**
@@ -109,8 +110,10 @@ public class Reparto {
 	 * @return un ArrayList con tutti i reparti
 	 */
 	public ArrayList<String> getAllReparti(){
-		if(this.reparti.size()==0)
+		if(this.reparti.size()==0){
+			System.out.println("TORNO I REPARTI DAL DB");
 			this.repartiR();
+		}
 	
 		return this.reparti;
 	}

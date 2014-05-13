@@ -527,6 +527,10 @@ public class ControllerServlet extends HttpServlet {
 
 		// caso del signin
 		if ("signin".equals(val)) {
+			
+//			session.invalidate();								//************************//
+//			session = request.getSession(true);
+			
 			System.out.println("username che setto: "
 					+ request.getParameter("username"));
 
@@ -886,7 +890,7 @@ public class ControllerServlet extends HttpServlet {
 				}
 			}
 
-			if (u.checkSignup(username, password, cpassword, name, surname,
+			if (u.checkSignupMod(password, cpassword, name, surname,
 					birthdate, deps)) {
 
 				// Setto gli errori da riprendere nella signupErr.jsp
