@@ -1,5 +1,3 @@
-<!-- NOTA: TALE PAGINA è DA METTERE A POSTO CON UNA GRAFICA MIGLIORE. -->
-
 <%@ page import="model.Reparto"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ include file="/WEB-INF/header.jsp"%>
@@ -34,27 +32,29 @@ birthdate
 		<div class="grid flex">
 			<div class="col_12" style="margin-top: 20px;">
 				<%
-					if (session.getAttribute("err_mod") != null)
-						if (!session.getAttribute("err_mod").toString().trim()
-								.isEmpty()) {
+					System.out.println("IOOIIIIIO: " + session.getAttribute("err_mod"));
+
+					//TITOLO: Se non ho l'err_mod allora stampo SIGNUP altrimenti MODIFICA PROFILO
+					if (session.getAttribute("err_mod") == null) {
+				%>
+				<h1 class="center">SIGN UP</h1>
+				<%
+					} else {
 				%>
 				<h1 class="center">
 					<i class="icon-edit"></i>MODIFICA PROFILO
 				</h1>
 				<%
 					}
-
-						else {
-				%><h1 class="center">SIGN UP</h1>
-				<%
-					}
 				%>
+
+				<!-- Adesso per la notifica di errore, se ho l'errore su err_mod faccio una cosa, altrimenti un altra  -->
 
 				<!-- Error -->
 				<%
 					if (session.getAttribute("err_mod") != null)
 						if (!session.getAttribute("err_mod").toString().trim()
-								.isEmpty()){
+								.isEmpty()) {
 				%>
 
 				<div class="notice error">
@@ -65,20 +65,28 @@ birthdate
 				<%
 					}
 
-						else if (session.getAttribute("err_username")!= null ||
-						session.getAttribute("err_password") != null||
-						session.getAttribute("err_name")!= null||
-						session.getAttribute("err_surname")!= null||
-						session.getAttribute("err_birthdate")!= null||
-						session.getAttribute("err_deps0")!= null||
-						session.getAttribute("err_deps")!= null)
-						if(!session.getAttribute("err_username").toString().trim().isEmpty() ||
-								!session.getAttribute("err_password").toString().trim().isEmpty()||
-								!session.getAttribute("err_name").toString().trim().isEmpty()||
-								!session.getAttribute("err_surname").toString().trim().isEmpty()||
-								!session.getAttribute("err_birthdate").toString().trim().isEmpty()||
-								!session.getAttribute("err_deps0").toString().trim().isEmpty()||
-								!session.getAttribute("err_deps").toString().trim().isEmpty()){
+					if (session.getAttribute("err_mod") == null
+							&& (session.getAttribute("err_username") != null
+									|| session.getAttribute("err_password") != null
+									|| session.getAttribute("err_name") != null
+									|| session.getAttribute("err_surname") != null
+									|| session.getAttribute("err_birthdate") != null
+									|| session.getAttribute("err_deps0") != null || session
+									.getAttribute("err_deps") != null))
+						if (!session.getAttribute("err_username").toString().trim()
+								.isEmpty()
+								|| !session.getAttribute("err_password").toString()
+										.trim().isEmpty()
+								|| !session.getAttribute("err_name").toString().trim()
+										.isEmpty()
+								|| !session.getAttribute("err_surname").toString()
+										.trim().isEmpty()
+								|| !session.getAttribute("err_birthdate").toString()
+										.trim().isEmpty()
+								|| !session.getAttribute("err_deps0").toString().trim()
+										.isEmpty()
+								|| !session.getAttribute("err_deps").toString().trim()
+										.isEmpty()) {
 				%>
 				<div class="notice error">
 					<i class="icon-remove-sign icon-large"></i> Errore inserimento
@@ -87,15 +95,17 @@ birthdate
 				</div>
 				<%
 					}
-				
+
 						else {
-							
-				%> <div class="notice error">
+				%>
+				<div class="notice error">
 					<i class="icon-remove-sign icon-large"></i> Errore inserimento
 					dati. Controllare i campi evidenziati in rosso. <a href="#close"
 						class="icon-remove"></a>
 				</div>
-				<%} %>
+				<%
+					}
+				%>
 
 
 
