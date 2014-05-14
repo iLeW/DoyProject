@@ -123,10 +123,10 @@ public class Monitoraggio {
 		
 		catch (Exception e) {
 			e.printStackTrace();
-			if(e.getMessage().contains("Duplicate"))
-			{
+			if(e.getMessage().contains("Duplicate")){
 				errors.add("ERRORE: il monitoraggio " + nomeVal + " è già attivo per il paziente selezionato");
 			}
+				
 		}
 	}
 	
@@ -182,25 +182,6 @@ public class Monitoraggio {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		//elimina anche da storico
-		//non serve, lo storico è meglio tenerlo
-		/*
-		try {
-			Class.forName(DRIVER).newInstance();
-			Connection con = DriverManager.getConnection(URL + DBNAME, SQLUSERNAME, SQLPW);
-			String strQuery="DELETE FROM storico WHERE IDPaziente=? AND valore=?";
-            PreparedStatement ps = con.prepareStatement(strQuery);
-            ps.setString(1, ID);
-            ps.setString(2, val);
-            
-            ps.executeUpdate();
-        	ps.close();
-        	con.close();
-        	
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}*/
 	}
 	
 	public boolean controllaPresenza(String ID){

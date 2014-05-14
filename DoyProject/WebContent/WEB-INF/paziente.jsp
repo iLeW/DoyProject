@@ -86,8 +86,8 @@ int conta = m.contaMonitor();
 			</select>	
 		
 		<!-- <input id="nomeValore" name="nomeValore" type="text" placeholder="nome valore" style="margin-left: 20px" required /> -->
-		<input id="valMin" name="valMin" type="text" placeholder="valore minimo" style="margin-left: 20px" required />
-		<input id="valMax" name="valMax" type="text" placeholder="valore massimo" style="margin-left: 20px" required />
+		<input id="valMin" name="valMin" type="number" placeholder="valore minimo" style="margin-left: 20px" required />
+		<input id="valMax" name="valMax" type="number" placeholder="valore massimo" style="margin-left: 20px" required />
 		<button class="blue" type="submit" name="val" style="margin-left: 20px" value="addValore">
 		<i class="icon-tag"></i> Aggiungi</button>
 	</div>
@@ -192,7 +192,7 @@ int conta = m.contaMonitor();
 			<option value="<%=s.getMon(i)%>"><%=s.getMon(i)%></option>
 			<%} %>
 			</select>
-		<input id="dato" name="dato" type="text" placeholder="dato" style="margin-left: 20px" required />
+		<input id="dato" name="dato" type="number" placeholder="dato" style="margin-left: 20px" required />
 		<button class="orange" type="submit" name="val" style="margin-left: 20px" value="addDato">
 		<i class="icon-tag"></i> Aggiungi</button>
 	</div>
@@ -264,7 +264,7 @@ int conta = m.contaMonitor();
     		chart.draw(data, options);
      		}
     	</script>
-		<div id="chart_div" style="width: 1600px; height: 500px; margin-top: 80px"></div>
+		<div id="chart_div" style="width: 1800px; height: 600px; margin-top: 80px"></div>
 	
 		<%}//fine if per i grafici di google %>
 

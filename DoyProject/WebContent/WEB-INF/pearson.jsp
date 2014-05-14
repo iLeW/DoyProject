@@ -107,10 +107,10 @@ int conta = m.contaMonitor();
         document.getElementById("variabile1").value = '<%= m.getVar1() %>';
         </script>
 	<label style="margin-left: 10px;"> da </label>
-	<input id="min1" name="min1" type="text" placeholder="minimo"
+	<input id="min1" name="min1" type="number" placeholder="minimo"
 	style="margin-left: 10px" value="<%= m.getMin1() %>" size="6" required />
 	<label style="margin-left: 10px;"> a </label>
-	<input id="max1" name="max1" type="text" placeholder="massimo"
+	<input id="max1" name="max1" type="number" placeholder="massimo"
 	style="margin-left: 10px" value="<%= m.getMax1() %>" size="6" required />
 	
 	<br><br>
@@ -127,15 +127,15 @@ int conta = m.contaMonitor();
         document.getElementById("variabile2").value = '<%= m.getVar2() %>';
         </script>
 	<label style="margin-left: 10px;"> da </label>
-	<input id="min2" name="min2" type="text" placeholder="minimo"
+	<input id="min2" name="min2" type="number" placeholder="minimo"
 	style="margin-left: 10px" value="<%= m.getMin2() %>" size="6" required />
 	<label style="margin-left: 10px;"> a </label>
-	<input id="max2" name="max2" type="text" placeholder="massimo"
+	<input id="max2" name="max2" type="number" placeholder="massimo"
 	style="margin-left: 10px" value="<%= m.getMax2() %>" size="6" required />
 	
 	<br><br>
 	<label>genera </label>
-	<input id="num" name="num" type="text" placeholder="numero"
+	<input id="num" name="num" type="number" placeholder="numero"
 	style="margin-left: 10px" value="<%= m.getNum() %>" size="6" required />
 	<label style="margin-left: 10px;"> valori random </label>
 	
@@ -157,12 +157,6 @@ int conta = m.contaMonitor();
 
 <form method="post" action="ControllerServlet">
 	<div class="grid flex; center" style="margin-top: 20px; margin-bottom: 20px">
-		<!-- pezzo vecchio per generare a caso i dati della tabella
-		<label>Crea una tabella di </label>
-		<input id="numTab" name="numTab" type="text" placeholder="numero"
-		style="margin-left: 10px" value="<%= m.getNum() %>" size="6" required />
-		<label style="margin-left: 10px;"> valori random </label>
-		 -->
 		<button class="green" type="submit" name="val" value="calcolaTabPearson">
 		<i class="icon-bar-chart"></i> Calcola Tabella </button>
 		
