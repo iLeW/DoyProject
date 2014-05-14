@@ -247,8 +247,8 @@ int conta = m.contaMonitor();
     		    var data = google.visualization.arrayToDataTable([
       		  	['Giorno', 'Valore misurato', 'Massimo', 'Minimo'],
       	        <% dim=s.getDimSto(); int i; for(i=0; i<dim-1; i++){ %>
-            	['<%= s.getData(i) %>', <%= s.getStorico(i) %>, <%= s.getMax() %>, <%= s.getMin() %>], <%}%>
-            	['<%= s.getData(i) %>', <%= s.getStorico(i) %>, <%= s.getMax() %>, <%= s.getMin() %>]
+            	['<%= s.getDataTS(i) %>', <%= s.getStorico(i) %>, <%= s.getMax() %>, <%= s.getMin() %>], <%}%>
+            	['<%= s.getDataTS(i) %>', <%= s.getStorico(i) %>, <%= s.getMax() %>, <%= s.getMin() %>]
             
 			]);
 

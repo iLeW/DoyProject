@@ -25,6 +25,7 @@ public class Storico {
 	//private Vector<Integer> dato = new Vector<Integer>();
 	private Vector<Integer> Storico = new Vector<Integer>();
 	private Vector<Date> data = new Vector<Date>();
+	private Vector<Timestamp> dataTS = new Vector<Timestamp>();
 	//private Vector<String> valore = new Vector<String>();
 	private Vector<String> monitor = new Vector<String>();
 	private Vector<String> monitorEstorico  = new Vector<String>();
@@ -252,6 +253,7 @@ public class Storico {
 	public void selezionaStorico(String IDp, String valore, String dataInizio, String dataFine){
 		Storico.clear();
 		data.clear();
+		dataTS.clear();
 		Timestamp dInizio = Timestamp.valueOf(dataInizio + " 00:00:00.000000");
 		Timestamp dFine = Timestamp.valueOf(dataFine + " 23:59:59.999999");
 		int ID = Integer.parseInt(IDp);
@@ -270,6 +272,7 @@ public class Storico {
 	       	ResultSet rs = ps.executeQuery();
 	       	while(rs.next()){
 	       		data.add(rs.getDate("data"));
+	       		dataTS.add(rs.getTimestamp("data"));
 				Storico.add(rs.getInt("dato"));
 			}
 			ps.close();
@@ -316,6 +319,10 @@ public class Storico {
 	}
 	public int getStorico(int i) {
 		return Storico.get(i);
+	}
+	public Timestamp getDataTS(int i) {
+		//System.out.println(i+" Data: "+data.get(i));
+		return dataTS.get(i);
 	}
 	
 	
